@@ -4,6 +4,7 @@
 /* @var $content string */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
@@ -27,7 +28,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'ยโสธรเจริญการช่าง',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -36,9 +37,23 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
+            [
+                'label' => 'ออกเอกสาร',
+                'items' => [
+                    ['label' => 'ใบเสนอราคา', 'url' => Url::to(['quotation/index'])],
+                    ['label' => 'ใบแจ้งหนี้', 'url' =>'#'],
+                    ['label' => 'ใบเสร็จรับเงิน', 'url' =>'#'],
+                ],
+            ],
+            ['label' => 'บันทึก', 'url' => '#'],
+            ['label' => 'สรุปประจำเดือน', 'url' => Url::to(['quotation/summary'])],
+            [
+                'label' => 'การตั้งค่า',
+                'items' => [
+                    ['label' => 'ตั้งค่าพนักงาน', 'url' => '#'],
+                ],
+            ],
+             
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
@@ -66,9 +81,9 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; ยโสธรเจริญการช่าง <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+<!--        <p class="pull-right"><?= Yii::powered() ?></p>-->
     </div>
 </footer>
 

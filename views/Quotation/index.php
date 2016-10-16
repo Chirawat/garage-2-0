@@ -2,6 +2,10 @@
 use yii\jui\Dialog;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
+use yii\jui\AutoComplete;
+use yii\web\View;
 ?>
     <div class="modal fade" id="customer" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -55,33 +59,36 @@ use yii\helpers\Url;
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="col-sm-6">
-                    <form class="form-horizontal">
+                    <form name="test" class="form-horizontal">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">ทะเบียน</label>
                             <div class="col-sm-4">
-                                <select type="text" class="form-control input-sm"> </select>
+                                <?=Html::DropDownList('plate_no', 0, ArrayHelper::map($viecleList, 'VID', 'plate_no'),[
+                                    'id' => 'plate-no',
+                                    'class' => 'form-control',
+                                    'onchange' => '$.post("' . Url::to(['viecle/viecle-detail']) . '", {VID: $(this).val()}, function(data){ updateViecleDetail( data ); });']) ?>
                             </div>
                             <label class="col-sm-2 control-label">ชื่อรถ</label>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control input-sm" readonly> </div>
+                                <input type="text" id="viecle-name" value="<?= $viecle->viecleName['name'] ?>" class="form-control input-sm" readonly> </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">รุ่น</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control input-sm" readonly> </div>
+                                <input type="text" id="viecle-model" value="<?= $viecle->viecleModel['model'] ?>" class="form-control input-sm" readonly> </div>
                             <label class="col-sm-2 control-label">ปี</label>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control input-sm" readonly> </div>
+                                <input type="text" id="year" value="<?= $viecle->viecle_year ?>" class="form-control input-sm" readonly> </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">เลขตัวถัง</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control input-sm" readonly> </div>
+                                <input type="text" id="body-code" value="<?= $viecle->body_code ?>" class="form-control input-sm" readonly> </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">เลขเครื่อง</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control input-sm" readonly> </div>
+                                <input type="text" id="engine-code" value="<?= $viecle->engin_code ?>" class="form-control input-sm" readonly> </div>
                         </div>
                         <br>
                         <div class="form-group">
@@ -106,8 +113,6 @@ use yii\helpers\Url;
                 </div>
                 <div class="col-sm-6">
                     <form class="form-horizontal">
-                        
-                        
                         <div class="form-group">
                             <label class="control-label col-sm-3">ประเภทลูกค้า</label>
                             <div class="col-sm-7">
@@ -129,11 +134,9 @@ use yii\helpers\Url;
                             <label class="col-sm-3 control-label" for="phone">บริษัทประกัน</label>
                             <div class="col-sm-7">
                                 <select class="form-control input-sm">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
+                                    <?php foreach($insuranceCompanies as $insuranceCompany): ?>
+                                    <option value="<?= $insuranceCompany->CID ?>"><?= $insuranceCompany->fullname ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <button class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-save-file"></span> จัดการ</button>
@@ -156,11 +159,9 @@ use yii\helpers\Url;
                             <label class="col-sm-3 control-label" for="phone">ตำแหน่งการชน</label>
                             <div class="col-sm-7">
                                 <select class="form-control input-sm">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
+                                    <?php foreach($damagePostions as $damagePosition): ?>
+                                        <option value="<?= $damagePosition->id ?>"><?= $damagePosition->position ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -169,3 +170,15 @@ use yii\helpers\Url;
             </div>
         </div>
     </div>
+
+<?php
+$this->registerJS('$("#plate-no").select2();', View::POS_READY);
+$str = 'function updateViecleDetail(data){ 
+            $("#viecle-name").val( data.viecle_name );
+            $("#viecle-model").val( data.viecle_model );
+            $("#year").val( data.year );
+            $("#engine-code").val( data.engine_code );
+            $("#body-code").val( data.body_code );
+        }';
+$this->registerJS( $str, View::POS_BEGIN);
+?>

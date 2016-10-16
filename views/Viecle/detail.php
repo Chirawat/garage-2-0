@@ -1,6 +1,18 @@
 <?php
-// Car model
-// http://www.carrecent.com/car-price
+/* Car model
+ http://www.carrecent.com/car-price
+ 
+*/
+
+/*
+
+jQuery.post( url [, data ] [, success ] [, dataType ] )
+This is a shorthand Ajax function, which is equivalent to:
+https://api.jquery.com/jquery.post/
+
+*/
+
+
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\grid\GridView;
@@ -22,7 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         <hr> </div>
                 </div>
                 <div class="row">
-                    <!--                <form class="form-horizontal" role="form">-->
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="col-sm-3">
@@ -37,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <label for="inputEmail3" class="control-label">รุ่น</label>
                             </div>
                             <div class="col-sm-9">
-                                <?= Html::activeDropDownList($model, 'viecle_model', [], [
+                                <?= Html::activeDropDownList($model, 'viecle_model', ArrayHelper::map($viecleModels, 'id', 'model'), [
                                     'class' => 'form-control',
                                     'id' => 'viecle-model',
                                 ]) ?>

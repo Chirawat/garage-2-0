@@ -6,7 +6,10 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
+use app\models\DamagePosition;
+use app\models\Customer;
+use app\models\Quotation;
+use app\models\Viecle;
 
 
 class QuotationController extends Controller
@@ -49,6 +52,17 @@ class QuotationController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $quotation = new Quotation();
+        $viecle = Viecle::findOne(220);
+        $viecleList = Viecle::find()->all();
+        $insuranceCompanies = Customer::find()->where(['type' => 'INSURANCE_COMP'])->all();
+        $damagePostions = DamagePosition::find()->all();
+        return $this->render('index',[
+            'quotation' => $quotation,
+            'viecle' => $viecle,
+            'viecleList' => $viecleList,
+            'insuranceCompanies' => $insuranceCompanies,
+            'damagePostions' => $damagePostions,
+        ]);
     }
 }

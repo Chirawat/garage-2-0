@@ -128,6 +128,7 @@ class ViecleController extends Controller
     public function actionDetail( $plate_no ){
         $model = Viecle::find()->where(['plate_no' => $plate_no])->one();
         $viecleName = ViecleName::find()->all();
+        $viecleModels = $model->viecleName->viecleModels;
         $bodyType = BodyType::find()->all();
         $request = Yii::$app->request;
         if( $request->post() ){
@@ -141,6 +142,7 @@ class ViecleController extends Controller
             return $this->render('detail',[
                 'model' => $model,
                 'viecleName' => $viecleName,
+                'viecleModels' => $viecleModels,
                 'bodyType' => $bodyType,
             ]);
         else
@@ -156,5 +158,21 @@ class ViecleController extends Controller
                 echo "<option value='" . $viecleModel['id'] . "'>" . $viecleModel['model'] . "</option>";
             }
 //        }
+    }
+    
+    public function actionViecleDetail(){
+        $request = Yii::$app->request;
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        $viecle = Viecle::findOne( $request->post('VID') );
+        
+        $ret = [];
+        
+        $ret['viecle_name'] = $viecle->viecleName['name'];
+        $ret['viecle_model'] = $viecle->viecleModel['model'];
+        $ret['year'] = $viecle->viecle_year;
+        $ret['engine_code'] = $viecle->engin_code;
+        $ret['body_code'] = $viecle->body_code;
+        return $ret;
     }
 }

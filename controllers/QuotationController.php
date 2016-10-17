@@ -54,9 +54,15 @@ class QuotationController extends Controller
     {
         $quotation = new Quotation();
         $viecle = new Viecle();
+        
+        if( Yii::$app->request->get('plate_no') ){
+            $viecle = Viecle::find()->where(['plate_no' => Yii::$app->request->get('plate_no')])->one();
+        }
+        
         $viecleList = Viecle::find()->all();
-        $insuranceCompanies = Customer::find()->where(['type' => 'INSURANCE_COMP'])->all();
         $damagePostions = DamagePosition::find()->all();
+        $insuranceCompanies = Customer::find()->where(['type' => 'INSURANCE_COMP'])->all();
+        
         return $this->render('index',[
             'quotation' => $quotation,
             'viecle' => $viecle,

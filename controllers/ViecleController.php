@@ -127,20 +127,34 @@ class ViecleController extends Controller
     
     public function actionDetail( $plate_no ){
         $model = Viecle::find()->where(['plate_no' => $plate_no])->one();
-        $viecleName = ViecleName::find()->all();
-        $viecleModels = $model->viecleName->viecleModels;
-        $bodyType = BodyType::find()->all();
+        $customer = $model->getOwner0()->one();
+        
+        
+        // update detail
         $request = Yii::$app->request;
         if( $request->post() ){
-            //$model->viecle_name = $request->post('viecle_name')
+            $model->load( $request->post() );
+            if( $model->validate() )
+                $model->save();
+            else
+                return $model->errors;
             
-            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return $request->post();
+            $customer->load( $request->post() );
+            if( $customer->validate() )
+                $customer->save();
+            else
+                return $customer->errors;
         }
+        
+        
+        $bodyType = BodyType::find()->all();
+        $viecleName = ViecleName::find()->all();
+        $viecleModels = $model->viecleName->viecleModels;
         
         if( $model != null )
             return $this->render('detail',[
                 'model' => $model,
+                'customer' => $customer,
                 'viecleName' => $viecleName,
                 'viecleModels' => $viecleModels,
                 'bodyType' => $bodyType,

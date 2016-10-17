@@ -185,5 +185,9 @@ $str = 'function updateViecleDetail(data){
     $("#phone").val( data.phone );
 }';
 $this->registerJS( $str, View::POS_BEGIN);
-$this->registerJS( '$("select#plate-no").append("<option disabled selected value>เลือกทะเบียนรถ</option>")', View::POS_READY );
+
+if( $viecle->plate_no != "" )
+    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>'.$viecle->plate_no.'</option>")', View::POS_READY );
+else
+    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>เลือกทะเบียนรถ</option>")', View::POS_READY );
 ?>

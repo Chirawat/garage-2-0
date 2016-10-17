@@ -53,7 +53,7 @@ class QuotationController extends Controller
     public function actionIndex()
     {
         $quotation = new Quotation();
-        $viecle = Viecle::findOne(220);
+        $viecle = new Viecle();
         $viecleList = Viecle::find()->all();
         $insuranceCompanies = Customer::find()->where(['type' => 'INSURANCE_COMP'])->all();
         $damagePostions = DamagePosition::find()->all();

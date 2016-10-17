@@ -168,11 +168,18 @@ class ViecleController extends Controller
         
         $ret = [];
         
+        // viecle
         $ret['viecle_name'] = $viecle->viecleName['name'];
         $ret['viecle_model'] = $viecle->viecleModel['model'];
         $ret['year'] = $viecle->viecle_year;
         $ret['engine_code'] = $viecle->engin_code;
         $ret['body_code'] = $viecle->body_code;
+        
+        //customer
+        $ret['fullname'] = $viecle->owner0['fullname'];
+        $ret['address'] = $viecle->owner0['address'];
+        $ret['phone'] = $viecle->owner0['phone'];
+        
         return $ret;
     }
 }

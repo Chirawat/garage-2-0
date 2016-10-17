@@ -94,19 +94,19 @@ use yii\web\View;
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="customer">ชื่อ</label>
                             <div class="col-sm-9">
-                                <input class="form-control input-sm" readonly>
+                                <input type="text" id="fullname" value="<?=$viecle->owner0['fullname'] ?>" class="form-control input-sm" readonly>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="adress">ที่อยู่</label>
                             <div class="col-sm-9">
-                                <textarea id="address" class="form-control input-sm" rows="2" readonly></textarea>
+                                <textarea id="address" class="form-control input-sm" rows="2" readonly><?= $viecle->owner0['address'] ?></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="customer">โทรศัพท์</label>
                             <div class="col-sm-9">
-                                <input class="form-control input-sm" readonly>
+                                <input type="text" id="phone" value="<?= $viecle->owner0['phone'] ?>" class="form-control input-sm" readonly>
                             </div>
                         </div>
                     </form>
@@ -174,11 +174,16 @@ use yii\web\View;
 <?php
 $this->registerJS('$("#plate-no").select2();', View::POS_READY);
 $str = 'function updateViecleDetail(data){ 
-            $("#viecle-name").val( data.viecle_name );
-            $("#viecle-model").val( data.viecle_model );
-            $("#year").val( data.year );
-            $("#engine-code").val( data.engine_code );
-            $("#body-code").val( data.body_code );
-        }';
+    $("#viecle-name").val( data.viecle_name );
+    $("#viecle-model").val( data.viecle_model );
+    $("#year").val( data.year );
+    $("#engine-code").val( data.engine_code );
+    $("#body-code").val( data.body_code );
+    
+    $("#fullname").val( data.fullname );
+    $("#address").val( data.address );
+    $("#phone").val( data.phone );
+}';
 $this->registerJS( $str, View::POS_BEGIN);
+$this->registerJS( '$("select#plate-no").append("<option disabled selected value>เลือกทะเบียนรถ</option>")', View::POS_READY );
 ?>

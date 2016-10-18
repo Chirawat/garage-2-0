@@ -10,6 +10,10 @@ use app\models\DamagePosition;
 use app\models\Customer;
 use app\models\Quotation;
 use app\models\Viecle;
+use app\models\Description;
+use yii\db\Query;
+use yii\Helpers\ArrayHelper;
+
 
 
 class QuotationController extends Controller
@@ -69,6 +73,30 @@ class QuotationController extends Controller
             'viecleList' => $viecleList,
             'insuranceCompanies' => $insuranceCompanies,
             'damagePostions' => $damagePostions,
+            //'descriptions' => $descriptions,
         ]);
+    }
+    
+    public function actionSearch(){
+        $request = Yii::$app->request;
+        
+        if($request->post('plate_no')){
+            $VID = Viecle::find()->where(['plate_no' => $request->post('plate_no')])->all();
+            $quotations = Quotation::find()->where(['VID' => $VID])->all();
+            
+            return $this->render('search', [
+               'quotations'  => $quotations,
+            ]);
+        }
+        
+        if( $request->post('quotation_id') ){
+            $quotations = Quotation::find()->where(['QID' => $request->post('quotation_id') ])->all();
+            
+            return $this->render('search', [
+               'quotations'  => $quotations,
+            ]); 
+        }
+        
+        return $this->render('search');
     }
 }

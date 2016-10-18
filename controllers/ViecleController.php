@@ -8,6 +8,7 @@ use app\models\ViecleSearch;
 use app\models\ViecleName;
 use app\models\ViecleModel;
 use app\models\BodyType;
+use app\models\Customer;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -67,12 +68,20 @@ class ViecleController extends Controller
     public function actionCreate()
     {
         $model = new Viecle();
-
+        $customer = new Customer();
+        $viecleModels = [];
+        $bodyType = BodyType::find()->all();
+        $viecleName = ViecleName::find()->all();
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->VID]);
         } else {
-            return $this->render('create', [
+            return $this->render('detail', [
                 'model' => $model,
+                'customer' => $customer,
+                'viecleModels' => $viecleModels,
+                'bodyType' => $bodyType,
+                'viecleName' => $viecleName,
             ]);
         }
     }
@@ -125,10 +134,15 @@ class ViecleController extends Controller
         }
     }
     
-    public function actionDetail( $plate_no ){
+    public function actionDetail( $plate_no=null ){
         $model = Viecle::find()->where(['plate_no' => $plate_no])->one();
+
+        if( $model == null || $plate_no == null)
+            // not found
+            return $this->redirect(['viecle/index', 'status' => 'failed']);
+
         $customer = $model->getOwner0()->one();
-        
+        $viecleModels = $model->viecleName->viecleModels;
         
         // update detail
         $request = Yii::$app->request;
@@ -149,7 +163,7 @@ class ViecleController extends Controller
         
         $bodyType = BodyType::find()->all();
         $viecleName = ViecleName::find()->all();
-        $viecleModels = $model->viecleName->viecleModels;
+        
         
         if( $model != null )
             return $this->render('detail',[
@@ -159,8 +173,8 @@ class ViecleController extends Controller
                 'viecleModels' => $viecleModels,
                 'bodyType' => $bodyType,
             ]);
-        else
-            return $this->render('index', ['status' => 'not found']);
+        //else
+            //return $this->render('index', ['status' => 'not found']);
     }
     
     public function actionModelList(){

@@ -9,7 +9,7 @@ use yii\widgets\Pjax;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 ?>
-    <?php if( isset($status) && $status == "not found" ) : ?>
+    <?php if( Yii::$app->request->get('status') == "failed" ) : ?>
     <div class="section">
         <div class="container">
             <div class="row">
@@ -28,6 +28,7 @@ use yii\widgets\Pjax;
                         <div class="form-group">
                             <label class="control-label" for="plate_id">ทะเบียนรถ</label>
                             <input class="form-control" id="plate_id" name="plate_no" placeholder="ใส่ทะเบียนรถ" type="text"> </div>
+                        <a href="<?= Url::to(['viecle/create']) ?>" class="btn btn-default">เพิ่ม</a>
                         <button type="submit" class="btn btn-default">ค้นหา</button>
                     <?= Html::endForm() ?>
                 </div>

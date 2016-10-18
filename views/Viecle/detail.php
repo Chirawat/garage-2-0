@@ -14,6 +14,7 @@ https://api.jquery.com/jquery.post/
 
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
@@ -22,13 +23,7 @@ use yii\web\View;
 $this->title = 'Viecles';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-    <?= Html::beginForm([
-        'viecle/detail', 
-        'plate_no' => Yii::$app->request->get('plate_no')], 
-        'post', [
-        'data-pjax' => '', 
-        'class' => 'form-horizontal']); 
-    ?>
+    <?php $form = ActiveForm::begin(['options' => [ 'class' => 'form-horizontal']]) ?>
         <div class="section">
             <div class="container">
                 <div class="row">
@@ -162,7 +157,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <!--                    <form class="form-horizontal" role="form">-->
                         <div class="form-group">
                             <div class="col-sm-3">
                                 <label for="fullname" class="control-label">ชื่อลูกค้า</label>
@@ -233,9 +227,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <p>ซีซี <strong id="cc_t"><?= $model->cc ?></strong>  ที่นั่ง <strong id="seat_t"><?= $model->seat ?></strong> น้ำหนักรวม <strong id="weight_t"><?= $model->weight ?> กก.</strong></p>
                                 <br>
                                 <h4>ข้อมูลลูกค้า</h4>
-                                <p>ชื่อลูกค้า <strong id="fullname_t"><?= $model->owner0->fullname ?></strong></p>
-                                <p>ที่อยู่ <strong id="address_t"><?= $model->owner0->address ?></strong></p>
-                                <p>เบอร์โทรศัพท์ <strong id="phone_t"><?= $model->owner0->phone ?></strong> เบอร์แฟ็กซ์ <strong id="fax_t"><?= $model->owner0->fax ?></strong></p>
+                                <p>ชื่อลูกค้า <strong id="fullname_t"><?= $customer->fullname ?></strong></p>
+                                <p>ที่อยู่ <strong id="address_t"><?= $customer->address ?></strong></p>
+                                <p>เบอร์โทรศัพท์ <strong id="phone_t"><?= $customer->phone ?></strong> เบอร์แฟ็กซ์ <strong id="fax_t"><?= $customer->fax ?></strong></p>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -249,7 +243,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <!-- /.modal -->
         </div>
-        <?= Html::endForm() ?>
+        <?php ActiveForm::end() ?>
 
 <?php
 // copy info into confirmation modal

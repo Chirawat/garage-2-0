@@ -111,22 +111,43 @@ class QuotationController extends Controller
             ///////////////////////////////////////////////////////////////////////////////
             $quotation = new Quotation();
 
-            // Fill up CID
-            $customer = Customer::find()->where(['fullname' => $data["quotation_info"]["customerFullName"]])->one();
-            $quotation->CID = $customer->CID;
-
+           // get customer id from viecle detail
+            $VID = $data["quotation_info"]["vieclePlateNo"];
+            $viecle = Viecle::findOne($VID);
+           
+            // Fill up CID / based on customer type
+            $customerType = $data["quotation_info"]["customerType"];
+            if($customerType == "GENERAL") { // general customer
+                // Fill up Quotation's VID
+                $quotation->CID = $viecle->owner0['CID'];
+            }
+           else{ // insurance company
+               // get customer id from customer with type 'insurance' / key already represents VID
+               $quotation->CID =  $data["quotation_info"]["insuranceCompany"];
+               
+           }
+           
             // Fill up VID
-            $viecle = Viecle::find()->where(['plate_no' => $data["quotation_info"]["vieclePlateNo"]])->one();
             $quotation->VID = $viecle->VID;
-
-            $quotation->claim_no = $data["quotation_info"]["claimNo"];
 
             // Fill up EID
             $quotation->Employee = Yii::$app->user->identity->getId();
-
-            $quotation->quotation_date = date("Y-m-d");
-            $quotation->quotation_id = $data["quotation_info"]["quotationId"];;
            
+           
+           // quotation id
+            //$quotation->quotation_id = $data["quotation_info"]["quotationId"];;
+
+           // quotation date
+           $quotation->quotation_date = date("Y-m-d");
+           
+           // claim no
+            $quotation->claim_no = $data["quotation_info"]["claimNo"];
+           
+           // damage level
+           $quotation->damage_level = $data["quotation_info"]["damageLevel"];
+           
+           //damage position
+           $quotation->damage_position = $data["quotation_info"]["damagePosition"];
            
            // Save Model
             if( $quotation->validate() ){
@@ -136,7 +157,7 @@ class QuotationController extends Controller
                return $quotation->errors;
            }
 
-           
+           // find latest id
            $QID = Quotation::find()->select(['QID'])->orderBy(['QID' => SORT_DESC])->one()["QID"];
            
             // Description data

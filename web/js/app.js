@@ -33,6 +33,58 @@ $(document).ready(function () {
             enterDescription();
         }
     });
+    $("#maintenance-add").click( function () {
+        enterDescription();
+    });
+    $("#part-add").click( function () {
+        enterDescription();
+    });
+    
+
+    function renderTableBody() {
+        /* append row when plus button clicked  */
+        /* update 20161019: render table based on presented objects */
+        // find len
+        var objLen = maintenance.length;
+        if (part.length > maintenance.length) objLen = part.length;
+        // prepare row
+        var appendRow = "";
+        for (var i = 0; i < objLen; i++) {
+            // col 1
+            appendRow += '<tr id="' + i + '"><td style="text-align: Center;">' + i + '</td>';
+            if (typeof maintenance[i] !== 'undefined') {
+                // col 2
+                appendRow += '<td>' + maintenance[i].list + '</td>\
+                    <td>' + maintenance[i].price + '</td>';
+                // col 3
+                appendRow += '<td>\
+                    <button id="maintenance-del" class="btn btn-danger btn-xs"> \
+                        <span class="glyphicon glyphicon-remove"></span> \
+                    </button></td>';
+            }
+            else {
+                appendRow += '<td></td><td></td>'
+                appendRow += '<td></td>'
+            }
+            if (typeof part[i] !== 'undefined') {
+                appendRow += '<td>' + part[i].list + '</td>\
+                    <td>' + part[i].price + '</td>';
+                appendRow += '<td>\
+                    <button id="part-del" class="btn btn-danger btn-xs"> \
+                        <span class="glyphicon glyphicon-remove"></span> \
+                    </button></td>';
+            }
+            else {
+                appendRow += '<td></td><td></td>'
+                appendRow += '<td></td>'
+            }
+            appendRow += '</tr>';
+        }
+        // clear table body content
+        $("table > tbody").html("");
+        // append row
+        $("table > tbody").html(appendRow);
+    }
 
     function enterDescription() {
         // check, empty?
@@ -40,19 +92,16 @@ $(document).ready(function () {
             alert("กรุณาป้อนรายการ");
             return false;
         }
-        // prepare append row.
-        var appendRow = '<tr id=' + id + '> \
-            <td style="text-align: center;">' + id + '</td> \
-            <td>' + $("#maintenance-list").val() + '</td> \
-            <td style="text-align: right;">' + $("#maintenance-price").val() + '</td> \
-            <td>' + $("#part-list").val() + '</td> \
-            <td style="text-align: right;"> ' + $("#part-price").val() + '</td>\
-            <td> \
-                <button id="ibtnDel"class="btn btn-danger btn-xs"> \
-                    <span class="glyphicon glyphicon-remove"></span> \
-                </button> \
-            </td></tr>';
-        $("table > tbody").append(appendRow);
+        // check, empty?
+        if ($("#maintenance-list").val() != "" && $("#maintenance-price").val() === "") { // งงมาก  $("#maintainance-price").val() เป็น 'undefined' แต่บรรทัดนี้เป็น ''
+            alert("กรุณาป้อนราคาซ่อม");
+            return false;
+        }
+        // check, empty?
+        if ($("#part-list").val() != "" && $("#part-price").val() === "") { // งงมาก  $("#maintainance-price").val() เป็น 'undefined' แต่บรรทัดนี้เป็น ''
+            alert("กรุณาป้อนราคาอะไหล่");
+            return false;
+        }
         // Push data into object.
         if ($("#maintenance-list").val() != "") {
             maintenance.push({
@@ -68,29 +117,34 @@ $(document).ready(function () {
                 , price: $("#part-price").val()
             });
         }
-        // clear text box value
+        renderTableBody();
+        /* clear text box value */
         $("#maintenance-list").val("");
         $("#maintenance-price").val("");
         $("#part-list").val("");
         $("#part-price").val("");
+        /* calulate total */
+        calTotal();
+        updateTableIndex();
+        /* Increment ID */
+        id++;
+    }
+    $("table#myTable").on("click", "#maintenance-del", function (event) {
+        var closestRow = $(this).closest("tr");
+        removeIndex = closestRow[0].id;
+        maintenance.splice(removeIndex, 1);
+        // re-render body table
+        renderTableBody();
         // calulate total
         calTotal();
         updateTableIndex();
-        // Increment ID
-        id++;
-    }
-    $("#add-button").click(function () {
-        enterDescription();
     });
-    $("table#myTable").on("click", "#ibtnDel", function (event) {
+    $("table#myTable").on("click", "#part-del", function (event) {
         var closestRow = $(this).closest("tr");
-        // remove data object
-        var removeIndex = arrayObjectIndexOf(maintenance, closestRow[0].id, "row");
-        if (removeIndex != -1) maintenance.splice(removeIndex, 1);
-        removeIndex = arrayObjectIndexOf(part, closestRow[0].id, "row");
-        if (removeIndex != -1) part.splice(removeIndex, 1);
-        // remove row
-        closestRow.remove();
+        removeIndex = closestRow[0].id;
+        part.splice(removeIndex, 1);
+        // re-render body table
+        renderTableBody();
         // calulate total
         calTotal();
         updateTableIndex();
@@ -190,30 +244,43 @@ $(document).ready(function () {
     });
     $("#btn-save").on("click", function (event, ui) {
         //if (maintenance.length != 0 || part.length != 0) {
-            // get quotation info
-            quotation_info = {
-                customerType: $("#customer-type:checked").val(),
-                claimNo: $("#claim-no").val(),
-                insuranceCompany: $("#insurance-company option:selected").val(),
-                damageLevel: $("#damage-level").val(),
-                damagePosition: $("#damage-position").val(),
-                vieclePlateNo: $("#plate-no option:selected").val()
-            };
-            console.log( quotation_info );
-//            $.ajax({
-//                url: "index.php?r=quotation/quotation-save"
-//                , type: 'json'
-//                , data: {
-//                    quotation_info: quotation_info
-//                    , maintenance_list: maintenance
-//                    , part_list: part
-//                , }
-//                , success: function (data) {
-//                    var id = $("#quotationId").val()
-//                    window.location.replace("?r=quotation/view&quotation_id=" + id);
-//                }
-//            });
-        //}
+        // get quotation info
+        quotation_info = {
+            customerType: $("#customer-type:checked").val()
+            , claimNo: $("#claim-no").val()
+            , insuranceCompany: $("#insurance-company option:selected").val()
+            , damageLevel: $("#damage-level").val()
+            , damagePosition: $("#damage-position").val()
+            , vieclePlateNo: $("#plate-no option:selected").val()
+        };
+        // check empty
+        if (quotation_info.vieclePlateNo == "") {
+            alert("กรุณาข้อมูลรถยนต์");
+            return false;
+        }
+        if (quotation_info.claimNo == "") {
+            alert("กรุณาใส่หมายเลขเคลม");
+            return false;
+        }
+        if (maintenance.length == 0 && part.length == 0) {
+            alert("กรุณาเพิ่มรายการ");
+            return false;
+        }
+        console.log(quotation_info);
+        /* Send information to server */
+        $.ajax({
+            url: "index.php?r=quotation/quotation-save"
+            , type: 'json'
+            , data: {
+                quotation_info: quotation_info
+                , maintenance_list: maintenance
+                , part_list: part
+            , }, 
+//            success: function (data) {
+//                var id = $("#quotationId").val()
+//                window.location.replace("?r=quotation/view&quotation_id=" + id);
+//            }
+        });
     });
     $('#modal-save').on('hidden.bs.modal', function (e) {
         window.location.replace("index.php/?r=quotation/view&quotation_id=" + data.quotation_id);
@@ -326,12 +393,7 @@ $(document).ready(function () {
 
     function formatMoney(n, c, d, t) {
         //var n = this, 
-        c = isNaN(c = Math.abs(c)) ? 2 : c
-            , d = d == undefined ? "." : d
-            , t = t == undefined ? "," : t
-            , s = n < 0 ? "-" : ""
-            , i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c)))
-            , j = (j = i.length) > 3 ? j % 3 : 0;
+        c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "." : d, t = t == undefined ? "," : t, s = n < 0 ? "-" : "", i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), j = (j = i.length) > 3 ? j % 3 : 0;
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     };
 });

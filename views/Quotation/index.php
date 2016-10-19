@@ -111,20 +111,20 @@ use yii\web\View;
                             <label class="control-label col-sm-3">ประเภทลูกค้า</label>
                             <div class="col-sm-7">
                                 <label class="radio-inline">
-                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> ลูกค้าทั่วไป </label>
+                                    <input type="radio" name="customer-type" id="customer-type" value="GENERAL" checked> ลูกค้าทั่วไป </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> บริษัทประกัน </label>
+                                    <input type="radio" name="customer-type" id="customer-type" value="INSURANCE"> บริษัทประกัน </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">เลขที่เคลม</label>
                             <div class="col-sm-7">
-                                <input class="form-control input-sm"> </div>
+                                <input id="claim-no" class="form-control input-sm"> </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="phone">บริษัทประกัน</label>
                             <div class="col-sm-7">
-                                <select class="form-control input-sm">
+                                <select id="insurance-company" class="form-control input-sm">
                                     <?php foreach($insuranceCompanies as $insuranceCompany): ?>
                                         <option value="<?= $insuranceCompany->CID ?>">
                                             <?= $insuranceCompany->fullname ?>
@@ -138,17 +138,17 @@ use yii\web\View;
                             <label class="control-label col-sm-3">ความเสียหาย</label>
                             <div class="col-sm-7">
                                 <label class="radio-inline">
-                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> น้อย </label>
+                                    <input type="radio" name="damage-level" id="damage-level" value="1" checked> น้อย </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> ปานกลาง </label>
+                                    <input type="radio" name="damage-level" id="damage-level" value="2"> ปานกลาง </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> มาก </label>
+                                    <input type="radio" name="damage-level" id="damage-level" value="3"> มาก </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="phone">ตำแหน่งการชน</label>
                             <div class="col-sm-7">
-                                <select class="form-control input-sm">
+                                <select id="damage-position" class="form-control input-sm">
                                     <?php foreach($damagePostions as $damagePosition): ?>
                                         <option value="<?= $damagePosition->id ?>">
                                             <?= $damagePosition->position ?>

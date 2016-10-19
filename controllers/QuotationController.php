@@ -99,4 +99,92 @@ class QuotationController extends Controller
         
         return $this->render('search');
     }
+    
+    public function actionQuotationSave(){
+       if( Yii::$app->request->isAjax){    
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+            $request = Yii::$app->request;
+            $data = $request->bodyParams;
+
+            // Quation data
+            ///////////////////////////////////////////////////////////////////////////////
+            $quotation = new Quotation();
+
+            // Fill up CID
+            $customer = Customer::find()->where(['fullname' => $data["quotation_info"]["customerFullName"]])->one();
+            $quotation->CID = $customer->CID;
+
+            // Fill up VID
+            $viecle = Viecle::find()->where(['plate_no' => $data["quotation_info"]["vieclePlateNo"]])->one();
+            $quotation->VID = $viecle->VID;
+
+            $quotation->claim_no = $data["quotation_info"]["claimNo"];
+
+            // Fill up EID
+            $quotation->Employee = Yii::$app->user->identity->getId();
+
+            $quotation->quotation_date = date("Y-m-d");
+            $quotation->quotation_id = $data["quotation_info"]["quotationId"];;
+           
+           
+           // Save Model
+            if( $quotation->validate() ){
+                $ret = $quotation->save();
+            }
+           else{
+               return $quotation->errors;
+           }
+
+           
+           $QID = Quotation::find()->select(['QID'])->orderBy(['QID' => SORT_DESC])->one()["QID"];
+           
+            // Description data
+            ///////////////////////////////////////////////////////////////////////////////
+
+            // Maintenance
+            if(!empty($data["maintenance_list"])){
+                for($i = 0; $i < sizeOf($data["maintenance_list"]); $i++){
+                    $description = new Description();
+
+                    $description->QID = $QID;
+                    $description->row = 1;
+                    $description->description = $data["maintenance_list"][$i]["list"];
+                    $description->type = "MAINTENANCE";
+                    $description->price = $data["maintenance_list"][$i]["price"];
+
+                    if( $description->validate() )
+                        $ret = $description->save();
+                    else
+                        return $description->errors;
+                }
+            }
+
+            // Part
+            if(!empty($data["part_list"])){
+                for($i = 0; $i < sizeOf($data["part_list"]); $i++){
+                    $description = new Description();
+
+                    $description->QID = $QID;
+                    $description->row = 1;
+                    $description->description = $data["part_list"][$i]["list"];
+                    $description->type = "PART";
+                    $description->price = $data["part_list"][$i]["price"];
+
+                    if( $description->validate() )
+                        $ret = $description->save();
+                    else
+                        return $description->errors;
+                }
+            }
+            
+
+            if( $ret ){
+               return ['status' => 'sucess', 'QID' => $QID];
+            }
+           else{
+               return ['status' => 'failed', 'error' => $ret];
+           }
+       }
+   }
 }

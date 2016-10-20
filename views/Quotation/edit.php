@@ -43,7 +43,7 @@ use yii\web\View;
             <div class="form-group pull-right">
                 <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
                 <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a> |
-                <a id="btn-save" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> บันทึก </a>
+                <a id="btn-edit-save" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> บันทึกรายการ </a>
                 <a id="btn-print" target="_blank" class="btn btn-success btn-sm"> <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
             </div>
         </form>
@@ -57,10 +57,7 @@ use yii\web\View;
                         <div class="form-group">
                             <label class="col-sm-3 control-label">ทะเบียน</label>
                             <div class="col-sm-4">
-                                <?=Html::DropDownList('plate_no', 0, ArrayHelper::map($viecleList, 'VID', 'plate_no'),[
-                                    'id' => 'plate-no',
-                                    'class' => 'form-control',
-                                    'onchange' => '$.post("' . Url::to(['viecle/viecle-detail']) . '", {VID: $(this).val()}, function(data){ updateViecleDetail( data ); });']) ?>
+                                <input disabled value="<?= $viecle->plate_no ?>" class="form-control input-sm">
                             </div>
                             <label class="col-sm-2 control-label">ชื่อรถ</label>
                             <div class="col-sm-3">
@@ -93,9 +90,7 @@ use yii\web\View;
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="adress">ที่อยู่</label>
                             <div class="col-sm-9">
-                                <textarea id="address" class="form-control input-sm" rows="2" readonly>
-                                    <?= $viecle->owner0['address'] ?>
-                                </textarea>
+                                <textarea id="address" class="form-control input-sm" rows="2" readonly><?= $viecle->owner0['address'] ?></textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -111,60 +106,49 @@ use yii\web\View;
                             <label class="control-label col-sm-3">ประเภทลูกค้า</label>
                             <div class="col-sm-7">
                                 <label class="radio-inline">
-                                    <input type="radio" name="customer-type" id="customer-type" value="GENERAL" checked> ลูกค้าทั่วไป </label>
+                                    <input type="radio" name="customer-type" id="customer-type" value="GENERAL" <?= $quotation->customer['type'] == "GENERAL" ? "checked":null?> disabled> ลูกค้าทั่วไป </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="customer-type" id="customer-type" value="INSURANCE"> บริษัทประกัน </label>
+                                    <input type="radio" name="customer-type" id="customer-type" value="INSURANCE" <?= $quotation->customer['type'] == "INSURANCE_COMP"?"checked":null?> disabled> บริษัทประกัน </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">เลขที่เคลม</label>
                             <div class="col-sm-7">
-                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>"> 
+                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>" disabled> 
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="phone">บริษัทประกัน</label>
                             <div class="col-sm-7">
-                                <select id="insurance-company" class="form-control input-sm">
-                                    <?php foreach($insuranceCompanies as $insuranceCompany): ?>
-                                        <option value="<?= $insuranceCompany->CID ?>">
-                                            <?= $insuranceCompany->fullname ?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                </select>
+                                <input type="text" disabled class="form-control input-sm" value="need to add this field"/>
+<!--                                <input type="text" value=""/>-->
                             </div>
-                            <button class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-save-file"></span> จัดการ</button>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">ความเสียหาย</label>
                             <div class="col-sm-7">
                                 <label class="radio-inline">
-                                    <input type="radio" name="damage-level" id="damage-level" value="1" checked> น้อย </label>
+                                    <input type="radio" name="damage-level" id="damage-level" value="1" <?= $quotation->damage_level=="1"?"checked":null?> disabled> น้อย </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="damage-level" id="damage-level" value="2"> ปานกลาง </label>
+                                    <input type="radio" name="damage-level" id="damage-level" value="2" <?= $quotation->damage_level=="2"?"checked":null?> disabled> ปานกลาง </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="damage-level" id="damage-level" value="3"> มาก </label>
+                                    <input type="radio" name="damage-level" id="damage-level" value="3" <?= $quotation->damage_level=="3"?"checked":null?> disabled> มาก </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="phone">ตำแหน่งการชน</label>
                             <div class="col-sm-7">
-                                <select id="damage-position" class="form-control input-sm">
-                                    <?php foreach($damagePostions as $damagePosition): ?>
-                                        <option value="<?= $damagePosition->id ?>">
-                                            <?= $damagePosition->position ?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                </select>
+                                <input type="text" disabled class="form-control input-sm" value="<?= $quotation->damagePosition['position']?>">
                             </div>
                         </div>
-                    </form>
+                    </form> 
                 </div>
             </div>
         </div>
     </div>
-    <div class="container">
-        <table class="table table-bordered" id="myTable">
+
+<div class="container">
+    <table class="table table-bordered" id="myTable">
             <thead>
                 <tr bgcolor="#000000">
                     <th class="text-white" style="color:white;">ลำดับ</th>
@@ -216,26 +200,18 @@ use yii\web\View;
                 </tr>
             </tfoot>
         </table>
-    </div>
-    <?php
-$this->registerJS('$("#plate-no").select2();', View::POS_READY);
-$str = 'function updateViecleDetail(data){ 
-    $("#viecle-name").val( data.viecle_name );
-    $("#viecle-model").val( data.viecle_model );
-    $("#year").val( data.year );
-    $("#engine-code").val( data.engine_code );
-    $("#body-code").val( data.body_code );
-    
-    $("#fullname").val( data.fullname );
-    $("#address").val( data.address );
-    $("#phone").val( data.phone );
-}';
-$this->registerJS( $str, View::POS_BEGIN);
-
-if( $viecle->plate_no != "" )
-    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>'.$viecle->plate_no.'</option>")', View::POS_READY );
-else
-    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>เลือกทะเบียนรถ</option>")', View::POS_READY );
+</div>
 
 
+<?php 
+foreach($maintenanceDescriptionModel as $maintenanceDescription){
+    $this->registerJS('globalMaintenance.push({
+        list: ' . json_encode($maintenanceDescription->description, JSON_HEX_TAG) . ',
+        price: ' . json_encode($maintenanceDescription->price, JSON_HEX_TAG) . '});', VIEW::POS_END);
+}
+foreach($partDescriptionModel as $partDescription){
+    $this->registerJS('globaPart.push({
+        list: ' . json_encode($partDescription->description, JSON_HEX_TAG) . ',
+        price: ' . json_encode($partDescription->price, JSON_HEX_TAG)  . '});', VIEW::POS_END);
+}
 ?>

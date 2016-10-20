@@ -1,6 +1,22 @@
+var globalMaintenance = [];
+var globaPart = [];
 $(document).ready(function () {
-    var maintenance = [];
-    var part = [];
+//    var maintenance = [];
+//    var part = [];
+    
+    var maintenance = globalMaintenance;
+    var part = globaPart;
+    
+    ///////////////////////////////////////////////////////
+    /* Initial calculation for edit page */
+//    console.log(maintenance);
+//    console.log(part);
+    renderTableBody();
+    calTotal();
+    updateTableIndex();
+    ///////////////////////////////////////////////////////
+    
+    
     var invoice = [];
     var id = 1;
     var list = [];
@@ -105,9 +121,7 @@ $(document).ready(function () {
         // Push data into object.
         if ($("#maintenance-list").val() != "") {
             maintenance.push({
-                row: id
-                , list: $("#maintenance-list").val()
-                , price: $("#maintenance-price").val()
+                row: id, list: $("#maintenance-list").val(), price: $("#maintenance-price").val()
             });
         }
         if ($("#part-list").val() != "") {
@@ -276,10 +290,27 @@ $(document).ready(function () {
                 , maintenance_list: maintenance
                 , part_list: part
             , }, 
-//            success: function (data) {
-//                var id = $("#quotationId").val()
-//                window.location.replace("?r=quotation/view&quotation_id=" + id);
-//            }
+            success: function (data) {
+                //console.log("Success data = ");
+                //console.log( data );
+                
+                // confirmation dialog
+                var r = confirm("บันทึกเรียบร้อย\n\rต้องการพิมพ์ใบเสนอราคาหรือไม่");
+                
+                if( r == true ){ // press OK
+                    // print quotation
+                } 
+                else{
+                    // redirect
+                    window.location.replace("?r=quotation/view&qid=" + data.QID);    
+                }
+                
+                
+                
+                //if()
+                //var id = $("#quotationId").val()
+                //window.location.replace("?r=quotation/view&quotation_id=" + id);
+            }
         });
     });
     $('#modal-save').on('hidden.bs.modal', function (e) {

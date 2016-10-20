@@ -63,6 +63,7 @@ class QuotationController extends Controller
             $viecle = Viecle::find()->where(['plate_no' => Yii::$app->request->get('plate_no')])->one();
         }
         
+        // list in combobox
         $viecleList = Viecle::find()->all();
         $damagePostions = DamagePosition::find()->all();
         $insuranceCompanies = Customer::find()->where(['type' => 'INSURANCE_COMP'])->all();
@@ -73,7 +74,6 @@ class QuotationController extends Controller
             'viecleList' => $viecleList,
             'insuranceCompanies' => $insuranceCompanies,
             'damagePostions' => $damagePostions,
-            //'descriptions' => $descriptions,
         ]);
     }
     
@@ -208,4 +208,78 @@ class QuotationController extends Controller
            }
        }
    }
+    
+    public function actionView($qid){
+        $quotation = Quotation::findOne( $qid );
+        $viecle = $quotation->viecle;
+        $descriptions = $quotation->descriptions;
+        
+        // Description
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE']);
+        $maintenanceDescriptionModel = $query->all();
+        $sumMaintenance = $query->sum('price');
+        
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART']);
+        $partDescriptionModel = $query->all();
+        $sumPart = $query->sum('price');
+        
+        $numRow = 0;
+        if(sizeof($maintenanceDescriptionModel) > sizeof($partDescriptionModel))
+            $numRow = sizeof($maintenanceDescriptionModel);
+        else
+            $numRow = sizeof($partDescriptionModel);
+        
+        return $this->render('view', [
+            'quotation' => $quotation,
+            'viecle' => $viecle,
+            'viecleList' => [],
+            'insuranceCompanies' => [],
+            'damagePostions' => [],
+            
+            // description
+            'descriptions' => $descriptions,
+            'maintenanceDescriptionModel' => $maintenanceDescriptionModel,
+            'sumMaintenance' => $sumMaintenance,
+            'partDescriptionModel' => $partDescriptionModel,
+            'sumPart' => $sumPart,
+            'numRow' => $numRow,
+        ]);
+    }
+    
+    public function actionEdit($qid){
+        $quotation = Quotation::findOne( $qid );
+        $viecle = $quotation->viecle;
+        $descriptions = $quotation->descriptions;
+        
+        // Description
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE']);
+        $maintenanceDescriptionModel = $query->all();
+        $sumMaintenance = $query->sum('price');
+        
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART']);
+        $partDescriptionModel = $query->all();
+        $sumPart = $query->sum('price');
+        
+        $numRow = 0;
+        if(sizeof($maintenanceDescriptionModel) > sizeof($partDescriptionModel))
+            $numRow = sizeof($maintenanceDescriptionModel);
+        else
+            $numRow = sizeof($partDescriptionModel);
+        
+        return $this->render('edit', [
+            'quotation' => $quotation,
+            'viecle' => $viecle,
+            'viecleList' => [],
+            'insuranceCompanies' => [],
+            'damagePostions' => [],
+            
+            // description
+            'descriptions' => $descriptions,
+            'maintenanceDescriptionModel' => $maintenanceDescriptionModel,
+            'sumMaintenance' => $sumMaintenance,
+            'partDescriptionModel' => $partDescriptionModel,
+            'sumPart' => $sumPart,
+            'numRow' => $numRow,
+        ]);
+    }
 }

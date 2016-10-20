@@ -43,7 +43,7 @@ use yii\web\View;
             <div class="form-group pull-right">
                 <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
                 <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a> |
-                <a id="btn-save" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> บันทึก </a>
+                <a id="btn-edit" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> แก้ไขรายการ </a>
                 <a id="btn-print" target="_blank" class="btn btn-success btn-sm"> <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
             </div>
         </form>
@@ -57,10 +57,7 @@ use yii\web\View;
                         <div class="form-group">
                             <label class="col-sm-3 control-label">ทะเบียน</label>
                             <div class="col-sm-4">
-                                <?=Html::DropDownList('plate_no', 0, ArrayHelper::map($viecleList, 'VID', 'plate_no'),[
-                                    'id' => 'plate-no',
-                                    'class' => 'form-control',
-                                    'onchange' => '$.post("' . Url::to(['viecle/viecle-detail']) . '", {VID: $(this).val()}, function(data){ updateViecleDetail( data ); });']) ?>
+                                <input disabled value="<?= $viecle->plate_no ?>" class="form-control input-sm">
                             </div>
                             <label class="col-sm-2 control-label">ชื่อรถ</label>
                             <div class="col-sm-3">
@@ -93,9 +90,7 @@ use yii\web\View;
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="adress">ที่อยู่</label>
                             <div class="col-sm-9">
-                                <textarea id="address" class="form-control input-sm" rows="2" readonly>
-                                    <?= $viecle->owner0['address'] ?>
-                                </textarea>
+                                <textarea id="address" class="form-control input-sm" rows="2" readonly><?= $viecle->owner0['address'] ?></textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -111,131 +106,84 @@ use yii\web\View;
                             <label class="control-label col-sm-3">ประเภทลูกค้า</label>
                             <div class="col-sm-7">
                                 <label class="radio-inline">
-                                    <input type="radio" name="customer-type" id="customer-type" value="GENERAL" checked> ลูกค้าทั่วไป </label>
+                                    <input type="radio" name="customer-type" id="customer-type" value="GENERAL" <?= $quotation->customer['type'] == "GENERAL" ? "checked":null?> disabled> ลูกค้าทั่วไป </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="customer-type" id="customer-type" value="INSURANCE"> บริษัทประกัน </label>
+                                    <input type="radio" name="customer-type" id="customer-type" value="INSURANCE" <?= $quotation->customer['type'] == "INSURANCE_COMP"?"checked":null?> disabled> บริษัทประกัน </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">เลขที่เคลม</label>
                             <div class="col-sm-7">
-                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>"> 
+                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>" disabled> 
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="phone">บริษัทประกัน</label>
                             <div class="col-sm-7">
-                                <select id="insurance-company" class="form-control input-sm">
-                                    <?php foreach($insuranceCompanies as $insuranceCompany): ?>
-                                        <option value="<?= $insuranceCompany->CID ?>">
-                                            <?= $insuranceCompany->fullname ?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                </select>
+                                <input type="text" disabled class="form-control input-sm" value="need to add this field"/>
+<!--                                <input type="text" value=""/>-->
                             </div>
-                            <button class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-save-file"></span> จัดการ</button>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">ความเสียหาย</label>
                             <div class="col-sm-7">
                                 <label class="radio-inline">
-                                    <input type="radio" name="damage-level" id="damage-level" value="1" checked> น้อย </label>
+                                    <input type="radio" name="damage-level" id="damage-level" value="1" <?= $quotation->damage_level=="1"?"checked":null?> disabled> น้อย </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="damage-level" id="damage-level" value="2"> ปานกลาง </label>
+                                    <input type="radio" name="damage-level" id="damage-level" value="2" <?= $quotation->damage_level=="2"?"checked":null?> disabled> ปานกลาง </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="damage-level" id="damage-level" value="3"> มาก </label>
+                                    <input type="radio" name="damage-level" id="damage-level" value="3" <?= $quotation->damage_level=="3"?"checked":null?> disabled> มาก </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="phone">ตำแหน่งการชน</label>
                             <div class="col-sm-7">
-                                <select id="damage-position" class="form-control input-sm">
-                                    <?php foreach($damagePostions as $damagePosition): ?>
-                                        <option value="<?= $damagePosition->id ?>">
-                                            <?= $damagePosition->position ?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                </select>
+                                <input type="text" disabled class="form-control input-sm" value="<?= $quotation->damagePosition['position']?>">
                             </div>
                         </div>
-                    </form>
+                    </form> 
                 </div>
             </div>
         </div>
     </div>
-    <div class="container">
-        <table class="table table-bordered" id="myTable">
-            <thead>
-                <tr bgcolor="#000000">
-                    <th class="text-white" style="color:white;">ลำดับ</th>
-                    <th class="col-sm-4" style="color:white;">รายการซ่อม</th>
-                    <th class="col-sm-2" style="color:white;">ราคา</th>
-                    <th></th>
-                    <th class="col-sm-4" style="color:white;">รายการอะไหล่</th>
-                    <th class="col-sm-2" style="color:white;">ราคา</th>
-                    <th></th>
-                </tr>
-                <tr id="input-row">
-                    <td></td>
-                    <td>
-                        <input class="form-control" type="text" id="maintenance-list" /> </td>
-                    <td>
-                        <input class="form-control" type="number" id="maintenance-price" /> </td>
-                    <td>
-                        <button class="btn btn-primary btn-xs" id="maintenance-add"><span class="glyphicon glyphicon-plus"></span></button>
-                    </td>
-                    <td>
-                        <input class="form-control" type="text" id="part-list" /> </td>
-                    <td>
-                        <input class="form-control" type="number" id="part-price" /> </td>
-                    <td>
-                        <button class="btn btn-primary btn-xs" id="part-add"><span class="glyphicon glyphicon-plus"></span></button>
-                    </td>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-            <tfoot>
+
+<div class="container">
+    <table class="table table-bordered" id="myTable">
+        <thead>
+            <tr bgcolor="#000000">
+                <th class="text-white" style="color:white;">ลำดับ</th>
+                <th class="col-sm-4" style="color:white;">รายการซ่อม</th>
+                <th class="col-sm-2" style="color:white;">ราคา</th>
+                <th class="col-sm-4" style="color:white;">รายการอะไหล่</th>
+                <th class="col-sm-2" style="color:white;">ราคา</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php for($i = 0; $i < $numRow; $i++):?>
                 <tr>
-                    <td></td>
-                    <td>รวมรายการซ่อม</td>
-                    <td><div id="maintenance-total"></div></td>
-                    <td></td>
-                    <td>รวมรายการอะไหล่</td>
-                    <td><div id="part-total"></div></td>
-                    <td></td>
+                    <td style="text-align: center;"><?= ($i + 1) ?></td>
+                    <td><?= isset($maintenanceDescriptionModel[$i]) ? $maintenanceDescriptionModel[$i]->description:null ?></td>
+                    <td class="text-right"><?= isset($maintenanceDescriptionModel[$i]) ? number_format( $maintenanceDescriptionModel[$i]->price, 2 ):null ?></td>
+                    <td><?= isset($partDescriptionModel[$i]) ? $partDescriptionModel[$i]->description:null ?></td>
+                    <td class="text-right"><?= isset($partDescriptionModel[$i]) ? number_format( $partDescriptionModel[$i]->price, 2 ):null ?></td>
                 </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>รวมสุทธิ</td>
-                    <td><div id="total"></div></td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-    <?php
-$this->registerJS('$("#plate-no").select2();', View::POS_READY);
-$str = 'function updateViecleDetail(data){ 
-    $("#viecle-name").val( data.viecle_name );
-    $("#viecle-model").val( data.viecle_model );
-    $("#year").val( data.year );
-    $("#engine-code").val( data.engine_code );
-    $("#body-code").val( data.body_code );
-    
-    $("#fullname").val( data.fullname );
-    $("#address").val( data.address );
-    $("#phone").val( data.phone );
-}';
-$this->registerJS( $str, View::POS_BEGIN);
-
-if( $viecle->plate_no != "" )
-    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>'.$viecle->plate_no.'</option>")', View::POS_READY );
-else
-    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>เลือกทะเบียนรถ</option>")', View::POS_READY );
-
-
-?>
+            <?php endfor; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td>รวมรายการซ่อม</td>               
+                <td><?= number_format( $sumMaintenance, 2 ) ?></td>
+                <td>รวมรายการอะไหล่</td>
+                <td><?= number_format( $sumPart, 2 ) ?></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>รวมสุทธิ</td>
+                <td><?= number_format( $sumMaintenance + $sumPart, 2 ) ?></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

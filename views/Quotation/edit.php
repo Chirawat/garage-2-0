@@ -204,6 +204,7 @@ use yii\web\View;
 
 
 <?php 
+/* 20161019: push description model into javascript object/ this method is insecure. */
 foreach($maintenanceDescriptionModel as $maintenanceDescription){
     $this->registerJS('globalMaintenance.push({
         list: ' . json_encode($maintenanceDescription->description, JSON_HEX_TAG) . ',
@@ -214,4 +215,7 @@ foreach($partDescriptionModel as $partDescription){
         list: ' . json_encode($partDescription->description, JSON_HEX_TAG) . ',
         price: ' . json_encode($partDescription->price, JSON_HEX_TAG)  . '});', VIEW::POS_END);
 }
+
+$this->registerJS('globalQid = '. $quotation->QID . ';', VIEW::POS_END);
+                   
 ?>

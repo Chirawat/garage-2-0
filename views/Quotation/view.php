@@ -147,8 +147,22 @@ use yii\web\View;
         </div>
     </div>
 
+
 <div class="container">
-    <table class="table table-bordered" id="myTable">
+    <div class="form-group">
+        <form class="form-inline">
+            <label class="form-label">ประวัติการแก้ไข</label>
+            <select class="form-control">
+                <div class="col-sm-3">
+                    <option value="1">แก้ไข 19/10/2559 (ล่าสุด)</option>
+                    <option value="1">แก้ไข 19/10/2559</option>
+                    <option value="1">แก้ไข 19/10/2559</option>
+                    <option value="1">แก้ไข 19/10/2559</option>
+                </div>
+            </select>
+        </form>
+    </div>
+    <table class="table table-bordered" id="table-edit">
         <thead>
             <tr bgcolor="#000000">
                 <th class="text-white" style="color:white;">ลำดับ</th>

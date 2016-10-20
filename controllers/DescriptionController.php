@@ -82,18 +82,18 @@ class DescriptionController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->DID]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
+//    public function actionUpdate($id)
+//    {
+//        $model = $this->findModel($id);
+//
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            return $this->redirect(['view', 'id' => $model->DID]);
+//        } else {
+//            return $this->render('update', [
+//                'model' => $model,
+//            ]);
+//        }
+//    }
 
     /**
      * Deletes an existing Description model.
@@ -141,5 +141,59 @@ class DescriptionController extends Controller
             return $row;
         }
             
+    }
+    
+    public function actionUpdate(){
+        if( Yii::$app->request->isAjax){    
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $request = Yii::$app->request;
+            $data = $request->bodyParams;
+            
+            // Maintenance
+            if(!empty($data["maintenance_list"])){
+                for($i = 0; $i < sizeOf($data["maintenance_list"]); $i++){
+                    $description = new Description();
+            
+                    $description->QID = $data["qid"];
+                    $description->description = $data["maintenance_list"][$i]["list"];
+                    $description->type = "MAINTENANCE";
+                    $description->price = $data["maintenance_list"][$i]["price"];
+                    
+                    /* update 20161019: for history of description */
+                    $description->date = date("Y-m-d");
+
+                    if( $description->validate() )
+                        $ret = $description->save();
+                    else
+                        return $description->errors;
+                }
+            }
+            
+            // Part
+            if(!empty($data["part_list"])){
+                for($i = 0; $i < sizeOf($data["part_list"]); $i++){
+                    $description = new Description();
+
+                    $description->QID = $data["qid"];
+                    $description->description = $data["part_list"][$i]["list"];
+                    $description->type = "PART";
+                    $description->price = $data["part_list"][$i]["price"];
+                    
+                    /* update 20161019: for history of description */
+                    $description->date = date("Y-m-d");
+
+                    if( $description->validate() )
+                        $ret = $description->save();
+                    else
+                        return $description->errors;
+                }
+            }
+            if( $ret ){
+               return ['status' => 'sucess', 'QID' => $QID];
+            }
+           else{
+               return ['status' => 'failed', 'error' => $ret];
+           }
+        }
     }
 }

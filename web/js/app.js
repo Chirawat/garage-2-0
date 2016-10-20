@@ -1,11 +1,14 @@
 var globalMaintenance = [];
 var globaPart = [];
+var globalQid;
 $(document).ready(function () {
 //    var maintenance = [];
 //    var part = [];
     
     var maintenance = globalMaintenance;
     var part = globaPart;
+    var qid = globalQid;
+    console.log( qid );
     
     ///////////////////////////////////////////////////////
     /* Initial calculation for edit page */
@@ -97,9 +100,9 @@ $(document).ready(function () {
             appendRow += '</tr>';
         }
         // clear table body content
-        $("table > tbody").html("");
+        $("table#myTable > tbody").html("");
         // append row
-        $("table > tbody").html(appendRow);
+        $("table#myTable > tbody").html(appendRow);
     }
 
     function enterDescription() {
@@ -280,7 +283,8 @@ $(document).ready(function () {
             alert("กรุณาเพิ่มรายการ");
             return false;
         }
-        console.log(quotation_info);
+        //console.log(quotation_info);
+        
         /* Send information to server */
         $.ajax({
             url: "index.php?r=quotation/quotation-save"
@@ -295,7 +299,7 @@ $(document).ready(function () {
                 //console.log( data );
                 
                 // confirmation dialog
-                var r = confirm("บันทึกเรียบร้อย\n\rต้องการพิมพ์ใบเสนอราคาหรือไม่");
+                var r = confirm("บันทึกเรียบร้อย\n\rต้องการพิมพ์ใบเสนอราคานี้เลยหรือไม่");
                 
                 if( r == true ){ // press OK
                     // print quotation
@@ -310,6 +314,33 @@ $(document).ready(function () {
                 //if()
                 //var id = $("#quotationId").val()
                 //window.location.replace("?r=quotation/view&quotation_id=" + id);
+            }
+        });
+    });
+     /* edit description, save button clicked */
+    $("#btn-edit-save").click( function(){
+        console.log({qid: qid,
+                maintenance_list: maintenance, 
+                part_list: part});
+        $.ajax({
+            url: "index.php?r=description/update", type: 'json', 
+            data: {
+                //quotation_info: quotation_info, 
+                qid: qid,
+                maintenance_list: maintenance, 
+                part_list: part
+            }, 
+            success: function (data) {
+                // confirmation dialog
+                var r = confirm("บันทึกเรียบร้อย\n\rต้องการพิมพ์ใบเสนอราคานี้เลยหรือไม่");
+                
+                if( r == true ){ // press OK
+                    // print quotation
+                } 
+                else{
+                    // redirect
+                    window.location.replace("?r=quotation/view&qid=" + data.QID);    
+                }
             }
         });
     });
@@ -338,6 +369,8 @@ $(document).ready(function () {
         $("#btn-print-invoice").removeClass('disabled'); // for invoice print
         $("#btn-register").addClass('disabled');
     }
+    
+    
     /////////////////////////////////////////////////////////////////////////////
     ////////////// Invoice //////////////////////////////////////////////////////
     $("#btn-add-invoice").click(function () {
@@ -414,6 +447,7 @@ $(document).ready(function () {
             }
         });
     });
+   
     $("#invoiceId").keyup(function () {
         //console.log("keyup!")
         $("#viewInovoice").removeClass('disabled');

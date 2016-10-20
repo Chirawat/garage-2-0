@@ -173,6 +173,9 @@ class QuotationController extends Controller
                     $description->description = $data["maintenance_list"][$i]["list"];
                     $description->type = "MAINTENANCE";
                     $description->price = $data["maintenance_list"][$i]["price"];
+                    
+                    /* update 20161019: for history of description */
+                    $description->date = date("Y-m-d");
 
                     if( $description->validate() )
                         $ret = $description->save();
@@ -191,6 +194,9 @@ class QuotationController extends Controller
                     $description->description = $data["part_list"][$i]["list"];
                     $description->type = "PART";
                     $description->price = $data["part_list"][$i]["price"];
+                    
+                    /* update 20161019: for history of description */
+                    $description->date = date("Y-m-d");
 
                     if( $description->validate() )
                         $ret = $description->save();

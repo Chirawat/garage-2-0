@@ -133,7 +133,6 @@ use yii\web\View;
                                         <?php endforeach; ?>
                                 </select>
                             </div>
-                            <button class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-save-file"></span> จัดการ</button>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">ความเสียหาย</label>

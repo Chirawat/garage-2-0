@@ -79,7 +79,9 @@ class QuotationController extends Controller
     
     public function actionSearch(){
         $request = Yii::$app->request;
+        ///$quotation = null;
         
+        // Search by plate no.
         if($request->post('plate_no')){
             $VID = Viecle::find()->where(['plate_no' => $request->post('plate_no')])->all();
             $quotations = Quotation::find()->where(['VID' => $VID])->all();
@@ -89,8 +91,9 @@ class QuotationController extends Controller
             ]);
         }
         
+        // Search by QID
         if( $request->post('quotation_id') ){
-            $quotations = Quotation::find()->where(['QID' => $request->post('quotation_id') ])->all();
+            $quotations = Quotation::find()->where(['quotation_id' => $request->post('quotation_id') ])->all();
             
             return $this->render('search', [
                'quotations'  => $quotations,
@@ -216,16 +219,25 @@ class QuotationController extends Controller
    }
     
     public function actionView($qid){
+        $request = Yii::$app->request;
+        
         $quotation = Quotation::findOne( $qid );
         $viecle = $quotation->viecle;
         $descriptions = $quotation->descriptions;
         
+        // find date
+        $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['did' => SORT_DESC])->all();
+        $dateIndex = 0;
+        if($request->isAjax){
+            $dateIndex = $request->post('dateIndex');
+        }
+        
         // Description
-        $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE']);
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE', 'date' => $dateLists[$dateIndex]->date ]);
         $maintenanceDescriptionModel = $query->all();
         $sumMaintenance = $query->sum('price');
         
-        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART']);
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART', 'date' => $dateLists[$dateIndex]->date]);
         $partDescriptionModel = $query->all();
         $sumPart = $query->sum('price');
         
@@ -234,7 +246,7 @@ class QuotationController extends Controller
             $numRow = sizeof($maintenanceDescriptionModel);
         else
             $numRow = sizeof($partDescriptionModel);
-        
+               
         return $this->render('view', [
             'quotation' => $quotation,
             'viecle' => $viecle,
@@ -249,6 +261,9 @@ class QuotationController extends Controller
             'partDescriptionModel' => $partDescriptionModel,
             'sumPart' => $sumPart,
             'numRow' => $numRow,
+            
+            'dateLists' => $dateLists,
+            'dateIndex' => $dateIndex,
         ]);
     }
     

@@ -196,4 +196,13 @@ class DescriptionController extends Controller
            }
         }
     }
+    
+    public function actionDescHistory($date){
+        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $descriptions = Description::find()->where(['date' => $date])->all();
+        
+        echo 'console.log("test")';
+        
+        //return $descriptions;
+    }
 }

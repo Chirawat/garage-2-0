@@ -6,6 +6,8 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\jui\AutoComplete;
 use yii\web\View;
+use yii\widgets\Pjax;
+use yii\widgets\ActiveForm;
 ?>
     <div class="modal fade" id="customer" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -146,22 +148,24 @@ use yii\web\View;
             </div>
         </div>
     </div>
-
-
-<div class="container">
-    <div class="form-group">
-        <form class="form-inline">
-            <label class="form-label">ประวัติการแก้ไข</label>
-            <select class="form-control">
-                <div class="col-sm-3">
-                    <option value="1">แก้ไข 19/10/2559 (ล่าสุด)</option>
-                    <option value="1">แก้ไข 19/10/2559</option>
-                    <option value="1">แก้ไข 19/10/2559</option>
-                    <option value="1">แก้ไข 19/10/2559</option>
-                </div>
-            </select>
-        </form>
-    </div>
+    
+    <?php Pjax::begin(); ?>
+    <div class="container">
+        <div class="form-group">
+            <?php $form = ActiveForm::begin(['options' => [
+                'data-pjax' => true,
+                'class' => 'form-inline']]) ?>
+                <label class="form-label">ประวัติการแก้ไข</label>
+                <select id="history-date" name="dateIndex" class="form-control input-sm">
+                    <div class="col-sm-3">
+                        <?php $i= 0; foreach($dateLists as $date): ?>
+                            <option value="<?= $i ?>" <?= $i==$dateIndex?"selected":null?> ><?= $date->date ?> <?= $i==0 ? "(ล่าสุด)":null ?></option>
+                        <?php $i++; endforeach; ?>
+                    </div>
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm">ค้น</button>
+            <?php ActiveForm::end() ?>
+        </div>
     <table class="table table-bordered" id="table-edit">
         <thead>
             <tr bgcolor="#000000">
@@ -200,4 +204,6 @@ use yii\web\View;
             </tr>
         </tfoot>
     </table>
+    
 </div>
+<?php Pjax::end(); ?>

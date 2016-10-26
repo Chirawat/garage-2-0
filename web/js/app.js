@@ -369,7 +369,13 @@ $(document).ready(function () {
         $("#btn-print-invoice").removeClass('disabled'); // for invoice print
         $("#btn-register").addClass('disabled');
     }
-    
+//    $("#history-date").change( function(){
+//        //console.log( $("#history-date option:selected").text() ) ;
+//        var tableUpdate =   $.post('?r=description/desc-history&date=' + $("#history-date option:selected").val(), function(){
+//            //console.log("success");
+//            $("#table-edit->tbody").html("");
+//        });
+//    });
     
     /////////////////////////////////////////////////////////////////////////////
     ////////////// Invoice //////////////////////////////////////////////////////

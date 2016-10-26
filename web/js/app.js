@@ -2,24 +2,20 @@ var globalMaintenance = [];
 var globaPart = [];
 var globalQid;
 $(document).ready(function () {
-//    var maintenance = [];
-//    var part = [];
-    
+    //    var maintenance = [];
+    //    var part = [];
     var maintenance = globalMaintenance;
     var part = globaPart;
     var qid = globalQid;
-    console.log( qid );
-    
+    console.log(qid);
     ///////////////////////////////////////////////////////
     /* Initial calculation for edit page */
-//    console.log(maintenance);
-//    console.log(part);
+    //    console.log(maintenance);
+    //    console.log(part);
     renderTableBody();
     calTotal();
     updateTableIndex();
     ///////////////////////////////////////////////////////
-    
-    
     var invoice = [];
     var id = 1;
     var list = [];
@@ -52,13 +48,12 @@ $(document).ready(function () {
             enterDescription();
         }
     });
-    $("#maintenance-add").click( function () {
+    $("#maintenance-add").click(function () {
         enterDescription();
     });
-    $("#part-add").click( function () {
+    $("#part-add").click(function () {
         enterDescription();
     });
-    
 
     function renderTableBody() {
         /* append row when plus button clicked  */
@@ -124,7 +119,9 @@ $(document).ready(function () {
         // Push data into object.
         if ($("#maintenance-list").val() != "") {
             maintenance.push({
-                row: id, list: $("#maintenance-list").val(), price: $("#maintenance-price").val()
+                row: id
+                , list: $("#maintenance-list").val()
+                , price: $("#maintenance-price").val()
             });
         }
         if ($("#part-list").val() != "") {
@@ -284,7 +281,6 @@ $(document).ready(function () {
             return false;
         }
         //console.log(quotation_info);
-        
         /* Send information to server */
         $.ajax({
             url: "index.php?r=quotation/quotation-save"
@@ -293,53 +289,50 @@ $(document).ready(function () {
                 quotation_info: quotation_info
                 , maintenance_list: maintenance
                 , part_list: part
-            , }, 
-            success: function (data) {
+            , }
+            , success: function (data) {
                 //console.log("Success data = ");
                 //console.log( data );
-                
                 // confirmation dialog
                 var r = confirm("บันทึกเรียบร้อย\n\rต้องการพิมพ์ใบเสนอราคานี้เลยหรือไม่");
-                
-                if( r == true ){ // press OK
+                if (r == true) { // press OK
                     // print quotation
-                } 
-                else{
-                    // redirect
-                    window.location.replace("?r=quotation/view&qid=" + data.QID);    
                 }
-                
-                
-                
+                else {
+                    // redirect
+                    window.location.replace("?r=quotation/view&qid=" + data.QID);
+                }
                 //if()
                 //var id = $("#quotationId").val()
                 //window.location.replace("?r=quotation/view&quotation_id=" + id);
             }
         });
     });
-     /* edit description, save button clicked */
-    $("#btn-edit-save").click( function(){
-        console.log({qid: qid,
-                maintenance_list: maintenance, 
-                part_list: part});
+    /* edit description, save button clicked */
+    $("#btn-edit-save").click(function () {
+        console.log({
+            qid: qid
+            , maintenance_list: maintenance
+            , part_list: part
+        });
         $.ajax({
-            url: "index.php?r=description/update", type: 'json', 
-            data: {
+            url: "index.php?r=description/update"
+            , type: 'json'
+            , data: {
                 //quotation_info: quotation_info, 
-                qid: qid,
-                maintenance_list: maintenance, 
-                part_list: part
-            }, 
-            success: function (data) {
+                qid: qid
+                , maintenance_list: maintenance
+                , part_list: part
+            }
+            , success: function (data) {
                 // confirmation dialog
                 var r = confirm("บันทึกเรียบร้อย\n\rต้องการพิมพ์ใบเสนอราคานี้เลยหรือไม่");
-                
-                if( r == true ){ // press OK
+                if (r == true) { // press OK
                     // print quotation
-                } 
-                else{
+                }
+                else {
                     // redirect
-                    window.location.replace("?r=quotation/view&qid=" + data.QID);    
+                    window.location.replace("?r=quotation/view&qid=" + data.QID);
                 }
             }
         });
@@ -357,18 +350,24 @@ $(document).ready(function () {
     $("#quotation-claim_no").keyup(function () {
         $("#btn-save").removeClass('disabled');
     });
-    $("#btn-print").click(function () {
-        var quotationId = $("#quotationId").val();
-        var hrefStr = "index.php?r=quotation/report&quotation_id=" + quotationId;
-        $("#btn-print").attr("href", hrefStr);
-        //console.log();
-    });
-    var pathname = window.location.href;
-    if (pathname.indexOf("view") != -1) {
-        $("#btn-print").removeClass('disabled');
-        $("#btn-print-invoice").removeClass('disabled'); // for invoice print
-        $("#btn-register").addClass('disabled');
+
+    function getUrlVars() {
+        var vars = []
+            , hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
     }
+    $("#btn-print").click(function () {
+        var qid = getUrlVars()["qid"];
+        var hrefStr = "index.php?r=quotation/report&qid=" + qid;
+        
+        $("#btn-print").attr("href", hrefStr);
+    });
 //    $("#history-date").change( function(){
 //        //console.log( $("#history-date option:selected").text() ) ;
 //        var tableUpdate =   $.post('?r=description/desc-history&date=' + $("#history-date option:selected").val(), function(){
@@ -376,17 +375,16 @@ $(document).ready(function () {
 //            $("#table-edit->tbody").html("");
 //        });
 //    });
-    
-    /////////////////////////////////////////////////////////////////////////////
-    ////////////// Invoice //////////////////////////////////////////////////////
-    $("#btn-add-invoice").click(function () {
-        // check, empty?
-        if ($("#maintenance-list").val() == "") {
-            alert("กรุณาป้อนรายการ");
-            return false;
-        }
-        // prepare append row.
-        var appendRow = '<tr id=' + id + '> \
+/////////////////////////////////////////////////////////////////////////////
+////////////// Invoice //////////////////////////////////////////////////////
+$("#btn-add-invoice").click(function () {
+    // check, empty?
+    if ($("#maintenance-list").val() == "") {
+        alert("กรุณาป้อนรายการ");
+        return false;
+    }
+    // prepare append row.
+    var appendRow = '<tr id=' + id + '> \
             <td style="text-align: center;">' + id + '</td> \
             <td>' + $("#maintenance-list").val() + '</td> \
             <td style="text-align: right;">' + $("#maintenance-price").val() + '</td> \
@@ -395,76 +393,70 @@ $(document).ready(function () {
                     <span class="glyphicon glyphicon-remove"></span> \
                 </button> \
             </td></tr>';
-        $("table > tbody").append(appendRow);
-        // Push data into object.
-        if ($("#maintenance-list").val() != "") {
-            invoice.push({
-                row: id
-                , list: $("#maintenance-list").val()
-                , price: $("#maintenance-price").val()
-            });
-        }
-        // Cal total
-        calTotalInvoice();
-        // clear text box value
-        $("#maintenance-list").val("");
-        $("#maintenance-price").val("");
-        id++;
-    });
-    $("table#myTable").on("click", "#btn-del-invoice", function (event) {
-        var closestRow = $(this).closest("tr");
-        // remove row
-        closestRow.remove();
-        // calulate total
-        updateTableIndex();
-    });
-
-    function calTotalInvoice() {
-        var total_invoice = 0;
-        for (var i = 0, len = invoice.length; i < len; i++) {
-            total_invoice += parseFloat(invoice[i].price);
-        }
-        // update DOM
-        var total = total_invoice.toFixed(2);
-        $("#invoice-total").text(formatMoney(total_invoice, 2));
-        var vat = total_invoice * 0.07;
-        $("#invoice-tax").text(formatMoney(vat));
-        var grandTotal = total_invoice + vat;
-        $("#invoice-grand-total").text(formatMoney(grandTotal));
-    };
-    $("#maintenance-list").keyup(function () {
-        //console.log("pressed");
-        $("#btn-save-invoice").removeClass('disabled');
-    });
-    $("#btn-save-invoice").on("click", function (event, ui) {
-        // error, customer cannot be blank!
-        if ($("#customer").val() == "") window.alert("ต้องเลือกลูกค้าก่อน");
-        $.ajax({
-            url: "index.php?r=invoice/create"
-            , type: 'json'
-            , data: {
-                customer: $("#customer").val()
-                , invoice_id: $("#invoiceId").val()
-                , invoice_description: invoice
-            }
-            , success: function (data) {
-                var id = $("#quotationId").val();
-                //window.location.replace("?r=invoice/view");
-            }
+    $("table > tbody").append(appendRow);
+    // Push data into object.
+    if ($("#maintenance-list").val() != "") {
+        invoice.push({
+            row: id
+            , list: $("#maintenance-list").val()
+            , price: $("#maintenance-price").val()
         });
-    });
-   
-    $("#invoiceId").keyup(function () {
-        //console.log("keyup!")
-        $("#viewInovoice").removeClass('disabled');
-    });
-    $("#viewInovoice").click(function () {
-        window.location.replace("?r=invoice/view&invoice_id=" + $("#invoiceId").val());
-    });
+    }
+    // Cal total
+    calTotalInvoice();
+    // clear text box value
+    $("#maintenance-list").val("");
+    $("#maintenance-price").val("");
+    id++;
+}); $("table#myTable").on("click", "#btn-del-invoice", function (event) {
+    var closestRow = $(this).closest("tr");
+    // remove row
+    closestRow.remove();
+    // calulate total
+    updateTableIndex();
+});
 
-    function formatMoney(n, c, d, t) {
-        //var n = this, 
-        c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "." : d, t = t == undefined ? "," : t, s = n < 0 ? "-" : "", i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), j = (j = i.length) > 3 ? j % 3 : 0;
-        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-    };
+function calTotalInvoice() {
+    var total_invoice = 0;
+    for (var i = 0, len = invoice.length; i < len; i++) {
+        total_invoice += parseFloat(invoice[i].price);
+    }
+    // update DOM
+    var total = total_invoice.toFixed(2);
+    $("#invoice-total").text(formatMoney(total_invoice, 2));
+    var vat = total_invoice * 0.07;
+    $("#invoice-tax").text(formatMoney(vat));
+    var grandTotal = total_invoice + vat;
+    $("#invoice-grand-total").text(formatMoney(grandTotal));
+}; $("#maintenance-list").keyup(function () {
+    //console.log("pressed");
+    $("#btn-save-invoice").removeClass('disabled');
+}); $("#btn-save-invoice").on("click", function (event, ui) {
+    // error, customer cannot be blank!
+    if ($("#customer").val() == "") window.alert("ต้องเลือกลูกค้าก่อน");
+    $.ajax({
+        url: "index.php?r=invoice/create"
+        , type: 'json'
+        , data: {
+            customer: $("#customer").val()
+            , invoice_id: $("#invoiceId").val()
+            , invoice_description: invoice
+        }
+        , success: function (data) {
+            var id = $("#quotationId").val();
+            //window.location.replace("?r=invoice/view");
+        }
+    });
+}); $("#invoiceId").keyup(function () {
+    //console.log("keyup!")
+    $("#viewInovoice").removeClass('disabled');
+}); $("#viewInovoice").click(function () {
+    window.location.replace("?r=invoice/view&invoice_id=" + $("#invoiceId").val());
+});
+
+function formatMoney(n, c, d, t) {
+    //var n = this, 
+    c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "." : d, t = t == undefined ? "," : t, s = n < 0 ? "-" : "", i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
 });

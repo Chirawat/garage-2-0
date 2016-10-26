@@ -13,8 +13,7 @@ use app\models\Viecle;
 use app\models\Description;
 use yii\db\Query;
 use yii\Helpers\ArrayHelper;
-
-
+use kartik\mpdf\Pdf;
 
 class QuotationController extends Controller
 {
@@ -302,5 +301,92 @@ class QuotationController extends Controller
             'sumPart' => $sumPart,
             'numRow' => $numRow,
         ]);
+    }
+    
+    public function actionReport($qid) {
+        $request = Yii::$app->request;
+        
+        $qid = Quotation::findOne($qid);
+        
+        // Quotation
+        $model = Quotation::find()->where(['QID' => $qid])->one();
+        
+        // Customer
+        $customerModel = Customer::find()->where(['CID' => $model->CID])->one();
+        
+        // Viecle
+        $viecleModel = Viecle::find()->where(['VID' => $model->VID])->one();
+        
+        // find date
+        $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['did' => SORT_DESC])->all();
+        $dateIndex = 0;
+        if($request->isAjax){
+            $dateIndex = $request->post('dateIndex');
+        }
+        
+        // Description
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE', 'date' => $dateLists[$dateIndex]->date ]);
+        $maintenanceDescriptionModel = $query->all();
+        $sumMaintenance = $query->sum('price');
+        
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART', 'date' => $dateLists[$dateIndex]->date]);
+        $partDescriptionModel = $query->all();
+        $sumPart = $query->sum('price');
+        
+        $numRow = 0;
+        if(sizeof($maintenanceDescriptionModel) > sizeof($partDescriptionModel))
+            $numRow = sizeof($maintenanceDescriptionModel);
+        else
+            $numRow = sizeof($partDescriptionModel);
+        
+        
+
+        //////////////// REPORT PROCEDURE ////////////////////////////////////////
+        $content = $this->renderPartial('report',[
+            'model' => $model,
+            'customerModel' => $customerModel,
+            'viecleModel' => $viecleModel,
+            
+            'maintenanceDescriptionModel' => $maintenanceDescriptionModel,
+            'sumMaintenance' => $sumMaintenance,
+            'partDescriptionModel' => $partDescriptionModel,
+            'sumPart' => $sumPart,
+            'numRow' => $numRow,
+        ]);
+
+        // setup kartik\mpdf\Pdf component
+        $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_UTF8, 
+        // A4 paper format
+        'format' => Pdf::FORMAT_A4, 
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_PORTRAIT, 
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER, 
+        // your html content input
+        'content' => $content,  
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting 
+        'cssFile' => '@app/web/css/pdf.css',
+        // any css to be embedded if required
+        //        'cssInline' => '.kv-heading-1{font-size:18px}', 
+        // set mPDF properties on the fly
+        'options' => ['title' => 'ใบเสนอราคา'],
+        // call mPDF methods on the fly
+        'methods' => [ 
+            //'SetHeader'=>['Krajee Report Header'], 
+            'SetFooter'=>['หน้า {PAGENO} / {nb}'],
+            ]
+        ]);
+
+        $pdf->configure(array(
+            'defaultfooterline' => '0', 
+            'defaultfooterfontstyle' => 'R',
+            'defaultfooterfontsize' => '10',
+        ));
+
+        // return the pdf output as per the destination setting
+        return $pdf->render(); 
     }
 }

@@ -93,9 +93,7 @@ use yii\web\View;
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="adress">ที่อยู่</label>
                             <div class="col-sm-9">
-                                <textarea id="address" class="form-control input-sm" rows="2" readonly>
-                                    <?= $viecle->owner0['address'] ?>
-                                </textarea>
+                                <textarea id="address" class="form-control input-sm" rows="2" readonly><?= $viecle->owner0['address'] ?></textarea>
                             </div>
                         </div>
                         <div class="form-group">

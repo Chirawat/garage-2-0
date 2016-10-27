@@ -56,6 +56,9 @@ class QuotationController extends Controller
     public function actionIndex()
     {
         $quotation = new Quotation();
+        $quotationId = Quotation::find()->where(['YEAR(quotation_date)' => date('Y')])->count() + 1;
+        $quotationId = $quotationId . "/" . (date('Y') + 543);
+        
         $viecle = new Viecle();
         
         if( Yii::$app->request->get('plate_no') ){
@@ -73,6 +76,7 @@ class QuotationController extends Controller
             'viecleList' => $viecleList,
             'insuranceCompanies' => $insuranceCompanies,
             'damagePostions' => $damagePostions,
+            'quotationId' => $quotationId,
         ]);
     }
     
@@ -83,7 +87,7 @@ class QuotationController extends Controller
         // Search by plate no.
         if($request->post('plate_no')){
             $VID = Viecle::find()->where(['plate_no' => $request->post('plate_no')])->all();
-            $quotations = Quotation::find()->where(['VID' => $VID])->all();
+            $quotations = Quotation::find()->where(['VID' => $VID])->orderBy(['qid' => SORT_DESC])->all();
             
             return $this->render('search', [
                'quotations'  => $quotations,
@@ -137,7 +141,9 @@ class QuotationController extends Controller
            
            
            // quotation id
-            //$quotation->quotation_id = $data["quotation_info"]["quotationId"];;
+           $quotationId = Quotation::find()->where(['YEAR(quotation_date)' => date('Y')])->count() + 1;
+           $quotationId = $quotationId . "/" . (date('Y') + 543);
+           $quotation->quotation_id = $quotationId;
 
            // quotation date
            $quotation->quotation_date = date("Y-m-d");

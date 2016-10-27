@@ -36,10 +36,10 @@ use yii\web\View;
         <form class="form-inline">
             <div class="form-group">
                 <label class="form-label">เลขที่</label>
-                <input type="text" class="form-control input-sm" readonly value="1/2559"> </div>
+                <input type="text" class="form-control input-sm" readonly value="<?= $quotationId ?>"> </div>
             <div class="form-group">
                 <label class="form-label">วันที่</label>
-                <input type="text" class="form-control input-sm" readonly value="1/10/2559"> </div>
+                <input type="text" class="form-control input-sm" readonly value="<?= date('d/m/') . (date('Y')+543) ?>"> </div>
             <div class="form-group pull-right">
                 <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
                 <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a> |

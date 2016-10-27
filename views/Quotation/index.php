@@ -115,12 +115,6 @@ use yii\web\View;
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3">เลขที่เคลม</label>
-                            <div class="col-sm-7">
-                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>"> 
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-sm-3 control-label" for="phone">บริษัทประกัน</label>
                             <div class="col-sm-7">
                                 <select id="insurance-company" class="form-control input-sm">
@@ -130,6 +124,12 @@ use yii\web\View;
                                         </option>
                                         <?php endforeach; ?>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">เลขที่เคลม</label>
+                            <div class="col-sm-7">
+                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>"> 
                             </div>
                         </div>
                         <div class="form-group">

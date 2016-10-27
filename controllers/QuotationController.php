@@ -319,8 +319,11 @@ class QuotationController extends Controller
         
         // find date
         $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['did' => SORT_DESC])->all();
+        
         if( $dateIndex == null)
             $dateIndex = 0;
+        
+        $dt = date_create($dateLists[$dateIndex]->date);
         //if($request->isAjax){
             //$dateIndex = $request->get('dateIndex');
             //$dateIndex = $dateIndex_t;
@@ -354,6 +357,8 @@ class QuotationController extends Controller
             'partDescriptionModel' => $partDescriptionModel,
             'sumPart' => $sumPart,
             'numRow' => $numRow,
+            
+            'dt' => date_format($dt, "Y/m/d") , // 20161027 date in quotation should be description's date
         ]);
 
         // setup kartik\mpdf\Pdf component

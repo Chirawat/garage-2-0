@@ -33,7 +33,7 @@ function DateThai($strDate){
     <h3 class="header">ใบเสนอราคา</h3>
     <table width="100%">
         <tr>
-            <td class="text-right">วันที่ <?= DateThai($model->quotation_date) ?></td>
+            <td class="text-right">วันที่ <?= DateThai($dt) ?></td>
         </tr>
         <tr>
             <td><?= $customerModel->fullname ?> เลขที่เคลม <?= $model->claim_no ?></td>

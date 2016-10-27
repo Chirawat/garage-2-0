@@ -329,6 +329,7 @@ $(document).ready(function () {
                 var r = confirm("บันทึกเรียบร้อย\n\rต้องการพิมพ์ใบเสนอราคานี้เลยหรือไม่");
                 if (r == true) { // press OK
                     // print quotation
+                    window.location.replace("?r=quotation/report&qid=" + data.QID);
                 }
                 else {
                     // redirect

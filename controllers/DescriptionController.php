@@ -149,6 +149,8 @@ class DescriptionController extends Controller
             $request = Yii::$app->request;
             $data = $request->bodyParams;
             
+            $dt = date('Y-m-d H:i:s');
+            
             // Maintenance
             if(!empty($data["maintenance_list"])){
                 for($i = 0; $i < sizeOf($data["maintenance_list"]); $i++){
@@ -160,7 +162,7 @@ class DescriptionController extends Controller
                     $description->price = $data["maintenance_list"][$i]["price"];
                     
                     /* update 20161019: for history of description */
-                    $description->date = date("Y-m-d");
+                    $description->date = $dt;
 
                     if( $description->validate() )
                         $ret = $description->save();
@@ -180,7 +182,7 @@ class DescriptionController extends Controller
                     $description->price = $data["part_list"][$i]["price"];
                     
                     /* update 20161019: for history of description */
-                    $description->date = date("Y-m-d");
+                    $description->date = $dt;
 
                     if( $description->validate() )
                         $ret = $description->save();
@@ -189,7 +191,7 @@ class DescriptionController extends Controller
                 }
             }
             if( $ret ){
-               return ['status' => 'sucess', 'QID' => $QID];
+               return ['status' => 'sucess', 'QID' => $data["qid"]];
             }
            else{
                return ['status' => 'failed', 'error' => $ret];

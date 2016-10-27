@@ -364,7 +364,8 @@ $(document).ready(function () {
     }
     $("#btn-print").click(function () {
         var qid = getUrlVars()["qid"];
-        var hrefStr = "index.php?r=quotation/report&qid=" + qid;
+        var dateIndex = $("#history-date").val();
+        var hrefStr = "index.php?r=quotation/report&qid=" + qid + "&dateIndex=" + dateIndex;
         
         $("#btn-print").attr("href", hrefStr);
     });

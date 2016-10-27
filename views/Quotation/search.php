@@ -7,20 +7,17 @@ use yii\web\View;
 $this->title = "ค้นหาใบเสนอราคา";
 ?>
 <div class="col-sm-4">
-    <?php ActiveForm::begin(); ?>
+    <?php ActiveForm::begin(['options' => ['class' => 'form-inline']]); ?>
     
     <div class="form-group">
         <label>เลขทะเบียน</label>
         <?= Html::input('text', 'plate_no', '', ['class' => 'form-control']) ?>
     </div>
-    
     <div class="form-group">
-        <label>เลขที่ใบเสนอราคา</label>
-        <?= Html::input('text', 'quotation_id', null, ['class' => 'form-control']) ?>
+        <button type="submit" class="btn btn-primary">ค้นหา</button>
     </div>
-    
-    <button type="submit" class="btn btn-primary">ค้นหา</button>
     <?php ActiveForm::end(); ?>
+    <br>
 </div>
 <?php if( isset($quotations) && sizeof($quotations) > 1 ): ?>
     <div class="col-sm-12">

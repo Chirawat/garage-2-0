@@ -303,7 +303,7 @@ class QuotationController extends Controller
         ]);
     }
     
-    public function actionReport($qid) {
+    public function actionReport($qid, $dateIndex = null) {
         $request = Yii::$app->request;
         
         $qid = Quotation::findOne($qid);
@@ -319,10 +319,12 @@ class QuotationController extends Controller
         
         // find date
         $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['did' => SORT_DESC])->all();
-        $dateIndex = 0;
-        if($request->isAjax){
-            $dateIndex = $request->post('dateIndex');
-        }
+        if( $dateIndex == null)
+            $dateIndex = 0;
+        //if($request->isAjax){
+            //$dateIndex = $request->get('dateIndex');
+            //$dateIndex = $dateIndex_t;
+        //}
         
         // Description
         $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE', 'date' => $dateLists[$dateIndex]->date ]);

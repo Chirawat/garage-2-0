@@ -114,16 +114,15 @@ use yii\widgets\ActiveForm;
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3">เลขที่เคลม</label>
+                            <label class="col-sm-3 control-label" for="phone">ลูกค้า</label>
                             <div class="col-sm-7">
-                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>" disabled> 
+                                <input type="text" disabled class="form-control input-sm" value="<?=$quotation->customer['fullname']?>"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="phone">บริษัทประกัน</label>
+                            <label class="control-label col-sm-3">เลขที่เคลม</label>
                             <div class="col-sm-7">
-                                <input type="text" disabled class="form-control input-sm" value="need to add this field"/>
-<!--                                <input type="text" value=""/>-->
+                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>" disabled> 
                             </div>
                         </div>
                         <div class="form-group">

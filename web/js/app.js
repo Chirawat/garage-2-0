@@ -333,7 +333,7 @@ $(document).ready(function () {
                 if (r == true) { // press OK
                     // print quotation
                     window.open(
-                      '?r=quotation/report&qid=" + data.QID',
+                      '?r=quotation/report&qid=' + data.QID,
                       '_blank' // <- This is what makes it open in a new window.
                     );
                 }

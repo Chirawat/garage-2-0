@@ -23,7 +23,7 @@ use yii\widgets\Pjax;
     <div class="section">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <?= Html::beginForm(['viecle/detail'], 'get') ?>
                         <div class="form-group">
                             <label class="control-label" for="plate_id">ทะเบียนรถ</label>

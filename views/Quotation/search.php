@@ -21,12 +21,15 @@ $this->title = "ค้นหาใบเสนอราคา";
 </div>
 <?php if( isset($quotations) && sizeof($quotations) > 1 ): ?>
     <div class="col-sm-12">
+        <div class="alert alert-success" role="alert"> พบข้อมูลจำนวน <?= sizeof($quotations) ?> รายการ </div>
+    </div>
+    <div class="col-sm-12">
         <table width="100%" class="table table-hover" id="search-table">
             <tbody>
                 <tr>
-                    <th width="10%">#</th>
-                    <th width="20%">เลขที่เคลม</th>
-                    <th width="20%">วันที่</th>
+                    <th>#</th>
+                    <th>เลขที่เคลม</th>
+                    <th>วันที่</th>
                 </tr>
                 <?php foreach($quotations as $quotation): ?>
                     <tr data-href="<?= Url::to(['quotation/view', 'qid' => $quotation->QID ]) ?>" style="cursor: pointer;">
@@ -37,6 +40,14 @@ $this->title = "ค้นหาใบเสนอราคา";
                 <?php endforeach; ?>
             </tbody>
         </table>
+    </div>
+<?php endif; ?>
+
+
+<!--In case of not found-->
+<?php if(isset($status) && $status == 'failed'):?>
+    <div class="col-sm-12">
+        <div class="alert alert-danger" role="alert"> <strong>ไม่พบข้อมูล!</strong> ไม่มีประวัติรถในฐานข้อมูล </div>
     </div>
 <?php endif; ?>
 

@@ -89,20 +89,19 @@ class QuotationController extends Controller
             $VID = Viecle::find()->where(['plate_no' => $request->post('plate_no')])->all();
             $quotations = Quotation::find()->where(['VID' => $VID])->orderBy(['qid' => SORT_DESC])->all();
             
-            return $this->render('search', [
-               'quotations'  => $quotations,
-            ]);
-        }
-        
-        // Search by QID
-        if( $request->post('quotation_id') ){
-            $quotations = Quotation::find()->where(['quotation_id' => $request->post('quotation_id') ])->all();
+            if( !empty($quotations) )
+                return $this->render('search', [
+                   'quotations'  => $quotations,
+                    'status' => 'success',
+                ]);
             
-            return $this->render('search', [
-               'quotations'  => $quotations,
-            ]); 
+            else
+                return $this->render('search', [
+                   'quotations'  => $quotations,
+                    'status' => 'failed',
+                ]);
         }
-        
+                
         return $this->render('search');
     }
     
@@ -183,7 +182,7 @@ class QuotationController extends Controller
                     $description->price = $data["maintenance_list"][$i]["price"];
                     
                     /* update 20161019: for history of description */
-                    $description->date = date("Y-m-d");
+                    $description->date = date('Y-m-d H:i:s');
 
                     if( $description->validate() )
                         $ret = $description->save();
@@ -204,7 +203,7 @@ class QuotationController extends Controller
                     $description->price = $data["part_list"][$i]["price"];
                     
                     /* update 20161019: for history of description */
-                    $description->date = date("Y-m-d");
+                    $description->date = date('Y-m-d H:i:s');
 
                     if( $description->validate() )
                         $ret = $description->save();

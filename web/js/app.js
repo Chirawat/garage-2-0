@@ -367,11 +367,16 @@ $(document).ready(function () {
         return vars;
     }
     $("#btn-print").click(function () {
-        var qid = getUrlVars()["qid"];
-        var dateIndex = $("#history-date").val();
-        var hrefStr = "index.php?r=quotation/report&qid=" + qid + "&dateIndex=" + dateIndex;
-        
-        $("#btn-print").attr("href", hrefStr);
+        if( maintenance.length != 0 || part.length != 0){
+            var qid = getUrlVars()["qid"];
+            var dateIndex = $("#history-date").val();
+            var hrefStr = "index.php?r=quotation/report&qid=" + qid + "&dateIndex=" + dateIndex;
+
+            $("#btn-print").attr("href", hrefStr);
+        }
+        else{
+            alert("กรุณาใส่รายละเอียดใบเสนอราคา");
+        }
     });
 //    $("#history-date").change( function(){
 //        //console.log( $("#history-date option:selected").text() ) ;

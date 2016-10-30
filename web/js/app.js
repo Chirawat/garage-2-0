@@ -403,6 +403,37 @@ $(document).ready(function () {
     $("#customer-type").change( function(){
         console.log("test");
     });
+    $("#auto-generate").click( function(){
+        /* Empty object */
+        while(maintenance.length > 0)
+            maintenance.pop();
+        
+        while(part.length > 0)
+            part.pop();
+        
+        /* Get description */
+        $.get("index.php/?r=description/auto-generated", {
+            vid: $("#plate-no").val(), 
+            damageLevel: $("#damage-level:checked").val(), 
+            damagePos: $("#damage-position").val()
+        }, function( data ){
+            //console.log( data.MAINTENANCE );
+            /* Push data and render table*/
+            for(var key in data.MAINTENANCE){
+                var obj = data.MAINTENANCE[key];
+                maintenance.push({ list: obj.description, price: obj.price })
+            }
+            
+            for(var key in data.PART){
+                var obj = data.PART[key];
+                part.push({ list: obj.description, price: obj.price })
+            }
+                renderTableBody();
+                calTotal();
+                updateTableIndex();
+                
+        } );
+    });
 /////////////////////////////////////////////////////////////////////////////
 ////////////// Invoice //////////////////////////////////////////////////////
 $("#btn-add-invoice").click(function () {

@@ -155,6 +155,11 @@ use yii\web\View;
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-sm-7 col-sm-offset-3">
+                                <a id="auto-generate" class="btn btn-primary btn-sm">สร้างรายการอัติโนมัติ</a>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

@@ -5,6 +5,8 @@ namespace app\controllers;
 use Yii;
 use app\models\Description;
 use app\models\DescriptionSearch;
+use app\models\Viecle;
+use app\models\Quotation;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -124,21 +126,51 @@ class DescriptionController extends Controller
         }
     }
     
-    public function actionDescriptionList( $term = null ){
+    public function actionDescriptionList( $term = null, $vid = null ){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if (!is_null($term)) {
             $query = new Query;
+            
+            // viecle model
+            $viecle = Viecle::findOne($vid);
+            $viecleModel = $viecle->viecleModel;
+            
+            // find viecle with the same model
+            $viecles = Viecle::find()->where(['viecle_model' => $viecleModel])->all();
 
-            $subQuery = Description::find()->select('description')->distinct()->where(['like', 'description', $term]);
-
-            $maxId = Description::find()->select("MAX(did)")->from('description')->where(['in', 'description', $subQuery])->groupBy('description');
-
-            $descriptionList = $query->select(["did AS key", "description AS value", 'price'])->from('description')->where(['in', 'did', $maxId]);
-
-            $row = $descriptionList->all();
-
-
-            return $row;
+            // Make a list of descriptions and prices
+            $descriptions = [];
+            foreach($viecles as $viecle){
+                //$descriptions = $viecles->getQuotations()->getDescriptions()->all();
+                $quotations = $viecle->quotations;
+                foreach($quotations as $quotation){
+                    foreach($quotation->getDescriptions()->where(['like', 'description', $term])->orderBy(['DID' => SORT_DESC])->all() as $des){
+                        array_push($descriptions, $des);
+                    }
+                }
+            }
+            
+            $des_price =  ArrayHelper::getColumn($descriptions, function($elements){
+                return [
+                    'DID' => $elements['DID'], 
+                    'description' => $elements['description'], 
+                    'price' => $elements['price'] 
+                ];
+            });
+            
+            $grouped_des_price = ArrayHelper::index($des_price, null, 'description');
+            
+            $latestPrice = [];
+            foreach($grouped_des_price as $dp){
+                //foreach($dp as $dp_t){
+                    array_push($latestPrice, $dp[0]);
+                //}
+            }    
+            
+            // revised 20161030 - find out description based on viecle model.
+            return ArrayHelper::getColumn($latestPrice, function($element){
+               return  ['key' => $element['DID'], 'value' =>  $element['description'], 'price' => $element['price']];
+            });
         }
             
     }

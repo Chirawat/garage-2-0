@@ -21,13 +21,18 @@ $(document).ready(function () {
     var list = [];
     /* Bind enter key to function */
     $("#maintenance-list").bind('keypress', function (e) {
+        if( $("#plate-no").val() === null)
+            alert("กรุณาเลือกทะเบียนรถ");
+        
         var code = e.keyCode || e.which;
         if (code == 13) {
-            //console.log("enter");
-            enterDescription();
+                enterDescription();
         }
     });
     $("#maintenance-price").bind('keypress', function (e) {
+        if( $("#plate-no").val() === null)
+            alert("กรุณาเลือกทะเบียนรถ");
+        
         var code = e.keyCode || e.which;
         if (code == 13) {
             //console.log("enter");
@@ -35,6 +40,9 @@ $(document).ready(function () {
         }
     });
     $("#part-list").bind('keypress', function (e) {
+        if( $("#plate-no").val() === null)
+            alert("กรุณาเลือกทะเบียนรถ");
+        
         var code = e.keyCode || e.which;
         if (code == 13) {
             //console.log("enter");
@@ -42,6 +50,9 @@ $(document).ready(function () {
         }
     });
     $("#part-price").bind('keypress', function (e) {
+        if( $("#plate-no").val() === null)
+            alert("กรุณาเลือกทะเบียนรถ");
+        
         var code = e.keyCode || e.which;
         if (code == 13) {
             //console.log("enter");
@@ -204,9 +215,11 @@ $(document).ready(function () {
                 url: "index.php?r=description/description-list"
                 , dataType: "json"
                 , data: {
-                    term: request.term
+                    term: request.term,
+                    vid: $("select#plate-no").val()
                 }
                 , success: function (data) {
+                    //console.log(data);
                     list = data;
                     if (data.length != 0) response(data);
                     else response({
@@ -233,7 +246,8 @@ $(document).ready(function () {
                 url: "index.php?r=description/description-list"
                 , dataType: "json"
                 , data: {
-                    term: request.term
+                    term: request.term,
+                    vid: $("select#plate-no").val()
                 }
                 , success: function (data) {
                     list = data;

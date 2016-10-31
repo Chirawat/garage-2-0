@@ -5,8 +5,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\jui\AutoComplete;
-use yii\web\View;
-?>
+use yii\web\View;?>
     <div class="modal fade" id="customer" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -238,6 +237,4 @@ if( $viecle->plate_no != "" )
     $this->registerJS( '$("select#plate-no").append("<option disabled selected value>'.$viecle->plate_no.'</option>")', View::POS_READY );
 else
     $this->registerJS( '$("select#plate-no").append("<option disabled selected value>เลือกทะเบียนรถ</option>")', View::POS_READY );
-
-
 ?>

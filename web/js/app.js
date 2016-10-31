@@ -404,6 +404,11 @@ $(document).ready(function () {
         console.log("test");
     });
     $("#auto-generate").click( function(){
+        /* Select plate id first */
+        if( $("#plate-no").val() == null ){
+            alert("ต้องเลือกข้อมูลรถก่อน");
+        }
+
         /* Empty object */
         while(maintenance.length > 0)
             maintenance.pop();

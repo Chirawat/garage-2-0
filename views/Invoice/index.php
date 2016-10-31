@@ -84,16 +84,30 @@ Modal::end();
                 <div class="panel-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <lable class="col-sm-4" for="customer">ลูกค้า</lable>
-                            <input type="text"> </div>
+                            <lable class="control-label col-sm-2" for="customer">ลูกค้า</lable>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-sm" value="<?=$customer->fullname?>">
+                            </div>
+                        </div>
                         <div class="form-group">
-                            <lable class="col-sm-4" for="customer">ที่อยู่</lable>
-                            <input type="text"> </div>
+                            <lable class="control-label col-sm-2" for="customer">ที่อยู่</lable>
+                            <div class="col-sm-10">
+                                <textarea rows="3" class="form-control input-sm"><?=$customer->address?></textarea>
+                            </div>
+                        </div>
                         <div class="form-group">
-                            <lable class="col-sm-4" for="customer">เลขประจำตัวผู้เสียภาษี</lable>
-                            <input type="text"> </div>
+                            <lable class="control-label col-sm-2" for="customer">โทร</lable>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-sm" value="<?=$customer->phone?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-10 col-sm-offset-2">
+                                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">ค้นจากรายชื่อลูกค้า</a>
+                                <a class="btn btn-primary btn-sm" >เพิ่มลูกค้า</a>
+                            </div>
+                        </div>
                     </form>
-                    <button data-toggle="modal" data-target="#myModal">ค้นจากรายชื่อลูกค้า</button>
                 </div>
             </div>
         </div>

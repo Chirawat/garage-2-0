@@ -38,7 +38,8 @@ class InvoiceController extends Controller
 
 
     public function actionIndex(){
-        if( Yii::$app->request->isAjax ){
+        $request = Yii::$app->request;
+        if( $request->isAjax ){
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             $invoice = new Invoice();
 
@@ -81,13 +82,19 @@ class InvoiceController extends Controller
 
         $detail = $this->renderPartial('detail',[]);
 
-
         $iid = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
         $iid = ($iid + 1) . "/" . (date('Y')+543);
-        return $this->render('header',[
+
+
+        if($request->get('cid'))
+            $customer = Customer::findOne($request->get('cid'));
+        else
+            $customer = new Customer();
+
+        return $this->render('index',[
             'detail' => $detail,
             'iid' => $iid,
-            'customer' => null,
+            'customer' => $customer,
         ]);
     }
 

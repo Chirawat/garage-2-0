@@ -41,21 +41,26 @@ AppAsset::register($this);
                 'label' => 'ออกเอกสาร',
                 'items' => [
                     ['label' => 'ใบเสนอราคา', 'url' => Url::to(['quotation/index'])],
-                    ['label' => 'ใบแจ้งหนี้', 'url' =>'#'],
+                    ['label' => 'ใบแจ้งหนี้', 'url' => Url::to(['invoice/index'])],
                     ['label' => 'ใบเสร็จรับเงิน', 'url' =>'#'],
-                    ['label' => 'เพิ่มรูปภาพ', 'url' =>'#'],
                 ],
             ],
-            ['label' => 'บันทึกการเงิน', 'url' => '#'],
-            ['label' => 'สรุปประจำเดือน', 'url' => Url::to(['quotation/summary'])],
+            ['label' => 'เพิ่มรูปภาพ', 'url' => '#'],
             [
-                'label' => 'การตั้งค่า',
+                'label' => 'การเงิน',
+                'items' => [
+                    ['label' => 'บันทึกการเงิน', 'url' => '#'],
+                    ['label' => 'สรุปประจำเดือน', 'url' =>'#'],
+                ],
+            ],
+            [
+                'label' => 'ตั้งค่า',
                 'items' => [
                     ['label' => 'บริษัทประกัน', 'url' => '#'],
                     ['label' => 'ชื่อและรุ่นรถยนต์', 'url' => '#'],
                     ['label' => 'ตั้งค่าพนักงาน', 'url' => '#'],
                     '<li class="divider"></li>',
-                    ['label' => 'ปรับรุ่นโปรแกรม', 'url' => '#'],
+                    ['label' => 'ตรวจสอบรุ่นโปรแกรม', 'url' => '#'],
                 ],
             ],
              
@@ -86,9 +91,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; ยโสธรเจริญการช่าง <?= date('Y') ?></p>
-
-<!--        <p class="pull-right"><?= Yii::powered() ?></p>-->
+        <p class="pull-left">Version: Beta</p>
     </div>
 </footer>
 

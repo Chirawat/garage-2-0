@@ -1,6 +1,17 @@
 var globalMaintenance = [];
 var globaPart = [];
 var globalQid;
+
+$('body').on("click", "#btn-search", function(){
+    $.get("index.php?r=invoice/customer-search",{
+        type: $("#customer-type option:selected").val(),
+        fullname: $("#fullname").val()
+    }, function(data){
+        $("#result").html("");
+        $("#result").html( data );
+    });
+});
+
 $(document).ready(function () {
     //    var maintenance = [];
     //    var part = [];
@@ -200,15 +211,15 @@ $(document).ready(function () {
         $("#total").text(formatMoney(total, 2));
     }
 
-    function updateTableIndex() {
-        var row = $("tbody > tr");
-        for (var i = 0, nRow = row.size(); i < nRow; i++) {
-            // select first column
-            var col = $(row).eq(i).find("td");
-            // update text
-            $(col).eq(0).text(i + 1);
-        }
-    }
+//    function updateTableIndex() {
+//        var row = $("tbody > tr");
+//        for (var i = 0, nRow = row.size(); i < nRow; i++) {
+//            // select first column
+//            var col = $(row).eq(i).find("td");
+//            // update text
+//            $(col).eq(0).text(i + 1);
+//        }
+//    }
     $("#maintenance-list").autocomplete({
         source: function (request, response) {
             $.ajax({
@@ -441,6 +452,7 @@ $(document).ready(function () {
     });
 /////////////////////////////////////////////////////////////////////////////
 ////////////// Invoice //////////////////////////////////////////////////////
+
 $("#btn-add-invoice").click(function () {
     // check, empty?
     if ($("#maintenance-list").val() == "") {

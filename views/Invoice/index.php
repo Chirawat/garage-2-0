@@ -12,17 +12,8 @@ use yii\widgets\Pjax;
 $this->title = 'ใบเสร็จ';
 
 $url = Url::to(['customer-list']);
-
-Modal::begin([
-    'id' => 'modal-save',
-    'header' => '<h5>การบันทึก</h5>',
-]);
-
-echo 'บันทึกข้อมูลเรียบร้อย';
-
-Modal::end();
 ?>
-    <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="customerSearch" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -41,19 +32,38 @@ Modal::end();
                             <a id="btn-search" class="btn btn-primary">ค้น</a>
                         </div>
                     </form>
-                    <div id="result">
-                        result here
-                    </div>
+                    <div id="result"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal -->
+    <div id="customerCreate" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">เพิ่มชื่อลูกค้า</h4>
+                </div>
+                <?php $form = ActiveForm::begin(['layout' => 'horizontal']); ?>
+                <div class="modal-body">
+                    <?= $form->field($customer_t, 'type')->radioList(['GENERAL' => 'ลูกค้าทั่วไป', 'INSURANCE_COMP' => 'บริษัทประกัน'])->label('ประเภท') ?>
+                    <?= $form->field($customer_t, 'fullname')->label('ชื่อลูกค้า') ?>
+                    <?= $form->field($customer_t, 'address')->textArea()->label('ที่อยู่') ?>
+                    <?= $form->field($customer_t, 'phone')->label('โทรศัพท์') ?>
+                    <?= $form->field($customer_t, 'taxpayer_id')->label('เลขประจำตัวผู้เสียภาษี') ?>
+                    <div id="result"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" >เพิ่ม</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+                <?php ActiveForm::end(); ?>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="container col-sm-6">
             <form class="form-horizontal">
@@ -103,8 +113,8 @@ Modal::end();
                         </div>
                         <div class="form-group">
                             <div class="col-sm-10 col-sm-offset-2">
-                                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">ค้นจากรายชื่อลูกค้า</a>
-                                <a class="btn btn-primary btn-sm" >เพิ่มลูกค้า</a>
+                                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#customerSearch">ค้นจากรายชื่อลูกค้า</a>
+                                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#customerCreate">เพิ่มลูกค้า</a>
                             </div>
                         </div>
                     </form>

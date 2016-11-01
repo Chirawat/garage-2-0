@@ -91,10 +91,21 @@ class InvoiceController extends Controller
         else
             $customer = new Customer();
 
+        // Create Customer
+        $customer_t = new Customer();
+        if( $customer_t->load($request->post()) && $customer_t->validate() ){
+            $customer_t->save();
+
+            // find latest record
+            $customer = Customer::find()->orderBy(['CID' => SORT_DESC])->one();
+            return $this->redirect(['invoice/index', 'cid'=>$customer->CID]);
+        }
+
         return $this->render('index',[
             'detail' => $detail,
             'iid' => $iid,
             'customer' => $customer,
+            'customer_t' => $customer_t,
         ]);
     }
 

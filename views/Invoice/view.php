@@ -10,7 +10,7 @@ use yii\bootstrap\Modal;
 use yii\jui\AutoComplete;
 ?>
     <div class="quotation-content">
-        <table class="table table-bordered" id="myTable">
+        <table class="table table-bordered" id="viewInvoice">
             <thead>
                 <tr bgcolor="#000000">
                     <th class="col-sm-1" class="text-white" style="color:white;">ลำดับ</th>

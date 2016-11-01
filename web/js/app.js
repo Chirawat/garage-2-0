@@ -18,7 +18,10 @@ $(document).ready(function () {
     var maintenance = globalMaintenance;
     var part = globaPart;
     var qid = globalQid;
-    console.log(qid);
+
+    var invoice = [];
+    var id = 1;
+    var list = [];
     ///////////////////////////////////////////////////////
     /* Initial calculation for edit page */
     //    console.log(maintenance);
@@ -27,9 +30,7 @@ $(document).ready(function () {
     calTotal();
     updateTableIndex();
     ///////////////////////////////////////////////////////
-    var invoice = [];
-    var id = 1;
-    var list = [];
+
     /* Bind enter key to function */
     $("#maintenance-list").bind('keypress', function (e) {
         if( $("#plate-no").val() === null)
@@ -124,6 +125,7 @@ $(document).ready(function () {
 
     function enterDescription() {
         // check, empty?
+        ///////////////////////////////////////////////////////////////////////////////
         if ($("#maintenance-list").val() == "" && $("#part-list").val() == "") {
             alert("กรุณาป้อนรายการ");
             return false;
@@ -139,6 +141,7 @@ $(document).ready(function () {
             return false;
         }
         // Push data into object.
+        ///////////////////////////////////////////////////////////////////////////////
         if ($("#maintenance-list").val() != "") {
             maintenance.push({
                 row: id
@@ -153,15 +156,19 @@ $(document).ready(function () {
                 , price: $("#part-price").val()
             });
         }
+
+        ////////////////////////////////////////////////////////////////////////////////
         renderTableBody();
         /* clear text box value */
         $("#maintenance-list").val("");
         $("#maintenance-price").val("");
         $("#part-list").val("");
         $("#part-price").val("");
+
         /* calulate total */
         calTotal();
         updateTableIndex();
+
         /* Increment ID */
         id++;
     }
@@ -211,7 +218,7 @@ $(document).ready(function () {
         $("#total").text(formatMoney(total, 2));
     }
 
-//    function updateTableIndex() {
+    function updateTableIndex() {
 //        var row = $("tbody > tr");
 //        for (var i = 0, nRow = row.size(); i < nRow; i++) {
 //            // select first column
@@ -219,7 +226,7 @@ $(document).ready(function () {
 //            // update text
 //            $(col).eq(0).text(i + 1);
 //        }
-//    }
+    }
     $("#maintenance-list").autocomplete({
         source: function (request, response) {
             $.ajax({
@@ -452,6 +459,62 @@ $(document).ready(function () {
     });
 /////////////////////////////////////////////////////////////////////////////
 ////////////// Invoice //////////////////////////////////////////////////////
+    function rederTableInvoice(){
+        var objLen = invoice.length;
+        // prepare row
+        var appendRow = "";
+        for (var i = 0; i < objLen; i++) {
+            // col 1
+            appendRow += '<tr id="' + i + '"><td style="text-align: Center;">' + (i+1) + '</td>';
+            appendRow += '<td>' + invoice[i].list + '</td>';
+            appendRow += '<td style="text-align: right;">' + formatMoney( invoice[i].price, 2) + '</td>';
+            appendRow += '<td></td>';
+            appendRow += '</tr>';
+        }
+        // clear table body content
+        $("table#tableInvoice > tbody").html("");
+
+        // append row
+        $("table#tableInvoice > tbody").html(appendRow);
+    }
+
+    function enterInvoiceDescription(){
+        invoice.push({
+            list: $("#invoice-list").val(),
+            price: $("#invoice-price").val()
+        });
+
+        /* Render table body */
+        rederTableInvoice();
+
+        // Cal total
+        calTotalInvoice();
+
+        /* Clear */
+        $("#invoice-list").val("");
+        $("#invoice-price").val("");
+    }
+
+    /* Bind enter key to function */
+    $("#invoice-list").bind('keypress', function (e) {
+//        if( $("#plate-no").val() === null)
+//            alert("กรุณาเลือกทะเบียนรถ");
+
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+                enterInvoiceDescription();
+        }
+    });
+    /* Bind enter key to function */
+    $("#invoice-price").bind('keypress', function (e) {
+//        if( $("#plate-no").val() === null)
+//            alert("กรุณาเลือกทะเบียนรถ");
+
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+                enterInvoiceDescription();
+        }
+    });
 
 $("#btn-add-invoice").click(function () {
     // check, empty?
@@ -484,7 +547,8 @@ $("#btn-add-invoice").click(function () {
     $("#maintenance-list").val("");
     $("#maintenance-price").val("");
     id++;
-}); $("table#myTable").on("click", "#btn-del-invoice", function (event) {
+});
+$("table#myTable").on("click", "#btn-del-invoice", function (event) {
     var closestRow = $(this).closest("tr");
     // remove row
     closestRow.remove();
@@ -505,24 +569,33 @@ function calTotalInvoice() {
     var grandTotal = total_invoice + vat;
     $("#invoice-grand-total").text(formatMoney(grandTotal));
 }; $("#maintenance-list").keyup(function () {
-    //console.log("pressed");
     $("#btn-save-invoice").removeClass('disabled');
-}); $("#btn-save-invoice").on("click", function (event, ui) {
+});
+$("#btn-save-invoice").on("click", function (event, ui) {
     // error, customer cannot be blank!
     if ($("#customer").val() == "") window.alert("ต้องเลือกลูกค้าก่อน");
-    $.ajax({
-        url: "index.php?r=invoice/create"
-        , type: 'json'
-        , data: {
-            customer: $("#customer").val()
-            , invoice_id: $("#invoiceId").val()
-            , invoice_description: invoice
-        }
-        , success: function (data) {
-            var id = $("#quotationId").val();
-            //window.location.replace("?r=invoice/view");
+
+    $.post("index.php?r=invoice/create", {
+        cid: getUrlVars()["cid"],
+        invoice: invoice
+    }, function(data){
+        if( data.status ){
+            confirm("บันทึกเรียบร้อย\r\nคุณต้องการพิมพ์ใบแจ้งหนี้เลยหรือไม่");
         }
     });
+
+//    $.ajax({
+//        url: "index.php?r=invoice/create"
+//        , type: 'json'
+//        , data: {
+//            customer: $("#customer").val(),
+//            invoice_id: $("#invoiceId").val(),
+//            invoice_description: invoice
+//        }
+//        , success: function (data) {
+//            var id = $("#quotationId").val();
+//        }
+//    });
 }); $("#invoiceId").keyup(function () {
     //console.log("keyup!")
     $("#viewInovoice").removeClass('disabled');

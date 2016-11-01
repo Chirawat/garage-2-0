@@ -79,7 +79,14 @@ $url = Url::to(['customer-list']);
                                 <!--New-->
                                 <input id="invoiceId" type="text" value="<?= $iid ?>" class="form-control col-sm-6">
                                 <?php endif; ?>
-                    </div> <a id="viewInovoice" class="btn btn-primary disabled"><span class="glyphicon glyphicon-search"></span></a> <a href="<?=Url::to(['invoice/create'])?>" class="btn btn-primary"><span class="glyphicon glyphicon-file"></span></a> </div>
+                    </div>
+                    <a id="viewInovoice" class="btn btn-primary disabled">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </a>
+                    <a href="<?=Url::to(['invoice/create'])?>" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-file"></span>
+                    </a>
+                </div>
             </form>
         </div>
         <div class="container col-sm-6">
@@ -96,7 +103,7 @@ $url = Url::to(['customer-list']);
                         <div class="form-group">
                             <lable class="control-label col-sm-2" for="customer">ลูกค้า</lable>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control input-sm" value="<?=$customer->fullname?>">
+                                <input type="text" class="form-control input-sm" value="<?=$customer->fullname ?>">
                             </div>
                         </div>
                         <div class="form-group">
@@ -121,4 +128,50 @@ $url = Url::to(['customer-list']);
                 </div>
             </div>
         </div>
-        <?= $detail ?>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-bordered" id="tableInvoice">
+            <thead>
+                <tr bgcolor="#000000">
+                    <th class="col-sm-1" class="text-white" style="color:white;">ลำดับ</th>
+                    <th class="col-sm-9" style="color:white;">รายการ</th>
+                    <th class="col-sm-2" style="color:white;">ราคา</th>
+                    <th></th>
+                </tr>
+                <tr id="input-row">
+                    <td></td>
+                    <td>
+                        <input class="form-control" type="text" id="invoice-list" /> </td>
+                    <td>
+                        <input class="form-control" type="number" id="invoice-price" /> </td>
+                    <td>
+                        <button class="btn btn-primary btn-xs" id="btn-add-invoice"><span class="glyphicon glyphicon-plus"></span></button>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td>จำนวนเงิน</td>
+                    <td><div id="invoice-total"></div></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>ภาษีมูลค่าเพิ่ม (7%)</td>
+                    <td><div id="invoice-tax"></div></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>ยอดรวมทั้งสิ้น</td>
+                    <td><div id="invoice-grand-total"></div></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

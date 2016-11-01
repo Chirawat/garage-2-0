@@ -196,11 +196,59 @@ class InvoiceController extends Controller
 //        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 //        return $customer;
 
-        return $this->render('header', [
+        return $this->render('view', [
             'iid' => $invoice->invoice_id,
             'customer' => $customer,
-            'detail' => $detail,
+            'invoice' => $invoice,
+            'descriptions' => $invoice->invoiceDescriptions,
+            'total' => $total,
+            'vat' => $vat,
+            'grandTotal' => $grandTotal,
         ]);
+    }
+
+    public function actionCreate(){
+        $request = Yii::$app->request;
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        // Create invoice
+        $invoice = new Invoice();
+
+        $invoice->CID = $request->post('cid');
+        $invoice->date = date('Y-m-d H:i:s');
+        $invoice->employee = Yii::$app->user->identity->getId();
+
+        $ret = [];
+        if($invoice->validate() && $invoice->save()){
+            $invoice = Invoice::find()->orderBy(['IID' => SORT_DESC])->one(); // get latest record
+
+            /* Create descriptions*/
+            $invoiceDescription_t = $request->post('invoice');
+            foreach($invoiceDescription_t as $description){
+                $invoiceDescription = new InvoiceDescription();
+
+                $invoiceDescription->IID = $invoice->IID;
+                $invoiceDescription->description = $description['list'];
+                $invoiceDescription->price = $description['price'];
+
+                if($invoiceDescription->validate()){
+                    $invoiceDescription->save();
+                    $ret['status'] = true;
+                    $ret['IID'] = $invoice->IID;
+                    $ret['message'] = "Create invoice successful";
+                }
+                else{
+                    $ret['status'] = false;
+                    $ret['message'] = "Error: " + $invoiceDescription->errors;
+                }
+            }
+        }
+        else{
+            //error
+            $ret['status'] = false;
+            $ret['message'] = "Error: " + $invoice->errors;
+        }
+
+        return $ret;
     }
 
     function num2thai($number){

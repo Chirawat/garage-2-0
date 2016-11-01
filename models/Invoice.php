@@ -57,7 +57,7 @@ class Invoice extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getC()
+    public function getCustomer()
     {
         return $this->hasOne(Customer::className(), ['CID' => 'CID']);
     }

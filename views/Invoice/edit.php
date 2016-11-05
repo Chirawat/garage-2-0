@@ -8,6 +8,7 @@ use yii\bootstrap\Modal;
 use yii\jui\AutoComplete;
 use yii\jui\JuiAsset;
 use yii\widgets\Pjax;
+use yii\web\View;
 
 $this->title = 'ใบเสร็จ';
 
@@ -40,30 +41,6 @@ $url = Url::to(['customer-list']);
             </div>
         </div>
     </div>
-    <div id="customerCreate" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">เพิ่มชื่อลูกค้า</h4>
-                </div>
-                <?php $form = ActiveForm::begin(['layout' => 'horizontal']); ?>
-                <div class="modal-body">
-                    <?= $form->field($customer_t, 'type')->radioList(['GENERAL' => 'ลูกค้าทั่วไป', 'INSURANCE_COMP' => 'บริษัทประกัน'])->label('ประเภท') ?>
-                    <?= $form->field($customer_t, 'fullname')->label('ชื่อลูกค้า') ?>
-                    <?= $form->field($customer_t, 'address')->textArea()->label('ที่อยู่') ?>
-                    <?= $form->field($customer_t, 'phone')->label('โทรศัพท์') ?>
-                    <?= $form->field($customer_t, 'taxpayer_id')->label('เลขประจำตัวผู้เสียภาษี') ?>
-                    <div id="result"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" >เพิ่ม</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-                <?php ActiveForm::end(); ?>
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="container col-sm-6">
             <div class="col-sm-6">
@@ -72,7 +49,12 @@ $url = Url::to(['customer-list']);
             </div>
         </div>
         <div class="container col-sm-6">
-            <div class="pull-right"> <a id="btn-save-invoice" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-save-file"></span> บันทึก</a> <a href="<?= Url::to(['invoice/invoice-report', 'invoice_id'=> Yii::$app->request->get('invoice_id'), 'iid'=> Yii::$app->request->get('iid')]) ?>" id="btn-print-invoice" target="_blank" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสร็จ</a> </div>
+            <div class="pull-right"> 
+                <a id="btn-save-invoice" class="btn btn-primary btn-sm">
+                    <span class="glyphicon glyphicon-save-file"></span> บันทึก</a> 
+                <a href="<?= Url::to(['invoice/invoice-report', 'invoice_id'=> Yii::$app->request->get('invoice_id'), 'iid'=> Yii::$app->request->get('iid')]) ?>" id="btn-print-invoice" target="_blank" class="btn btn-success btn-sm">
+                    <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสร็จ</a> 
+            </div>
         </div>
     </div>
     <div class="row">
@@ -157,3 +139,9 @@ $url = Url::to(['customer-list']);
         </table>
     </div>
 </div>
+<?php foreach($invoiceDescriptions as $invoiceDescription){
+    $this->registerJS('globalInvoice.push({
+        list: ' . json_encode($invoiceDescription->description, JSON_HEX_TAG) . ',
+        price: ' . json_encode($invoiceDescription->price, JSON_HEX_TAG) . '});', VIEW::POS_END);
+}
+?>

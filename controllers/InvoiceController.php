@@ -109,7 +109,6 @@ class InvoiceController extends Controller
         ]);
     }
 
-
     public function actionInvoiceReport($iid=null, $invoice_id=null){
         //////////////// REPORT PROCEDURE ////////////////////////////////////////
 
@@ -182,22 +181,11 @@ class InvoiceController extends Controller
         $vat = $total * 0.07;
         $grandTotal = $total + $vat;
 
-
-        //return $invoice->invoiceDescriptions;
-        $detail = $this->renderPartial('view',[
-            'invoice' => $invoice,
-            'descriptions' => $invoice->invoiceDescriptions,
-            'total' => $total,
-            'vat' => $vat,
-            'grandTotal' => $grandTotal,
-        ]);
-
-        $customer = $invoice->customer;
+         $customer = $invoice->customer;
 //        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 //        return $customer;
 
         return $this->render('view', [
-            'iid' => $invoice->invoice_id,
             'customer' => $customer,
             'invoice' => $invoice,
             'descriptions' => $invoice->invoiceDescriptions,
@@ -382,6 +370,21 @@ class InvoiceController extends Controller
 
             echo '</tbody></table>';
         }
+    }
+    
+    public function actionEdit($iid){
+        $invoice = Invoice::findOne( $iid );
+        $customer = $invoice->customer;
+        $invoiceDescriptions = $invoice->invoiceDescriptions;
+        
+        return $this->render('edit',[
+            'customer' => $customer,
+            'invoiceDescriptions' => $invoiceDescriptions,
+        ]);
+    }
+    
+    public function actionReport($iid){
+        return $this->render('invoice_report');
     }
 }
 ?>

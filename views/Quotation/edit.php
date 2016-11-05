@@ -35,7 +35,7 @@ use yii\web\View;
     <div class="container">
         <form class="form-inline">
             <div class="form-group">
-                <label class="form-label">เลขที่</label>
+                <label class="form-label">เล่มที่</label>
                 <input type="text" class="form-control input-sm" readonly value="1/2559"> </div>
             <div class="form-group">
                 <label class="form-label">วันที่</label>

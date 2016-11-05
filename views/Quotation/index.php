@@ -32,20 +32,16 @@ use yii\web\View;?>
     </div>
     <!-- /.modal -->
     <div class="container">
-        <form class="form-inline">
-            <div class="form-group">
-                <label class="form-label">เลขที่</label>
-                <input type="text" class="form-control input-sm" readonly value="<?= $quotationId ?>"> </div>
-            <div class="form-group">
-                <label class="form-label">วันที่</label>
-                <input type="text" class="form-control input-sm" readonly value="<?= date('d/m/') . (date('Y')+543) ?>"> </div>
-            <div class="form-group pull-right">
-                <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
-                <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a> |
-                <a id="btn-save" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> บันทึก </a>
-                <a id="btn-print" target="_blank" class="btn btn-success btn-sm"> <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
-            </div>
-        </form>
+        <div class="col-sm-6">
+            <label>เล่มที่ ...... เลขที่ ..............</label><br>
+            <label>วันที่ ..............</label>
+        </div>
+        <div class="form-group pull-right">
+            <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
+            <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a> |
+            <a id="btn-save" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> บันทึก </a>
+            <a id="btn-print" target="_blank" class="btn btn-success btn-sm"> <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
+        </div>
     </div>
     <br>
     <div class="container">

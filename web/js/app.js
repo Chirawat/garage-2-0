@@ -1,6 +1,7 @@
 var globalMaintenance = [];
 var globaPart = [];
 var globalQid;
+var globalInvoice = [];
 
 $('body').on("click", "#btn-search", function(){
     $.get("index.php?r=invoice/customer-search",{
@@ -19,16 +20,21 @@ $(document).ready(function () {
     var part = globaPart;
     var qid = globalQid;
 
-    var invoice = [];
+    var invoice = globalInvoice;
     var id = 1;
     var list = [];
     ///////////////////////////////////////////////////////
     /* Initial calculation for edit page */
-    //    console.log(maintenance);
-    //    console.log(part);
+    
+    /* Quotation */
     renderTableBody();
     calTotal();
     updateTableIndex();
+    
+    /* Invoice */
+    rederTableInvoice();
+    calTotalInvoice();
+    
     ///////////////////////////////////////////////////////
 
     /* Bind enter key to function */
@@ -525,8 +531,8 @@ $("#btn-add-invoice").click(function () {
     // prepare append row.
     var appendRow = '<tr id=' + id + '> \
             <td style="text-align: center;">' + id + '</td> \
-            <td>' + $("#maintenance-list").val() + '</td> \
-            <td style="text-align: right;">' + $("#maintenance-price").val() + '</td> \
+            <td>' + $("#invoice-list").val() + '</td> \
+            <td style="text-align: right;">' + $("#invoice-price").val() + '</td> \
             <td> \
                 <button id="btn-del-invoice"class="btn btn-danger btn-xs"> \
                     <span class="glyphicon glyphicon-remove"></span> \
@@ -580,7 +586,16 @@ $("#btn-save-invoice").on("click", function (event, ui) {
         invoice: invoice
     }, function(data){
         if( data.status ){
-            confirm("บันทึกเรียบร้อย\r\nคุณต้องการพิมพ์ใบแจ้งหนี้เลยหรือไม่");
+            var r = confirm("บันทึกเรียบร้อย\r\nคุณต้องการพิมพ์ใบแจ้งหนี้เลยหรือไม่");
+            
+            if(r){
+                // print
+                window.location.replace("?r=invoice/report&iid=" + data.IID);
+            }
+            else{
+                // view
+                window.location.replace("?r=invoice/view&iid=" + data.IID);
+            }
         }
     });
 

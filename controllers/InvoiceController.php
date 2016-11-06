@@ -171,6 +171,8 @@ class InvoiceController extends Controller
     }
 
     public function actionView($iid=null, $invoice_id=null){
+        $request = Yii::$app->request;
+
         if( $invoice_id != null ){
             $invoice = Invoice::find()->where(['invoice_id' => $invoice_id])->one();
         }
@@ -178,19 +180,30 @@ class InvoiceController extends Controller
             $invoice = Invoice::find()->where(['iid' => $iid])->one();
         }
 
+        // find date
+        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->orderBy(['date'=>SORT_DESC])->all();
+        $dateIndex = 0;
+        if($request->isAjax){
+            $dateIndex = $request->post('dateIndex');
+        }
+
+        // Description
+        $query = InvoiceDescription::find()->where(['IID' => $iid, 'date' => $dateLists[$dateIndex]->date ]);
+        $descriptions = $query->all();
 
         $total = $invoice->getInvoiceDescriptions()->sum('price');
         $vat = $total * 0.07;
         $grandTotal = $total + $vat;
 
          $customer = $invoice->customer;
-//        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-//        return $customer;
 
         return $this->render('view', [
+            'dateLists' => $dateLists,
+            'dateIndex' => $dateIndex,
+
             'customer' => $customer,
             'invoice' => $invoice,
-            'descriptions' => $invoice->invoiceDescriptions,
+            'descriptions' => $descriptions,
             'total' => $total,
             'vat' => $vat,
             'grandTotal' => $grandTotal,
@@ -375,24 +388,68 @@ class InvoiceController extends Controller
     }
     
     public function actionEdit($iid){
+        $request = Yii::$app->request;
+
         $invoice = Invoice::findOne( $iid );
         $customer = $invoice->customer;
         $invoiceDescriptions = $invoice->invoiceDescriptions;
         
+        if($request->post()){
+            /* Create descriptions*/
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $invoiceDescription_t = $request->post('invoice');
+
+            $dt = date('Y-m-d H:i:s');
+
+            foreach($invoiceDescription_t as $description){
+                $invoiceDescription = new InvoiceDescription();
+
+                $invoiceDescription->IID = $iid;
+                $invoiceDescription->description = $description['list'];
+                $invoiceDescription->price = $description['price'];
+                $invoiceDescription->date = $dt;
+
+                if($invoiceDescription->validate()){
+                    $invoiceDescription->save();
+                    $ret['status'] = true;
+                    $ret['IID'] = $invoice->IID;
+                    $ret['message'] = "Create invoice successful";
+                }
+                else{
+                    $ret['status'] = false;
+                    $ret['message'] = "Error: " + $invoiceDescription->errors;
+                }
+
+            }
+            return $ret;
+        }
+
         return $this->render('edit',[
             'customer' => $customer,
             'invoiceDescriptions' => $invoiceDescriptions,
         ]);
     }
     
-    public function actionReport($iid){
-        $invoice = Invoice::findOne( $iid );
-        $total = $invoice->getInvoiceDescriptions()->sum('price');
+    public function actionReport($iid, $dateIndex = null){
+        // find date
+        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->orderBy(['date' => SORT_DESC])->all();
+
+        if( $dateIndex == null)
+            $dateIndex = 0;
+
+        $invoice = Invoice::findOne($iid);
+
+        $query = InvoiceDescription::find()->where(['iid' => $iid, 'date' => $dateLists[$dateIndex]]);
+        $descriptions = $query->all();
+
+        $total = $query->sum('price');
         $vat = $total * 0.07;
         $grandTotal = $total + $vat;
 
         $content = $this->renderPartial('report', [
             'invoice' => $invoice,
+
+            'descriptions' => $descriptions,
             'total' => $total,
             'vat' => $vat,
             'grandTotal' => $grandTotal,

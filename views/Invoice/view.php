@@ -20,7 +20,7 @@ $this->title = "แก้ไขใบแจ้งหนี้";
             <div class="pull-right"> 
                 <a href="<?=Url::to(['invoice/edit', 'iid'=>$invoice->IID])?>" id="btn-edit-invoice" class="btn btn-primary btn-sm">
                     <span class="glyphicon glyphicon-save-file"></span> แก้ไข</a> 
-                <a href="<?= Url::to(['invoice/invoice-report', 'invoice_id'=> Yii::$app->request->get('invoice_id'), 'iid'=> Yii::$app->request->get('iid')]) ?>" id="btn-print-invoice" target="_blank" class="btn btn-success btn-sm">
+                <a id="btn-print-invoice" target="_blank" class="btn btn-success btn-sm">
                     <span class="glyphicon glyphicon-print"></span> พิมพ์ใบแจ้งหนี้</a> 
             </div>
         </div>
@@ -83,6 +83,7 @@ $this->title = "แก้ไขใบแจ้งหนี้";
             </div>
         </div>
 </div>
+    <?php Pjax::begin(); ?>
     <div class="quotation-content">
         <div class="form-group">
             <?php $form = ActiveForm::begin(['options' => [
@@ -90,10 +91,17 @@ $this->title = "แก้ไขใบแจ้งหนี้";
                 'class' => 'form-inline']]) ?>
                 <label class="form-label">ประวัติการแก้ไข</label>
                 <select id="history-date" name="dateIndex" class="form-control input-sm">
-                    <option>test</option>
+                    <div class="col-sm-3">
+                        <?php $i= 0; foreach($dateLists as $date): ?>
+                            <option value="<?= $i ?>" <?= $i==$dateIndex?"selected":null?> >
+                                <?= $date->date ?> <?= $i==0 ? "(ล่าสุด)":null ?>
+                            </option>
+                        <?php $i++; endforeach; ?>
+                    </div>
                 </select>
                 <button type="submit" class="btn btn-primary btn-sm">ค้น</button>
             <?php ActiveForm::end() ?>
+
         </div>
         <table class="table table-bordered" id="viewInvoice">
             <thead>
@@ -141,4 +149,5 @@ $this->title = "แก้ไขใบแจ้งหนี้";
                 </tr>
             </tfoot>
         </table>
+        <?php Pjax::end() ?>
     </div>

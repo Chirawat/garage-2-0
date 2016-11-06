@@ -48,7 +48,7 @@ function DateThai($strDate){
                 <td class="column-header">รายการ</td>
                 <td width="30%" class="column-header">ราคา</td>
             </tr>
-            <?php $i = 1; foreach( $invoice->invoiceDescriptions as $description): ?>
+            <?php $i = 1; foreach( $descriptions as $description): ?>
             <tr>
                 <td style="text-align: center;"><?= $i++ ?></td>
                 <td><?= $description->description ?></td>

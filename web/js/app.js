@@ -653,10 +653,38 @@ $("#btn-save-invoice").on("click", function (event, ui) {
             }
         }
     });
-}); $("#invoiceId").keyup(function () {
-    //console.log("keyup!")
+});
+$("#btn-edit-invoice").click(function(){
+    var iid = getUrlVars()["iid"];
+    $.post("index.php?r=invoice/edit&iid=" + iid, {
+        invoice: invoice
+    }, function(data){
+        if( data.status ){
+            var r = confirm("บันทึกเรียบร้อย\r\nคุณต้องการพิมพ์ใบแจ้งหนี้เลยหรือไม่");
+
+            if(r){
+                // print
+                window.location.replace("?r=invoice/report&iid=" + data.IID);
+            }
+            else{
+                // view
+                window.location.replace("?r=invoice/view&iid=" + data.IID);
+            }
+        }
+    });
+});
+
+ $("#btn-print-invoice").click(function () {
+    var iid = getUrlVars()["iid"];
+    var dateIndex = $("#history-date").val();
+    var hrefStr = "index.php?r=invoice/report&iid=" + iid + "&dateIndex=" + dateIndex;
+
+    $("#btn-print-invoice").attr("href", hrefStr);
+});
+$("#invoiceId").keyup(function () {
     $("#viewInovoice").removeClass('disabled');
-}); $("#viewInovoice").click(function () {
+});
+$("#viewInovoice").click(function () {
     window.location.replace("?r=invoice/view&invoice_id=" + $("#invoiceId").val());
 });
 

@@ -72,7 +72,12 @@ $url = Url::to(['customer-list']);
             </div>
         </div>
         <div class="container col-sm-6">
-            <div class="pull-right"> <a id="btn-save-invoice" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-save-file"></span> บันทึก</a> <a href="<?= Url::to(['invoice/invoice-report', 'invoice_id'=> Yii::$app->request->get('invoice_id'), 'iid'=> Yii::$app->request->get('iid')]) ?>" id="btn-print-invoice" target="_blank" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสร็จ</a> </div>
+            <div class="pull-right">
+                <a href="<?=Url::to(['invoice/search'])?>" class="btn btn-primary btn-sm">
+                    <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบแจ้งหนี้</a>
+                <a id="btn-save-invoice" class="btn btn-primary btn-sm">
+                    <span class="glyphicon glyphicon-save-file"></span> บันทึก</a>
+            </div>
         </div>
     </div>
     <div class="row">

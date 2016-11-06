@@ -18,19 +18,17 @@ function DateThai($strDate){
 ?>
     <table width="100%">
         <tr>
-            <td width="30%">
-                <?=Html::img(Yii::getAlias('@app').'/web/img/LOGO.jpg', ['width' => 200])?>
+            <td width="10%">
+                <?=Html::img(Yii::getAlias('@app').'/web/img/logo_t.jpg', ['width' => 60])?><br>
             </td>
             <td>
-                <h3>เจริญการช่าง</h3> <small>345 ม.3 บ้านดอนมะยาง ต.ตาดทอง อ.เมืองยโสธร จ.ยโสธร 35000<br/>
-            เบอร์โทรศัพท์ 045-712911, 082-7565361 เบอร์แฟกซ์ 045-712911</small> </td>
-            <td class="text-right" valign="top">
-                <!--                เลขที่ -->
+                <h3>ยโสธรเจริญการช่าง</h3> <small>345 ม.3 บ้านดอนมะยาง ต.ตาดทอง อ.เมืองยโสธร จ.ยโสธร 35000<br/>
+                เบอร์โทรศัพท์ 045-712911, 082-7565361 เบอร์แฟกซ์ 045-712911</small>
             </td>
         </tr>
     </table>
     <br/>
-    <h3 class="header">ใบเสร็จรับเงิน/ใบกำกับภาษี</h3>
+    <h3 class="header">ใบแจ้งหนี้</h3>
     <table class="table_bordered" width="100%" border="0" cellpadding="2" cellspacing="0" style="border: 0px solid transparent;">
         <tr>
             <td width="50%" style="padding: 10px;">ชื่อ <?= $invoice->customer->fullname ?>

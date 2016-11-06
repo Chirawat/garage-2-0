@@ -1,7 +1,82 @@
-var globalMaintenance = [];
-var globaPart = [];
-var globalQid;
-var globalInvoice = [];
+//var globalMaintenance = [];
+//var globaPart = [];
+//var globalQid;
+//var globalInvoice = [];
+
+
+var maintenance = [];
+var part = [];
+var qid = undefined;
+var invoice = [];
+
+function formatMoney(n, c, d, t) {
+    //var n = this,
+    c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "." : d, t = t == undefined ? "," : t, s = n < 0 ? "-" : "", i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
+
+function rederTableInvoice(){
+    var objLen = invoice.length;
+    // prepare row
+    var appendRow = "";
+    for (var i = 0; i < objLen; i++) {
+        // col 1
+        appendRow += '<tr id="' + i + '"><td style="text-align: Center;">' + (i+1) + '</td>';
+        appendRow += '<td>' + invoice[i].list + '</td>';
+        appendRow += '<td style="text-align: right;">' + formatMoney( invoice[i].price, 2) + '</td>';
+        appendRow += '<td>\
+                        <button id="btn-invoice-edit" data-i="' + i + '" data-toggle="modal" data-target="#edit-invoice-description" class="btn btn-default btn-xs">\
+                            <span class="glyphicon glyphicon-pencil"></span></button>\
+                        <button id="btn-invoice-remove" class="btn btn-default btn-xs" onclick="removeInvoiceDescription(' + i + ')">\
+                            <span class="glyphicon glyphicon-remove"></span></button>\
+                      </td>';
+        appendRow += '</tr>';
+    }
+    // clear table body content
+    $("table#tableInvoice > tbody").html("");
+
+    // append row
+    $("table#tableInvoice > tbody").html(appendRow);
+}
+
+function removeInvoiceDescription(i){
+    var r = confirm("คุณต้องการที่จะลบรายการที่ " + (i+1) + " หรือไม่?");
+
+    if(r){
+        invoice.splice(i, 1); // remove index = i, count = 1
+
+        // render table
+        rederTableInvoice();
+        calTotalInvoice();
+    }
+
+}
+
+function calTotalInvoice() {
+    var total_invoice = 0;
+    for (var i = 0, len = invoice.length; i < len; i++) {
+        total_invoice += parseFloat(invoice[i].price);
+    }
+    // update DOM
+    var total = total_invoice.toFixed(2);
+    $("#invoice-total").text(formatMoney(total_invoice, 2));
+    var vat = total_invoice * 0.07;
+    $("#invoice-tax").text(formatMoney(vat));
+    var grandTotal = total_invoice + vat;
+    $("#invoice-grand-total").text(formatMoney(grandTotal));
+};
+
+function updateInvoiceDescription( i ){
+    //console.log(i);
+    var modal = $('#edit-invoice-description');
+    invoice[i].list = modal.find('.modal-body input#list').val();
+    invoice[i].price = modal.find('.modal-body input#price').val();
+
+    //console.log(invoice);
+    rederTableInvoice();
+    calTotalInvoice();
+    $("#edit-invoice-description").modal('hide');
+}
 
 $('body').on("click", "#btn-search", function(){
     $.get("index.php?r=invoice/customer-search",{
@@ -14,13 +89,10 @@ $('body').on("click", "#btn-search", function(){
 });
 
 $(document).ready(function () {
-    //    var maintenance = [];
-    //    var part = [];
-    var maintenance = globalMaintenance;
-    var part = globaPart;
-    var qid = globalQid;
-
-    var invoice = globalInvoice;
+//    var maintenance = globalMaintenance;
+//    var part = globaPart;
+//    var qid = globalQid;
+//    var invoice = globalInvoice;
     var id = 1;
     var list = [];
     ///////////////////////////////////////////////////////
@@ -465,24 +537,18 @@ $(document).ready(function () {
     });
 /////////////////////////////////////////////////////////////////////////////
 ////////////// Invoice //////////////////////////////////////////////////////
-    function rederTableInvoice(){
-        var objLen = invoice.length;
-        // prepare row
-        var appendRow = "";
-        for (var i = 0; i < objLen; i++) {
-            // col 1
-            appendRow += '<tr id="' + i + '"><td style="text-align: Center;">' + (i+1) + '</td>';
-            appendRow += '<td>' + invoice[i].list + '</td>';
-            appendRow += '<td style="text-align: right;">' + formatMoney( invoice[i].price, 2) + '</td>';
-            appendRow += '<td></td>';
-            appendRow += '</tr>';
-        }
-        // clear table body content
-        $("table#tableInvoice > tbody").html("");
 
-        // append row
-        $("table#tableInvoice > tbody").html(appendRow);
-    }
+
+    $('#edit-invoice-description').on('show.bs.modal', function(event){
+        //console.log(invoice);
+        var button = $(event.relatedTarget);
+        var i = button.data('i');
+
+        var modal = $(this);
+        modal.find('.modal-body input#list').val( invoice[i].list );
+        modal.find('.modal-body input#price').val( invoice[i].price );
+        modal.find('.modal-footer button#desc-update').attr("onclick", "updateInvoiceDescription(" + i + ")");
+    });
 
     function enterInvoiceDescription(){
         invoice.push({
@@ -562,19 +628,8 @@ $("table#myTable").on("click", "#btn-del-invoice", function (event) {
     updateTableIndex();
 });
 
-function calTotalInvoice() {
-    var total_invoice = 0;
-    for (var i = 0, len = invoice.length; i < len; i++) {
-        total_invoice += parseFloat(invoice[i].price);
-    }
-    // update DOM
-    var total = total_invoice.toFixed(2);
-    $("#invoice-total").text(formatMoney(total_invoice, 2));
-    var vat = total_invoice * 0.07;
-    $("#invoice-tax").text(formatMoney(vat));
-    var grandTotal = total_invoice + vat;
-    $("#invoice-grand-total").text(formatMoney(grandTotal));
-}; $("#maintenance-list").keyup(function () {
+
+    $("#maintenance-list").keyup(function () {
     $("#btn-save-invoice").removeClass('disabled');
 });
 $("#btn-save-invoice").on("click", function (event, ui) {
@@ -598,19 +653,6 @@ $("#btn-save-invoice").on("click", function (event, ui) {
             }
         }
     });
-
-//    $.ajax({
-//        url: "index.php?r=invoice/create"
-//        , type: 'json'
-//        , data: {
-//            customer: $("#customer").val(),
-//            invoice_id: $("#invoiceId").val(),
-//            invoice_description: invoice
-//        }
-//        , success: function (data) {
-//            var id = $("#quotationId").val();
-//        }
-//    });
 }); $("#invoiceId").keyup(function () {
     //console.log("keyup!")
     $("#viewInovoice").removeClass('disabled');
@@ -618,9 +660,5 @@ $("#btn-save-invoice").on("click", function (event, ui) {
     window.location.replace("?r=invoice/view&invoice_id=" + $("#invoiceId").val());
 });
 
-function formatMoney(n, c, d, t) {
-    //var n = this, 
-    c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "." : d, t = t == undefined ? "," : t, s = n < 0 ? "-" : "", i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-};
+
 });

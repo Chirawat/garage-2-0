@@ -8,6 +8,8 @@ use yii\filters\VerbFilter;
 use kartik\mpdf\Pdf;
 use app\Models\Invoice;
 use app\Models\InvoiceDescription;
+use app\Models\Viecle;
+use app\Models\Quotation;
 use app\Models\Customer;
 use yii\helpers\Url;
 
@@ -384,7 +386,77 @@ class InvoiceController extends Controller
     }
     
     public function actionReport($iid){
-        return $this->render('invoice_report');
+        $invoice = Invoice::findOne( $iid );
+        $total = $invoice->getInvoiceDescriptions()->sum('price');
+        $vat = $total * 0.07;
+        $grandTotal = $total + $vat;
+
+        $content = $this->renderPartial('report', [
+            'invoice' => $invoice,
+            'total' => $total,
+            'vat' => $vat,
+            'grandTotal' => $grandTotal,
+            'thbStr' => $this->num2thai($grandTotal),
+        ]);
+
+        // setup kartik\mpdf\Pdf component
+        $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_UTF8,
+        // A4 paper format
+        'format' => Pdf::FORMAT_A4,
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_PORTRAIT,
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER,
+        // your html content input
+        'content' => $content,
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting
+        'cssFile' => '@app/web/css/pdf.css',
+        // any css to be embedded if required
+        //        'cssInline' => '.kv-heading-1{font-size:18px}',
+        // set mPDF properties on the fly
+        'options' => ['title' => 'ใบเสร็จรับเงิน/ใบกํากับภาษี'],
+        // call mPDF methods on the fly
+        'methods' => [
+            //'SetHeader'=>['Krajee Report Header'],
+            'SetFooter'=>['หน้า {PAGENO} / {nb}'],
+            ]
+        ]);
+
+        $pdf->configure(array(
+            'defaultfooterline' => '0',
+            'defaultfooterfontstyle' => 'R',
+            'defaultfooterfontsize' => '10',
+        ));
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+
+    public function actionSearch(){
+        $request = Yii::$app->request;
+
+        // Search by plate no.
+        if($request->post('plate_no')){
+            $VID = Viecle::find()->where(['plate_no' => $request->post('plate_no')])->all();
+            $quotations = Quotation::find()->where(['VID' => $VID])->orderBy(['qid' => SORT_DESC])->all();
+
+            if( !empty($quotations) )
+                return $this->render('search', [
+                   'quotations'  => $quotations,
+                    'status' => 'success',
+                ]);
+
+            else
+                return $this->render('search', [
+                   'quotations'  => $quotations,
+                    'status' => 'failed',
+                ]);
+        }
+
+        return $this->render('search');
     }
 }
 ?>

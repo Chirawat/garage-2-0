@@ -589,36 +589,7 @@ $(document).ready(function () {
     });
 
 $("#btn-add-invoice").click(function () {
-    // check, empty?
-    if ($("#maintenance-list").val() == "") {
-        alert("กรุณาป้อนรายการ");
-        return false;
-    }
-    // prepare append row.
-    var appendRow = '<tr id=' + id + '> \
-            <td style="text-align: center;">' + id + '</td> \
-            <td>' + $("#invoice-list").val() + '</td> \
-            <td style="text-align: right;">' + $("#invoice-price").val() + '</td> \
-            <td> \
-                <button id="btn-del-invoice"class="btn btn-danger btn-xs"> \
-                    <span class="glyphicon glyphicon-remove"></span> \
-                </button> \
-            </td></tr>';
-    $("table > tbody").append(appendRow);
-    // Push data into object.
-    if ($("#maintenance-list").val() != "") {
-        invoice.push({
-            row: id
-            , list: $("#maintenance-list").val()
-            , price: $("#maintenance-price").val()
-        });
-    }
-    // Cal total
-    calTotalInvoice();
-    // clear text box value
-    $("#maintenance-list").val("");
-    $("#maintenance-price").val("");
-    id++;
+   enterInvoiceDescription();
 });
 $("table#myTable").on("click", "#btn-del-invoice", function (event) {
     var closestRow = $(this).closest("tr");
@@ -690,6 +661,8 @@ $("#viewInovoice").click(function () {
 $("#customer").select2();
 
 $("input#customer-type").on('change', function(){
+    $("#address").html("");
+    $("#tax-id").val("");
     $.get("?r=customer/customer-list", {customerType: this.value} , function(data){
         $("#customer-list").html("");
         $("#customer-list").html(data);

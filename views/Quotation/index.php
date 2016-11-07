@@ -6,48 +6,23 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\jui\AutoComplete;
 use yii\web\View;?>
-    <div class="modal fade" id="customer" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Modal title</h4> </div>
-                <div class="modal-body">
-                    <select multiple class="form-control">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
+
+<div class="container">
+    <div class="col-sm-6">
+        <label>เล่มที่ ...... เลขที่ ..............</label><br>
+        <label>วันที่ ..............</label>
     </div>
-    <!-- /.modal -->
-    <div class="container">
-        <div class="col-sm-6">
-            <label>เล่มที่ ...... เลขที่ ..............</label><br>
-            <label>วันที่ ..............</label>
-        </div>
-        <div class="form-group pull-right">
-            <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm">
-                <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
-            <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm">
-                <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a>
-            <a id="btn-save" class="btn btn-primary btn-sm">
-                <span class="glyphicon glyphicon-save-file"></span> บันทึก </a>
-            <a id="btn-print" target="_blank" class="btn btn-success btn-sm">
-                <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
-        </div>
+    <div class="form-group pull-right">
+        <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm">
+            <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
+        <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm">
+            <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a>
+        <a id="btn-save" class="btn btn-primary btn-sm">
+            <span class="glyphicon glyphicon-save-file"></span> บันทึก </a>
+        <a id="btn-print" target="_blank" class="btn btn-success btn-sm">
+            <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
     </div>
-    <br>
+</div>
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-body">

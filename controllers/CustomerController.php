@@ -127,9 +127,14 @@ class CustomerController extends Controller
         $customers = Customer::find()->where(['type' => $customerType])->all();
 
         echo "<select id='customer' class='form-control'>";
+        echo '<option disabled selected>เลือกลูกค้า</option>';
         foreach($customers as $customer){
             echo "<option value=" . $customer->CID . ">" . $customer->fullname . "</option>";
         }
-        echo '</select><script>$("select#customer").select2();</script>';
+        echo '</select><script>$("select#customer").select2();$("select#customer").bind("change", function(){
+            $.get("?r=invoice/update-detail", {CID: this.value}, function(data){ $("#address").html( data.address); $("#tax-id").val( data.taxpayer_id );});
+            });</script>';
     }
+
+    //public function actionInvoiceUpdateDetail
 }

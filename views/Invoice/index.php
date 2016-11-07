@@ -123,47 +123,41 @@ $url = Url::to(['customer-list']);?>
                                 <input type="text" id="engine-code" value="<?= $viecle->engin_code ?>" class="form-control input-sm" readonly> </div>
                         </div>
                         <br>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="customer">ชื่อ</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="fullname" value="<?=$viecle->owner0['fullname'] ?>" class="form-control input-sm" readonly> </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="adress">ที่อยู่</label>
-                            <div class="col-sm-9">
-                                <textarea id="address" class="form-control input-sm" rows="2" readonly><?= $viecle->owner0['address'] ?></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="customer">โทรศัพท์</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="phone" value="<?= $viecle->owner0['phone'] ?>" class="form-control input-sm" readonly> </div>
-                        </div>
                     </form>
                 </div>
                 <div class="col-sm-6">
                     <form class="form-horizontal">
                         <div class="form-group">
+                            <label class="control-label col-sm-3">เลขที่เคลม</label>
+                            <div class="col-sm-9">
+                                <input id="claim-no" class="form-control input-sm" value="<?= $invoice->claim_no ?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label col-sm-3">ประเภทลูกค้า</label>
-                            <div class="col-sm-7">
+                            <div class="col-sm-9">
                                 <label class="radio-inline">
-                                    <input type="radio" name="customer-type" id="customer-type" value="GENERAL" checked> ลูกค้าทั่วไป </label>
+                                    <input type="radio" name="customer-type" id="customer-type" value="GENERAL"> ลูกค้าทั่วไป </label>
                                 <label class="radio-inline">
                                     <input type="radio" name="customer-type" id="customer-type" value="INSURANCE_COMP"> บริษัทประกัน </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">นามลูกค้า</label>
-                            <div id="customer-list" class="col-sm-7">
-                                <?= Html::dropDownList('customer', null, ArrayHelper::map($customers, 'CID', 'fullname'), [
-                                    'id' => 'customer',
-                                    'class' => 'form-control'])?>
+                            <div id="customer-list" class="col-sm-9">
+                                <select class="form-control input-sm"></select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3">เลขที่เคลม</label>
-                            <div class="col-sm-7">
-                                <input id="claim-no" class="form-control input-sm" value="<?= $invoice->claim_no ?>">
+                            <label class="control-label col-sm-3">ที่อยู่</label>
+                            <div class="col-sm-9">
+                                <textarea id="address" rows="3" class="form-control input-sm"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">เลขประจำตัวผู้เสียภาษี</label>
+                            <div class="col-sm-9" id="tax">
+                                <input id="tax-id" class="form-control input-sm">
                             </div>
                         </div>
                     </form>
@@ -176,10 +170,10 @@ $url = Url::to(['customer-list']);?>
         <table class="table table-bordered" id="tableInvoice">
             <thead>
                 <tr bgcolor="#000000">
-                    <th class="col-sm-1" class="text-white" style="color:white;">ลำดับ</th>
-                    <th class="col-sm-9" style="color:white;">รายการ</th>
-                    <th class="col-sm-2" style="color:white;">ราคา</th>
-                    <th></th>
+                    <th width="5%" class="text-white" style="color:white;">ลำดับ</th>
+                    <th width="80$" style="color:white;">รายการ</th>
+                    <th width="25%" style="color:white;">ราคา</th>
+                    <th width="10%"></th>
                 </tr>
                 <tr id="input-row">
                     <td></td>
@@ -227,10 +221,6 @@ $str = 'function updateViecleDetail(data){
             $("#year").val( data.year );
             $("#engine-code").val( data.engine_code );
             $("#body-code").val( data.body_code );
-
-            $("#fullname").val( data.fullname );
-            $("#address").val( data.address );
-            $("#phone").val( data.phone );
 }';
 $this->registerJS( $str, View::POS_BEGIN);
 $this->registerJS( $str, View::POS_BEGIN);

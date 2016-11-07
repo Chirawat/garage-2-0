@@ -185,7 +185,6 @@ class InvoiceController extends Controller
 //            return $this->redirect(['invoice/index', 'cid'=>$customer->CID]);
 //        }
 
-        $customers = Customer::find()->where(['type' => 'GENERAL'])->all();
 
         $iid = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
         $iid = ($iid + 1) . "/" . (date('Y')+543);
@@ -200,6 +199,8 @@ class InvoiceController extends Controller
             $viecle = Viecle::find()->where(['plate_no' => Yii::$app->request->get('plate_no')])->one();
         }
 
+        $customers = Customer::find()->where(['type' => 'GENERAL'])->all();
+        $customers = ['fullname' => "เลือกลูกค้า"];
 
         return $this->render('index',[
             'invoice' => $invoice,
@@ -549,6 +550,12 @@ class InvoiceController extends Controller
         }
 
         return $this->render('search');
+    }
+
+    public function actionUpdateDetail( $CID ){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $customer = Customer::findOne($CID);
+        return $customer;
     }
 }
 ?>

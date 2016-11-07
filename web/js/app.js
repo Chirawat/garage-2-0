@@ -688,12 +688,12 @@ $("#viewInovoice").click(function () {
     window.location.replace("?r=invoice/view&invoice_id=" + $("#invoiceId").val());
 });
 $("#customer").select2();
+
 $("input#customer-type").on('change', function(){
     $.get("?r=customer/customer-list", {customerType: this.value} , function(data){
         $("#customer-list").html("");
         $("#customer-list").html(data);
     })
-
 });
 
 });

@@ -674,7 +674,7 @@ $("#btn-edit-invoice").click(function(){
     });
 });
 
- $("#btn-print-invoice").click(function () {
+$("#btn-print-invoice").click(function () {
     var iid = getUrlVars()["iid"];
     var dateIndex = $("#history-date").val();
     var hrefStr = "index.php?r=invoice/report&iid=" + iid + "&dateIndex=" + dateIndex;
@@ -687,6 +687,13 @@ $("#invoiceId").keyup(function () {
 $("#viewInovoice").click(function () {
     window.location.replace("?r=invoice/view&invoice_id=" + $("#invoiceId").val());
 });
+$("#customer").select2();
+$("input#customer-type").on('change', function(){
+    $.get("?r=customer/customer-list", {customerType: this.value} , function(data){
+        $("#customer-list").html("");
+        $("#customer-list").html(data);
+    })
 
+});
 
 });

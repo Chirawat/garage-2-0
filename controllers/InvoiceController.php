@@ -12,9 +12,94 @@ use app\Models\Viecle;
 use app\Models\Quotation;
 use app\Models\Customer;
 use yii\helpers\Url;
+use yii\db\Query;
 
 class InvoiceController extends Controller
 {
+    function num2thai($number){
+        $t1 = array("ศูนย์", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า");
+        $t2 = array("เอ็ด", "ยี่", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", "ล้าน");
+        $zerobahtshow = 0; // ในกรณีที่มีแต่จำนวนสตางค์ เช่น 0.25 หรือ .75 จะให้แสดงคำว่า ศูนย์บาท หรือไม่ 0 = ไม่แสดง, 1 = แสดง
+        (string) $number;
+        $number = explode(".", $number);
+        if(!empty($number[1])){
+            if(strlen($number[1]) == 1){
+                $number[1] .= "0";
+            }else if(strlen($number[1]) > 2){
+                if($number[1]{2} < 5){
+                    $number[1] = substr($number[1], 0, 2);
+                }else{
+                    $number[1] = $number[1]{0}.($number[1]{1}+1);
+                }
+            }
+        }
+
+        for($i=0; $i<count($number); $i++){
+            $countnum[$i] = strlen($number[$i]);
+            if($countnum[$i] <= 7){
+                $var[$i][] = $number[$i];
+            }else{
+                $loopround = ceil($countnum[$i]/6);
+                for($j=1; $j<=$loopround; $j++){
+                    if($j == 1){
+                            $slen = 0;
+                        $elen = $countnum[$i]-(($loopround-1)*6);
+                    }else{
+                        $slen = $countnum[$i]-((($loopround+1)-$j)*6);
+                        $elen = 6;
+                    }
+                    $var[$i][] = substr($number[$i], $slen, $elen);
+                }
+            }
+
+            $nstring[$i] = "";
+            for($k=0; $k<count($var[$i]); $k++){
+                if($k > 0) $nstring[$i] .= $t2[7];
+                    $val = $var[$i][$k];
+                    $tnstring = "";
+                    $countval = strlen($val);
+                for($l=7; $l>=2; $l--){
+                    if($countval >= $l){
+                        $v = substr($val, -$l, 1);
+                        if($v > 0){
+                            if($l == 2 && $v == 1){
+                                $tnstring .= $t2[($l)];
+                            }elseif($l == 2 && $v == 2){
+                                $tnstring .= $t2[1].$t2[($l)];
+                            }else{
+                                $tnstring .= $t1[$v].$t2[($l)];
+                            }
+                        }
+                    }
+                }
+
+                if($countval >= 1){
+                    $v = substr($val, -1, 1);
+                    if($v > 0){
+                        if($v == 1 && $countval > 1 && substr($val, -2, 1) > 0){
+                            $tnstring .= $t2[0];
+                        }else{
+                            $tnstring .= $t1[$v];
+                        }
+                    }
+                }
+
+                $nstring[$i] .= $tnstring;
+            }
+        }
+        $rstring = "";
+        if(!empty($nstring[0]) || $zerobahtshow == 1 || empty($nstring[1])){
+            if($nstring[0] == "") $nstring[0] = $t1[0];
+                $rstring .= $nstring[0]."บาท";
+        }
+        if(count($number) == 1 || empty($nstring[1])){
+            $rstring .= "ถ้วน";
+        }else{
+            $rstring .= $nstring[1]."สตางค์";
+        }
+        return $rstring;
+    }
+
     public function behaviors()
     {
         return [
@@ -41,6 +126,9 @@ class InvoiceController extends Controller
 
     public function actionIndex(){
         $request = Yii::$app->request;
+
+        $invoice = new Invoice();
+
         if( $request->isAjax ){
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             $invoice = new Invoice();
@@ -82,32 +170,48 @@ class InvoiceController extends Controller
             return $this->redirect(['invoice/view', 'iid' => $IID]);
         }
 
-        $detail = $this->renderPartial('detail',[]);
+//        if($request->get('cid'))
+//            $customer = Customer::findOne($request->get('cid'));
+//        else
+//            $customer = new Customer();
+//
+//        // Create Customer
+        $customer_t = new Customer();
+//        if( $customer_t->load($request->post()) && $customer_t->validate() ){
+//            $customer_t->save();
+//
+//            // find latest record
+//            $customer = Customer::find()->orderBy(['CID' => SORT_DESC])->one();
+//            return $this->redirect(['invoice/index', 'cid'=>$customer->CID]);
+//        }
+
+        $customers = Customer::find()->where(['type' => 'GENERAL'])->all();
 
         $iid = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
         $iid = ($iid + 1) . "/" . (date('Y')+543);
 
+        // list in combobox
+        $viecleList = Viecle::find()->all();
+        $insuranceCompanies = Customer::find()->where(['type' => 'INSURANCE_COMP'])->all();
 
-        if($request->get('cid'))
-            $customer = Customer::findOne($request->get('cid'));
-        else
-            $customer = new Customer();
+        $viecle = new Viecle();
 
-        // Create Customer
-        $customer_t = new Customer();
-        if( $customer_t->load($request->post()) && $customer_t->validate() ){
-            $customer_t->save();
-
-            // find latest record
-            $customer = Customer::find()->orderBy(['CID' => SORT_DESC])->one();
-            return $this->redirect(['invoice/index', 'cid'=>$customer->CID]);
+        if( Yii::$app->request->get('plate_no') ){
+            $viecle = Viecle::find()->where(['plate_no' => Yii::$app->request->get('plate_no')])->one();
         }
 
+
         return $this->render('index',[
-            'detail' => $detail,
+            'invoice' => $invoice,
+
             'iid' => $iid,
-            'customer' => $customer,
-            'customer_t' => $customer_t,
+//            'customer' => $customer,
+            'customer_t' => $customer_t, //
+            'customers' => $customers,
+
+            'viecleList' => $viecleList,
+            'insuranceCompanies' => $insuranceCompanies,
+            'viecle' => $viecle,
         ]);
     }
 
@@ -252,90 +356,6 @@ class InvoiceController extends Controller
         }
 
         return $ret;
-    }
-
-    function num2thai($number){
-        $t1 = array("ศูนย์", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า");
-        $t2 = array("เอ็ด", "ยี่", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", "ล้าน");
-        $zerobahtshow = 0; // ในกรณีที่มีแต่จำนวนสตางค์ เช่น 0.25 หรือ .75 จะให้แสดงคำว่า ศูนย์บาท หรือไม่ 0 = ไม่แสดง, 1 = แสดง
-        (string) $number;
-        $number = explode(".", $number);
-        if(!empty($number[1])){
-            if(strlen($number[1]) == 1){
-                $number[1] .= "0";
-            }else if(strlen($number[1]) > 2){
-                if($number[1]{2} < 5){
-                    $number[1] = substr($number[1], 0, 2);
-                }else{
-                    $number[1] = $number[1]{0}.($number[1]{1}+1);
-                }
-            }
-        }
-
-        for($i=0; $i<count($number); $i++){
-            $countnum[$i] = strlen($number[$i]);
-            if($countnum[$i] <= 7){
-                $var[$i][] = $number[$i];
-            }else{
-                $loopround = ceil($countnum[$i]/6);
-                for($j=1; $j<=$loopround; $j++){
-                    if($j == 1){
-                            $slen = 0;
-                        $elen = $countnum[$i]-(($loopround-1)*6);
-                    }else{
-                        $slen = $countnum[$i]-((($loopround+1)-$j)*6);
-                        $elen = 6;
-                    }
-                    $var[$i][] = substr($number[$i], $slen, $elen);
-                }
-            }
-
-            $nstring[$i] = "";
-            for($k=0; $k<count($var[$i]); $k++){
-                if($k > 0) $nstring[$i] .= $t2[7];
-                    $val = $var[$i][$k];
-                    $tnstring = "";
-                    $countval = strlen($val);
-                for($l=7; $l>=2; $l--){
-                    if($countval >= $l){
-                        $v = substr($val, -$l, 1);
-                        if($v > 0){
-                            if($l == 2 && $v == 1){
-                                $tnstring .= $t2[($l)];
-                            }elseif($l == 2 && $v == 2){
-                                $tnstring .= $t2[1].$t2[($l)];
-                            }else{
-                                $tnstring .= $t1[$v].$t2[($l)];
-                            }
-                        }
-                    }
-                }
-
-                if($countval >= 1){
-                    $v = substr($val, -1, 1);
-                    if($v > 0){
-                        if($v == 1 && $countval > 1 && substr($val, -2, 1) > 0){
-                            $tnstring .= $t2[0];
-                        }else{
-                            $tnstring .= $t1[$v];
-                        }
-                    }
-                }
-
-                $nstring[$i] .= $tnstring;
-            }
-        }
-        $rstring = "";
-        if(!empty($nstring[0]) || $zerobahtshow == 1 || empty($nstring[1])){
-            if($nstring[0] == "") $nstring[0] = $t1[0];
-                $rstring .= $nstring[0]."บาท";
-        }
-        if(count($number) == 1 || empty($nstring[1])){
-            $rstring .= "ถ้วน";
-        }else{
-            $rstring .= $nstring[1]."สตางค์";
-        }
-        return $rstring;
     }
 
     public function actionCustomerSearch($type = null, $fullname = null){
@@ -495,20 +515,35 @@ class InvoiceController extends Controller
     public function actionSearch(){
         $request = Yii::$app->request;
 
-        // Search by plate no.
-        if($request->post('plate_no')){
-            $VID = Viecle::find()->where(['plate_no' => $request->post('plate_no')])->all();
-            $quotations = Quotation::find()->where(['VID' => $VID])->orderBy(['qid' => SORT_DESC])->all();
+        if($request->post()){
+            $fullname = $request->post('fullname');
+            $customers = Customer::find()->where(['like', 'fullname', $fullname])->all();
 
-            if( !empty($quotations) )
+            if( sizeof($customers) != 0 ){
                 return $this->render('search', [
-                   'quotations'  => $quotations,
+                    'status' => 'success',
+                    'customers' => $customers,
+                ]);
+            }
+            else{
+                return $this->render('search', [
+                    'status' => 'failed',
+                ]);
+            }
+        }
+        if($request->post()){
+            $CID = Customer::findOne($CID);
+            $invoice = Invoice::find()->where(['CID' => $CID ])->all();
+
+            if( !empty( $invoice ) )
+                return $this->render('search', [
+                   'invoice'  => $invoice,
                     'status' => 'success',
                 ]);
 
             else
                 return $this->render('search', [
-                   'quotations'  => $quotations,
+                   'invoice'  => $invoice,
                     'status' => 'failed',
                 ]);
         }

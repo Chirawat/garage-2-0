@@ -121,4 +121,15 @@ class CustomerController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public function actionCustomerList(){
+        $customerType = Yii::$app->request->get('customerType');
+        $customers = Customer::find()->where(['type' => $customerType])->all();
+
+        echo "<select id='customer' class='form-control'>";
+        foreach($customers as $customer){
+            echo "<option value=" . $customer->CID . ">" . $customer->fullname . "</option>";
+        }
+        echo '</select><script>$("select#customer").select2();</script>';
+    }
 }

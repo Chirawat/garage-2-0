@@ -41,8 +41,7 @@ AppAsset::register($this);
                 'label' => 'ออกเอกสาร',
                 'items' => [
                     ['label' => 'ใบเสนอราคา', 'url' => Url::to(['quotation/index'])],
-                    ['label' => 'ใบแจ้งหนี้', 'url' => Url::to(['invoice/index'])],
-                    ['label' => 'ใบเสร็จรับเงิน', 'url' =>'#'],
+                    ['label' => 'ใบแจ้งหนี้/ใบเสร็จ', 'url' => Url::to(['invoice/index'])],
                 ],
             ],
             ['label' => 'เพิ่มรูปภาพ', 'url' => '#'],

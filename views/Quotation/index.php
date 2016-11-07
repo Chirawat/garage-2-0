@@ -37,10 +37,14 @@ use yii\web\View;?>
             <label>วันที่ ..............</label>
         </div>
         <div class="form-group pull-right">
-            <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
-            <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a> |
-            <a id="btn-save" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> บันทึก </a>
-            <a id="btn-print" target="_blank" class="btn btn-success btn-sm"> <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
+            <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm">
+                <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
+            <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm">
+                <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a>
+            <a id="btn-save" class="btn btn-primary btn-sm">
+                <span class="glyphicon glyphicon-save-file"></span> บันทึก </a>
+            <a id="btn-print" target="_blank" class="btn btn-success btn-sm">
+                <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
         </div>
     </div>
     <br>
@@ -214,7 +218,7 @@ use yii\web\View;?>
             </tfoot>
         </table>
     </div>
-    <?php
+<?php
 $this->registerJS('$("#plate-no").select2();', View::POS_READY);
 $str = 'function updateViecleDetail(data){ 
     $("#viecle-name").val( data.viecle_name );

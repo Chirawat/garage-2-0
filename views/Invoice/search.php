@@ -11,7 +11,7 @@ $this->title = "ค้นหาใบเสนอราคา";
 
     <div class="form-group">
         <label>ชื่อลูกค้า</label>
-        <?= Html::input('text', 'plate_no', '', ['class' => 'form-control']) ?>
+        <?= Html::input('text', 'fullname', '', ['class' => 'form-control']) ?>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">ค้นหา</button>
@@ -19,23 +19,25 @@ $this->title = "ค้นหาใบเสนอราคา";
     <?php ActiveForm::end(); ?>
     <br>
 </div>
-<?php if( isset($quotations) && sizeof($quotations) > 1 ): ?>
+<?php if( isset($customers) && sizeof($customers) > 0 ): ?>
     <div class="col-sm-12">
-        <div class="alert alert-success" role="alert"> พบข้อมูลจำนวน <?= sizeof($quotations) ?> รายการ </div>
+        <div class="alert alert-success" role="alert"> พบข้อมูลจำนวน <?= sizeof($customers) ?> รายการ </div>
     </div>
     <div class="col-sm-12">
         <table width="100%" class="table table-hover" id="search-table">
             <tbody>
                 <tr>
                     <th>#</th>
-                    <th>เลขที่เคลม</th>
-                    <th>วันที่</th>
+                    <th>ชื่อลูกค้า</th>
+                    <th>จำนวน</th>
+                    <th>ข้อมูลล่าสุด</th>
                 </tr>
-                <?php foreach($quotations as $quotation): ?>
-                    <tr data-href="<?= Url::to(['quotation/view', 'qid' => $quotation->QID ]) ?>" style="cursor: pointer;">
+                <?php foreach($customers as $customer): ?>
+                    <tr data-href="<?= Url::to(['invocie/view', 'iid' => 0 ]) ?>" style="cursor: pointer;">
                         <td></td>
-                        <td> <?= $quotation->claim_no ?></td>
-                        <td> <?= $quotation->quotation_date ?></td>
+                        <td> <?= $customer->fullname ?></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

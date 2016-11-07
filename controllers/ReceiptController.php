@@ -13,6 +13,7 @@ use app\Models\Quotation;
 use app\Models\Customer;
 use yii\helpers\Url;
 use yii\db\Query;
+use app\Models\Reciept;
 
 class ReceiptController extends Controller{
     function num2thai($number){
@@ -137,6 +138,23 @@ class ReceiptController extends Controller{
         $total = $query->sum('price');
         $vat = $total * 0.07;
         $grandTotal = $total + $vat;
+
+
+        /* Update Reciept Info */
+        $reciept = new Reciept();
+        $reciept->IID = $invoice->IID;
+        $reciept->date = date('Y-m-d H:i:s');
+        $reciept->total = $grandTotal;
+        $reciept->EID = Yii::$app->user->identity->getId();
+
+        if($reciept->validate() && $reciept->save()){
+            // success
+        }
+        else{
+            // failed
+            echo $reciept->errors;
+            die();
+        }
 
         $content = $this->renderPartial('report', [
             'invoice' => $invoice,

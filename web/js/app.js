@@ -672,7 +672,18 @@ $("input#customer-type").on('change', function(){
     })
 });
 $("#btn-print-receipt").click( function(){
+    var r = confirm("คุณต้องการพิมพ์ใบเสร็จใช่หรือไม่")
 
+    var iid = getUrlVars()["iid"];
+    var dateIndex = $("#history-date").val();
+    var str = "index.php?r=receipt/report&iid=" + iid + "&dateIndex=" + dateIndex;
+
+    if(r){
+        window.open(
+          str,
+          '_blank' // <- This is what makes it open in a new window.
+        );
+    }
 });
 
 });

@@ -10,7 +10,7 @@ use Yii;
  * @property integer $idid
  * @property integer $IID
  * @property string $description
- * @property integer $price
+ * @property double $price
  * @property string $date
  *
  * @property Invoice $i
@@ -32,8 +32,9 @@ class InvoiceDescription extends \yii\db\ActiveRecord
     {
         return [
             [['IID'], 'required'],
-            [['IID', 'price'], 'integer'],
+            [['IID'], 'integer'],
             [['description'], 'string'],
+            [['price'], 'number'],
             [['date'], 'safe'],
             [['IID'], 'exist', 'skipOnError' => true, 'targetClass' => Invoice::className(), 'targetAttribute' => ['IID' => 'IID']],
         ];

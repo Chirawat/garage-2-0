@@ -12,10 +12,9 @@ use Yii;
  * @property string $reciept_id
  * @property string $date
  * @property integer $total
- * @property integer $receive
- * @property integer $Employee_EID
+ * @property integer $EID
  *
- * @property Employee $employeeE
+ * @property Employee $e
  * @property Invoice $i
  */
 class Reciept extends \yii\db\ActiveRecord
@@ -34,11 +33,11 @@ class Reciept extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['IID', 'Employee_EID'], 'required'],
-            [['IID', 'total', 'receive', 'Employee_EID'], 'integer'],
+            [['IID'], 'required'],
+            [['IID', 'total', 'EID'], 'integer'],
             [['reciept_id'], 'string'],
             [['date'], 'safe'],
-            [['Employee_EID'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['Employee_EID' => 'EID']],
+            [['EID'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['EID' => 'EID']],
             [['IID'], 'exist', 'skipOnError' => true, 'targetClass' => Invoice::className(), 'targetAttribute' => ['IID' => 'IID']],
         ];
     }
@@ -54,17 +53,16 @@ class Reciept extends \yii\db\ActiveRecord
             'reciept_id' => 'Reciept ID',
             'date' => 'Date',
             'total' => 'Total',
-            'receive' => 'Receive',
-            'Employee_EID' => 'Employee  Eid',
+            'EID' => 'Eid',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEmployeeE()
+    public function getE()
     {
-        return $this->hasOne(Employee::className(), ['EID' => 'Employee_EID']);
+        return $this->hasOne(Employee::className(), ['EID' => 'EID']);
     }
 
     /**

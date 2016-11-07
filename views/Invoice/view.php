@@ -8,6 +8,7 @@ use yii\helpers\Url;
 use kartik\select2\Select2;
 use yii\bootstrap\Modal;
 use yii\jui\AutoComplete;
+use yii\helpers\ArrayHelper;
 
 $this->title = "แก้ไขใบแจ้งหนี้";
 ?>
@@ -21,7 +22,9 @@ $this->title = "แก้ไขใบแจ้งหนี้";
                 <a href="<?=Url::to(['invoice/edit', 'iid'=>$invoice->IID])?>" id="btn-edit-invoice" class="btn btn-primary btn-sm">
                     <span class="glyphicon glyphicon-save-file"></span> แก้ไข</a> 
                 <a id="btn-print-invoice" target="_blank" class="btn btn-success btn-sm">
-                    <span class="glyphicon glyphicon-print"></span> พิมพ์ใบแจ้งหนี้</a> 
+                    <span class="glyphicon glyphicon-print"></span> พิมพ์ใบแจ้งหนี้ </a>
+                <a id="btn-print-receipt" target="_blank" class="btn btn-success btn-sm">
+                    <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสร็จ </a>
             </div>
         </div>
     </div>
@@ -53,36 +56,83 @@ $this->title = "แก้ไขใบแจ้งหนี้";
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-6">
+   <div class="row">
+       <div class="container">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">ข้อมูลลูกค้า</h3> </div>
                 <div class="panel-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <lable class="control-label col-sm-2" for="customer">ลูกค้า</lable>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control input-sm" value="<?=$customer->fullname ?>" readonly>
+                    <div class="col-sm-6">
+                        <form name="test" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">ทะเบียน</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm" value="<?=$viecle->plate_no?>" readonly>
+                                </div>
+                                <label class="col-sm-2 control-label">ชื่อรถ</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="viecle-name" value="<?= $viecle->viecleName['name'] ?>" class="form-control input-sm" readonly> </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <lable class="control-label col-sm-2" for="customer">ที่อยู่</lable>
-                            <div class="col-sm-10">
-                                <textarea rows="3" class="form-control input-sm" readonly><?=$customer->address?></textarea>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">รุ่น</label>
+                                <div class="col-sm-4">
+                                    <input type="text" id="viecle-model" value="<?= $viecle->viecleModel['model'] ?>" class="form-control input-sm" readonly> </div>
+                                <label class="col-sm-2 control-label">ปี</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="year" value="<?= $viecle->viecle_year ?>" class="form-control input-sm" readonly> </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <lable class="control-label col-sm-2" for="customer">โทร</lable>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control input-sm" value="<?=$customer->phone?>" readonly>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">เลขตัวถัง</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="body-code" value="<?= $viecle->body_code ?>" class="form-control input-sm" readonly> </div>
                             </div>
-                        </div>
-                    </form>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">เลขเครื่อง</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="engine-code" value="<?= $viecle->engin_code ?>" class="form-control input-sm" readonly> </div>
+                            </div>
+                            <br>
+                        </form>
+                    </div>
+                    <div class="col-sm-6">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">เลขที่เคลม</label>
+                                <div class="col-sm-9">
+                                    <input id="claim-no" class="form-control input-sm" value="<?= $invoice->claim_no ?>" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">ประเภทลูกค้า</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="customer-type" id="customer-type" value="GENERAL" <?=$customer->type=="GENERAL"?"checked":null?>> ลูกค้าทั่วไป </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="customer-type" id="customer-type" value="INSURANCE_COMP" <?=$customer->type=="INSURANCE_COMP"?"checked":null?>> บริษัทประกัน </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">นามลูกค้า</label>
+                                <div id="customer-list" class="col-sm-9">
+                                    <input type="text" class="form-control input-sm" value="<?=$customer->fullname?>" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">ที่อยู่</label>
+                                <div class="col-sm-9">
+                                    <textarea id="address" rows="3" class="form-control input-sm" readonly><?=$customer->address?></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">เลขประจำตัวผู้เสียภาษี</label>
+                                <div class="col-sm-9" id="tax">
+                                    <input id="tax-id" class="form-control input-sm" readonly value="<?=$customer->taxpayer_id?>">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-</div>
+       </div>
+    </div>
     <?php Pjax::begin(); ?>
     <div class="quotation-content">
         <div class="form-group">

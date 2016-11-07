@@ -286,7 +286,7 @@ class InvoiceController extends Controller
         }
 
         // find date
-        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->orderBy(['date'=>SORT_DESC])->all();
+        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->where(['iid' => $iid])->orderBy(['date'=>SORT_DESC])->all();
         $dateIndex = 0;
         if($request->isAjax){
             $dateIndex = $request->post('dateIndex');
@@ -295,23 +295,26 @@ class InvoiceController extends Controller
         // Description
         $query = InvoiceDescription::find()->where(['IID' => $iid, 'date' => $dateLists[$dateIndex]->date ]);
         $descriptions = $query->all();
-
-        $total = $invoice->getInvoiceDescriptions()->sum('price');
+        $total = $query->sum('price');
         $vat = $total * 0.07;
         $grandTotal = $total + $vat;
 
-         $customer = $invoice->customer;
+        $customer = $invoice->customer;
+
+        $viecle = $invoice->viecle;
 
         return $this->render('view', [
             'dateLists' => $dateLists,
             'dateIndex' => $dateIndex,
-
             'customer' => $customer,
+            'viecle' => $viecle,
             'invoice' => $invoice,
             'descriptions' => $descriptions,
             'total' => $total,
             'vat' => $vat,
             'grandTotal' => $grandTotal,
+
+
         ]);
     }
 
@@ -321,9 +324,13 @@ class InvoiceController extends Controller
         // Create invoice
         $invoice = new Invoice();
 
-        $invoice->CID = $request->post('cid');
-        $invoice->date = date('Y-m-d H:i:s');
-        $invoice->employee = Yii::$app->user->identity->getId();
+        $invoice->CID = $request->post('CID');
+        $invoice->VID = $request->post('VID');
+        $invoice->EID = Yii::$app->user->identity->getId();
+        $invoice->claim_no = $request->post('claim_no');
+
+        $dt = date('Y-m-d H:i:s');
+        $invoice->date = $dt;
 
         $ret = [];
         if($invoice->validate() && $invoice->save()){
@@ -337,6 +344,7 @@ class InvoiceController extends Controller
                 $invoiceDescription->IID = $invoice->IID;
                 $invoiceDescription->description = $description['list'];
                 $invoiceDescription->price = $description['price'];
+                $invoiceDescription->date = $dt;
 
                 if($invoiceDescription->validate()){
                     $invoiceDescription->save();
@@ -353,7 +361,7 @@ class InvoiceController extends Controller
         else{
             //error
             $ret['status'] = false;
-            $ret['message'] = "Error: " + $invoice->errors;
+            $ret['message'] = $invoice->errors;
         }
 
         return $ret;
@@ -412,8 +420,10 @@ class InvoiceController extends Controller
         $request = Yii::$app->request;
 
         $invoice = Invoice::findOne( $iid );
+
+        $viecle = $invoice->viecle;
+
         $customer = $invoice->customer;
-        $invoiceDescriptions = $invoice->invoiceDescriptions;
         
         if($request->post()){
             /* Create descriptions*/
@@ -445,8 +455,21 @@ class InvoiceController extends Controller
             return $ret;
         }
 
+        // find date
+        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->where(['iid' => $iid])->orderBy(['date'=>SORT_DESC])->all();
+        $dateIndex = 0;
+        if($request->isAjax){
+            $dateIndex = $request->post('dateIndex');
+        }
+
+        // Description
+        $query = InvoiceDescription::find()->where(['IID' => $iid, 'date' => $dateLists[$dateIndex]->date ]);
+        $invoiceDescriptions = $query->all();
+
         return $this->render('edit',[
+            'invoice' => $invoice,
             'customer' => $customer,
+            'viecle' => $viecle,
             'invoiceDescriptions' => $invoiceDescriptions,
         ]);
     }

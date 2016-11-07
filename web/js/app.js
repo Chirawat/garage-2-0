@@ -104,8 +104,8 @@ $(document).ready(function () {
     updateTableIndex();
     
     /* Invoice */
-    rederTableInvoice();
-    calTotalInvoice();
+//    rederTableInvoice();
+//    calTotalInvoice();
     
     ///////////////////////////////////////////////////////
 
@@ -605,10 +605,12 @@ $("table#myTable").on("click", "#btn-del-invoice", function (event) {
 });
 $("#btn-save-invoice").on("click", function (event, ui) {
     // error, customer cannot be blank!
-    if ($("#customer").val() == "") window.alert("ต้องเลือกลูกค้าก่อน");
+//    if ($("#customer").val() == "") window.alert("ต้องเลือกลูกค้าก่อน");
 
     $.post("index.php?r=invoice/create", {
-        cid: getUrlVars()["cid"],
+        CID: $("#customer-list option:selected").val(),
+        VID: $("#plate-no").val(),
+        claim_no: $("#claim-no").val(),
         invoice: invoice
     }, function(data){
         if( data.status ){
@@ -635,12 +637,13 @@ $("#btn-edit-invoice").click(function(){
 
             if(r){
                 // print
+                 window.open(
+                      '?r=invoice/report&iid=' + data.IID,
+                      '_blank' // <- This is what makes it open in a new window.
+                    );
                 window.location.replace("?r=invoice/report&iid=" + data.IID);
             }
-            else{
-                // view
-                window.location.replace("?r=invoice/view&iid=" + data.IID);
-            }
+            window.location.replace("?r=invoice/view&iid=" + data.IID);
         }
     });
 });
@@ -667,6 +670,9 @@ $("input#customer-type").on('change', function(){
         $("#customer-list").html("");
         $("#customer-list").html(data);
     })
+});
+$("#btn-print-receipt").click( function(){
+
 });
 
 });

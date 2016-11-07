@@ -41,37 +41,37 @@ $url = Url::to(['customer-list']);?>
             </div>
         </div>
     </div>
-    <div id="edit-invoice-description" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">แก้ไขรายการ</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">รายการ</label>
-                            <div class="form-group col-sm-10">
-                                <input id="list" type="text" class="form-control">
-                            </div>
+<div id="edit-invoice-description" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">แก้ไขรายการ</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">รายการ</label>
+                        <div class="form-group col-sm-10">
+                            <input id="list" type="text" class="form-control">
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">ราคา</label>
-                            <div class="form-group col-sm-5">
-                                <input id="price" type="number" class="form-control">
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">ราคา</label>
+                        <div class="form-group col-sm-5">
+                            <input id="price" type="number" class="form-control">
                         </div>
-                    </form>
-                </div>
-                    <div class="modal-footer">
-                    <button id="desc-update" type="button" class="btn btn-primary" onclick="updateInvoiceDescription()">บันทึก</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <div id="del-confirm" class="modal fade" tabindex="-1" role="dialog">
+                    </div>
+                </form>
+            </div>
+                <div class="modal-footer">
+                <button id="desc-update" type="button" class="btn btn-primary" onclick="updateInvoiceDescription()">บันทึก</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div id="del-confirm" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -127,14 +127,12 @@ $url = Url::to(['customer-list']);?>
                 <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a>
             <a id="btn-save-invoice" class="btn btn-primary btn-sm">
                 <span class="glyphicon glyphicon-save-file"></span> บันทึก</a>
-            <a id="btn-print" target="_blank" class="btn btn-success btn-sm">
-                <span class="glyphicon glyphicon-print"></span> พิมพ์ใบแจ้งหนี้ </a>
-            <a id="btn-print" target="_blank" class="btn btn-success btn-sm">
-                <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสร็จ </a>
+
         </div>
     </div>
 </div>
-<div class="container">
+<div class="row">
+    <div class="container">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="col-sm-6">
@@ -198,13 +196,13 @@ $url = Url::to(['customer-list']);?>
                         <div class="form-group">
                             <label class="control-label col-sm-3">ที่อยู่</label>
                             <div class="col-sm-9">
-                                <textarea id="address" rows="3" class="form-control input-sm"></textarea>
+                                <textarea id="address" rows="3" class="form-control input-sm" readonly></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">เลขประจำตัวผู้เสียภาษี</label>
                             <div class="col-sm-9" id="tax">
-                                <input id="tax-id" class="form-control input-sm">
+                                <input id="tax-id" class="form-control input-sm" readonly>
                             </div>
                         </div>
                     </form>
@@ -212,6 +210,7 @@ $url = Url::to(['customer-list']);?>
             </div>
         </div>
     </div>
+</div>
 <div class="row">
     <div class="col-sm-12">
         <table class="table table-bordered" id="tableInvoice">

@@ -10,15 +10,16 @@ use Yii;
  * @property integer $QID
  * @property integer $CID
  * @property integer $VID
- * @property string $Employee
  * @property integer $TID
  * @property string $quotation_id
  * @property string $quotation_date
  * @property string $claim_no
  * @property integer $damage_level
  * @property integer $damage_position
+ * @property integer $EID
  *
  * @property Description[] $descriptions
+ * @property Employee $e
  * @property Customer $c
  * @property DamagePosition $damagePosition
  * @property Viecle $v
@@ -39,10 +40,11 @@ class Quotation extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CID', 'VID', 'TID', 'damage_level', 'damage_position'], 'integer'],
-            [['Employee', 'quotation_id', 'claim_no'], 'string'],
+            [['CID', 'VID', 'TID', 'damage_level', 'damage_position', 'EID'], 'integer'],
+            [['quotation_id', 'claim_no'], 'string'],
             [['quotation_date'], 'safe'],
-            [['damage_position'], 'required'],
+            [['damage_position', 'EID'], 'required'],
+            [['EID'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['EID' => 'EID']],
             [['CID'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['CID' => 'CID']],
             [['damage_position'], 'exist', 'skipOnError' => true, 'targetClass' => DamagePosition::className(), 'targetAttribute' => ['damage_position' => 'id']],
             [['VID'], 'exist', 'skipOnError' => true, 'targetClass' => Viecle::className(), 'targetAttribute' => ['VID' => 'VID']],
@@ -58,13 +60,13 @@ class Quotation extends \yii\db\ActiveRecord
             'QID' => 'Qid',
             'CID' => 'Cid',
             'VID' => 'Vid',
-            'Employee' => 'Employee',
             'TID' => 'Tid',
             'quotation_id' => 'Quotation ID',
             'quotation_date' => 'Quotation Date',
             'claim_no' => 'Claim No',
             'damage_level' => 'Damage Level',
             'damage_position' => 'Damage Position',
+            'EID' => 'Eid',
         ];
     }
 
@@ -79,7 +81,15 @@ class Quotation extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCustomer()
+    public function getE()
+    {
+        return $this->hasOne(Employee::className(), ['EID' => 'EID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getC()
     {
         return $this->hasOne(Customer::className(), ['CID' => 'CID']);
     }
@@ -95,7 +105,7 @@ class Quotation extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getViecle()
+    public function getV()
     {
         return $this->hasOne(Viecle::className(), ['VID' => 'VID']);
     }

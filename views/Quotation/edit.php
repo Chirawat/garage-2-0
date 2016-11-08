@@ -88,8 +88,7 @@ use yii\web\View;
                     <div class="form-group">
                         <label class="col-sm-3 control-label" for="phone">บริษัทประกัน</label>
                         <div class="col-sm-9">
-                            <input type="text" disabled class="form-control input-sm" value="need to add this field"/>
-<!--                                <input type="text" value=""/>-->
+                            <input type="text" disabled class="form-control input-sm" value="<?=$quotation->customer['fullname']?>"/>
                         </div>
                     </div>
                     <div class="form-group">

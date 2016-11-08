@@ -104,9 +104,9 @@ $this->title = "แก้ไขใบแจ้งหนี้";
                                 <label class="control-label col-sm-3">ประเภทลูกค้า</label>
                                 <div class="col-sm-9">
                                     <label class="radio-inline">
-                                        <input type="radio" name="customer-type" id="customer-type" value="GENERAL" <?=$customer->type=="GENERAL"?"checked":null?>> ลูกค้าทั่วไป </label>
+                                        <input type="radio" name="customer-type" id="customer-type" value="GENERAL" <?=$customer->type=="GENERAL"?"checked":null?> disabled> ลูกค้าทั่วไป </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="customer-type" id="customer-type" value="INSURANCE_COMP" <?=$customer->type=="INSURANCE_COMP"?"checked":null?>> บริษัทประกัน </label>
+                                        <input type="radio" name="customer-type" id="customer-type" value="INSURANCE_COMP" <?=$customer->type=="INSURANCE_COMP"?"checked":null?> disabled> บริษัทประกัน </label>
                                 </div>
                             </div>
                             <div class="form-group">

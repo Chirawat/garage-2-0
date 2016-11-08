@@ -372,7 +372,7 @@ $(document).ready(function () {
         quotation_info = {
             customerType: $("#customer-type:checked").val()
             , claimNo: $("#claim-no").val()
-            , insuranceCompany: $("#insurance-company option:selected").val()
+            , CID: $("#customer option:selected").val()
             , damageLevel: $("#damage-level").val()
             , damagePosition: $("#damage-position").val()
             , vieclePlateNo: $("#plate-no option:selected").val()

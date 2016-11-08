@@ -81,7 +81,7 @@ class Quotation extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getE()
+    public function getEmployee()
     {
         return $this->hasOne(Employee::className(), ['EID' => 'EID']);
     }
@@ -89,7 +89,7 @@ class Quotation extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getC()
+    public function getCustomer()
     {
         return $this->hasOne(Customer::className(), ['CID' => 'CID']);
     }
@@ -105,7 +105,7 @@ class Quotation extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getV()
+    public function getViecle()
     {
         return $this->hasOne(Viecle::className(), ['VID' => 'VID']);
     }

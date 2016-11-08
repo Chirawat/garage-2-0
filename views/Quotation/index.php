@@ -19,8 +19,6 @@ use yii\web\View;?>
             <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a>
         <a id="btn-save" class="btn btn-primary btn-sm">
             <span class="glyphicon glyphicon-save-file"></span> บันทึก </a>
-        <a id="btn-print" target="_blank" class="btn btn-success btn-sm">
-            <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
     </div>
 </div>
     <div class="container">
@@ -67,7 +65,7 @@ use yii\web\View;?>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="adress">ที่อยู่</label>
                             <div class="col-sm-9">
-                                <textarea id="address" class="form-control input-sm" rows="2" readonly><?= $viecle->owner0['address'] ?></textarea>
+                                <textarea id="viecle-address" class="form-control input-sm" rows="2" readonly><?= $viecle->owner0['address'] ?></textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -80,35 +78,29 @@ use yii\web\View;?>
                 <div class="col-sm-6">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="control-label col-sm-3">ประเภทลูกค้า</label>
-                            <div class="col-sm-7">
-                                <label class="radio-inline">
-                                    <input type="radio" name="customer-type" id="customer-type" value="GENERAL" checked> ลูกค้าทั่วไป </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="customer-type" id="customer-type" value="INSURANCE"> บริษัทประกัน </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="phone">บริษัทประกัน</label>
-                            <div class="col-sm-7">
-                                <select id="insurance-company" class="form-control input-sm">
-                                    <?php foreach($insuranceCompanies as $insuranceCompany): ?>
-                                        <option value="<?= $insuranceCompany->CID ?>">
-                                            <?= $insuranceCompany->fullname ?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label col-sm-3">เลขที่เคลม</label>
-                            <div class="col-sm-7">
-                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>"> 
+                            <div class="col-sm-9">
+                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">ประเภทลูกค้า</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline">
+                                    <input type="radio" name="customer-type" id="customer-type" value="GENERAL"> ลูกค้าทั่วไป </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="customer-type" id="customer-type" value="INSURANCE_COMP"> บริษัทประกัน </label>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="control-label col-sm-3">นามลูกค้า</label>
+                            <div id="customer-list" class="col-sm-9">
+                                <select class="form-control input-sm"></select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-3">ความเสียหาย</label>
-                            <div class="col-sm-7">
+                            <div class="col-sm-9">
                                 <label class="radio-inline">
                                     <input type="radio" name="damage-level" id="damage-level" value="1" checked> น้อย </label>
                                 <label class="radio-inline">
@@ -119,7 +111,7 @@ use yii\web\View;?>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="phone">ตำแหน่งการชน</label>
-                            <div class="col-sm-7">
+                            <div class="col-sm-9">
                                 <select id="damage-position" class="form-control input-sm">
                                     <?php foreach($damagePostions as $damagePosition): ?>
                                         <option value="<?= $damagePosition->id ?>">
@@ -131,7 +123,7 @@ use yii\web\View;?>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-7 col-sm-offset-3">
-                                <a id="auto-generate" class="btn btn-primary btn-sm">สร้างรายการอัติโนมัติ</a>
+                                <a id="auto-generate" class="btn btn-primary btn-sm">สร้างรายการอัตโนมัติ</a>
                             </div>
                         </div>
                     </form>
@@ -203,7 +195,7 @@ $str = 'function updateViecleDetail(data){
     $("#body-code").val( data.body_code );
     
     $("#fullname").val( data.fullname );
-    $("#address").val( data.address );
+    $("#viecle-address").val( data.address );
     $("#phone").val( data.phone );
 }';
 $this->registerJS( $str, View::POS_BEGIN);

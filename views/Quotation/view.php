@@ -8,163 +8,135 @@ use yii\jui\AutoComplete;
 use yii\web\View;
 use yii\widgets\Pjax;
 use yii\widgets\ActiveForm;
+
+$this->title = "ใบเสนอราคา";
 ?>
-    <div class="modal fade" id="customer" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Modal title</h4> </div>
-                <div class="modal-body">
-                    <select multiple class="form-control">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
+<div class="container">
+        <div class="col-sm-6">
+            <label>เล่มที่ ...... เลขที่ ..............</label><br>
+            <label>วันที่ ..............</label>
         </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-    <div class="container">
-        <form class="form-inline">
-            <div class="form-group">
-                <label class="form-label">เลขที่</label>
-                <input type="text" class="form-control input-sm" readonly value="<?= $quotation->quotation_id ?>"> </div>
-            <div class="form-group">
-                <label class="form-label">วันที่</label>
-                <input type="text" class="form-control input-sm" readonly value="<?= date('d/m/') . (date('Y')+543) ?>"> </div>
-            <div class="form-group pull-right">
-                <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
-                <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a> |
-                <a href="<?=Url::to(['quotation/edit', 'qid' => $quotation->QID])?>" id="btn-edit" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-save-file"></span> แก้ไขรายการ </a>
-                <a id="btn-print" target="_blank" class="btn btn-success btn-sm"> <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
-            </div>
-        </form>
-    </div>
-    <br>
-    <div class="container">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="col-sm-6">
-                    <form name="test" class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">ทะเบียน</label>
-                            <div class="col-sm-4">
-                                <input disabled value="<?= $viecle->plate_no ?>" class="form-control input-sm">
-                            </div>
-                            <label class="col-sm-2 control-label">ชื่อรถ</label>
-                            <div class="col-sm-3">
-                                <input type="text" id="viecle-name" value="<?= $viecle->viecleName['name'] ?>" class="form-control input-sm" readonly> </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">รุ่น</label>
-                            <div class="col-sm-4">
-                                <input type="text" id="viecle-model" value="<?= $viecle->viecleModel['model'] ?>" class="form-control input-sm" readonly> </div>
-                            <label class="col-sm-2 control-label">ปี</label>
-                            <div class="col-sm-3">
-                                <input type="text" id="year" value="<?= $viecle->viecle_year ?>" class="form-control input-sm" readonly> </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">เลขตัวถัง</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="body-code" value="<?= $viecle->body_code ?>" class="form-control input-sm" readonly> </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">เลขเครื่อง</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="engine-code" value="<?= $viecle->engin_code ?>" class="form-control input-sm" readonly> </div>
-                        </div>
-                        <br>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="customer">ชื่อ</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="fullname" value="<?=$viecle->owner0['fullname'] ?>" class="form-control input-sm" readonly> </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="adress">ที่อยู่</label>
-                            <div class="col-sm-9">
-                                <textarea id="address" class="form-control input-sm" rows="2" readonly><?= $viecle->owner0['address'] ?></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="customer">โทรศัพท์</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="phone" value="<?= $viecle->owner0['phone'] ?>" class="form-control input-sm" readonly> </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-sm-6">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">ประเภทลูกค้า</label>
-                            <div class="col-sm-7">
-                                <label class="radio-inline">
-                                    <input type="radio" name="customer-type" id="customer-type" value="GENERAL" <?= $quotation->customer['type'] == "GENERAL" ? "checked":null?> disabled> ลูกค้าทั่วไป </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="customer-type" id="customer-type" value="INSURANCE" <?= $quotation->customer['type'] == "INSURANCE_COMP"?"checked":null?> disabled> บริษัทประกัน </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="phone">ลูกค้า</label>
-                            <div class="col-sm-7">
-                                <input type="text" disabled class="form-control input-sm" value="<?=$quotation->customer['fullname']?>"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">เลขที่เคลม</label>
-                            <div class="col-sm-7">
-                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>" disabled> 
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">ความเสียหาย</label>
-                            <div class="col-sm-7">
-                                <label class="radio-inline">
-                                    <input type="radio" name="damage-level" id="damage-level" value="1" <?= $quotation->damage_level=="1"?"checked":null?> disabled> น้อย </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="damage-level" id="damage-level" value="2" <?= $quotation->damage_level=="2"?"checked":null?> disabled> ปานกลาง </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="damage-level" id="damage-level" value="3" <?= $quotation->damage_level=="3"?"checked":null?> disabled> มาก </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="phone">ตำแหน่งการชน</label>
-                            <div class="col-sm-7">
-                                <input type="text" disabled class="form-control input-sm" value="<?= $quotation->damagePosition['position']?>">
-                            </div>
-                        </div>
-                    </form> 
-                </div>
-            </div>
+        <div class="form-group pull-right">
+            <a href="<?=Url::to(['quotation/edit', 'qid' => $quotation->QID])?>" id="btn-edit" class="btn btn-primary btn-sm">
+                <span class="glyphicon glyphicon-save-file"></span> แก้ไขรายการ </a>
+            <a id="btn-print" target="_blank" class="btn btn-success btn-sm">
+                <span class="glyphicon glyphicon-print"></span> พิมพ์ใบเสนอราคา </a>
         </div>
-    </div>
-    
-    <?php Pjax::begin(); ?>
-    <div class="container">
-        <div class="form-group">
-            <?php $form = ActiveForm::begin(['options' => [
-                'data-pjax' => true,
-                'class' => 'form-inline']]) ?>
-                <label class="form-label">ประวัติการแก้ไข</label>
-                <select id="history-date" name="dateIndex" class="form-control input-sm">
-                    <div class="col-sm-3">
-                        <?php $i= 0; foreach($dateLists as $date): ?>
-                            <option value="<?= $i ?>" <?= $i==$dateIndex?"selected":null?> ><?= $date->date ?> <?= $i==0 ? "(ล่าสุด)":null ?></option>
-                        <?php $i++; endforeach; ?>
+</div>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-sm-6">
+                <form name="test" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">ทะเบียน</label>
+                        <div class="col-sm-4">
+                            <input disabled value="<?= $viecle->plate_no ?>" class="form-control input-sm">
+                        </div>
+                        <label class="col-sm-2 control-label">ชื่อรถ</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="viecle-name" value="<?= $viecle->viecleName['name'] ?>" class="form-control input-sm" readonly> </div>
                     </div>
-                </select>
-                <button type="submit" class="btn btn-primary btn-sm">ค้น</button>
-            <?php ActiveForm::end() ?>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">รุ่น</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="viecle-model" value="<?= $viecle->viecleModel['model'] ?>" class="form-control input-sm" readonly> </div>
+                        <label class="col-sm-2 control-label">ปี</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="year" value="<?= $viecle->viecle_year ?>" class="form-control input-sm" readonly> </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">เลขตัวถัง</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="body-code" value="<?= $viecle->body_code ?>" class="form-control input-sm" readonly> </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">เลขเครื่อง</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="engine-code" value="<?= $viecle->engin_code ?>" class="form-control input-sm" readonly> </div>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="customer">ชื่อ</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="fullname" value="<?=$viecle->owner0['fullname'] ?>" class="form-control input-sm" readonly> </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="adress">ที่อยู่</label>
+                        <div class="col-sm-9">
+                            <textarea id="address" class="form-control input-sm" rows="2" readonly><?= $viecle->owner0['address'] ?></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="customer">โทรศัพท์</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="phone" value="<?= $viecle->owner0['phone'] ?>" class="form-control input-sm" readonly> </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">เลขที่เคลม</label>
+                        <div class="col-sm-9">
+                            <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">ประเภทลูกค้า</label>
+                        <div class="col-sm-9">
+                            <label class="radio-inline">
+                                <input type="radio" name="customer-type" id="customer-type" value="GENERAL" <?= $quotation->customer['type'] == "GENERAL" ? "checked":null?> disabled> ลูกค้าทั่วไป </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="customer-type" id="customer-type" value="INSURANCE" <?= $quotation->customer['type'] == "INSURANCE_COMP"?"checked":null?> disabled> บริษัทประกัน </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="phone">ลูกค้า</label>
+                        <div class="col-sm-9">
+                            <input type="text" disabled class="form-control input-sm" value="<?=$quotation->customer['fullname']?>"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">ความเสียหาย</label>
+                        <div class="col-sm-9">
+                            <label class="radio-inline">
+                                <input type="radio" name="damage-level" id="damage-level" value="1" <?= $quotation->damage_level=="1"?"checked":null?> disabled> น้อย </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="damage-level" id="damage-level" value="2" <?= $quotation->damage_level=="2"?"checked":null?> disabled> ปานกลาง </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="damage-level" id="damage-level" value="3" <?= $quotation->damage_level=="3"?"checked":null?> disabled> มาก </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="phone">ตำแหน่งการชน</label>
+                        <div class="col-sm-9">
+                            <input type="text" disabled class="form-control input-sm" value="<?= $quotation->damagePosition['position']?>">
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
+    </div>
+</div>
+
+<?php Pjax::begin(); ?>
+<div class="container">
+    <div class="form-group">
+        <?php $form = ActiveForm::begin(['options' => [
+            'data-pjax' => true,
+            'class' => 'form-inline']]) ?>
+            <label class="form-label">ประวัติการแก้ไข</label>
+            <select id="history-date" name="dateIndex" class="form-control input-sm">
+                <div class="col-sm-3">
+                    <?php $i= 0; foreach($dateLists as $date): ?>
+                        <option value="<?= $i ?>" <?= $i==$dateIndex?"selected":null?> ><?= $date->date ?> <?= $i==0 ? "(ล่าสุด)":null ?></option>
+                    <?php $i++; endforeach; ?>
+                </div>
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm">ค้น</button>
+        <?php ActiveForm::end() ?>
+    </div>
     <table class="table table-bordered" id="table-edit">
         <thead>
             <tr bgcolor="#000000">

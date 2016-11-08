@@ -128,7 +128,7 @@ class QuotationController extends Controller
             }
            else{ // insurance company
                // get customer id from customer with type 'insurance' / key already represents VID
-               $quotation->CID =  $data["quotation_info"]["insuranceCompany"];
+               $quotation->CID =  $data["quotation_info"]["CID"];
                
            }
            
@@ -136,7 +136,7 @@ class QuotationController extends Controller
             $quotation->VID = $viecle->VID;
 
             // Fill up EID
-            $quotation->Employee = Yii::$app->user->identity->getId();
+            $quotation->EID = Yii::$app->user->identity->getId();
            
            
            // quotation id
@@ -230,7 +230,7 @@ class QuotationController extends Controller
         $descriptions = $quotation->descriptions;
         
         // find date
-        $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['did' => SORT_DESC])->all();
+        $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['date' => SORT_DESC])->all();
         $dateIndex = 0;
         if($request->isAjax){
             $dateIndex = $request->post('dateIndex');
@@ -323,7 +323,7 @@ class QuotationController extends Controller
         $viecleModel = Viecle::find()->where(['VID' => $model->VID])->one();
         
         // find date
-        $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['did' => SORT_DESC])->all();
+        $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['date' => SORT_DESC])->all();
         
         if( $dateIndex == null)
             $dateIndex = 0;

@@ -72,85 +72,20 @@ function updateInvoiceDescription( i ){
     $("#edit-invoice-description").modal('hide');
 }
 
-$('body').on("click", "#btn-search", function(){
-    $.get("index.php?r=invoice/customer-search",{
-        type: $("#customer-type option:selected").val(),
-        fullname: $("#fullname").val()
-    }, function(data){
-        $("#result").html("");
-        $("#result").html( data );
-    });
-});
 
-$(document).ready(function () {
-//    var maintenance = globalMaintenance;
-//    var part = globaPart;
-//    var qid = globalQid;
-//    var invoice = globalInvoice;
-    var id = 1;
-    var list = [];
-    ///////////////////////////////////////////////////////
-    /* Initial calculation for edit page */
-    
-    /* Quotation */
+function updateMaintenanceDescription( i ){
+    //console.log(i);
+    var modal = $('#edit-maintenance-description');
+    maintenance[i].list = modal.find('.modal-body input#list').val();
+    maintenance[i].price = modal.find('.modal-body input#price').val();
+
+    //console.log(invoice);
     renderTableBody();
     calTotal();
-    updateTableIndex();
-    
-    /* Invoice */
-//    rederTableInvoice();
-//    calTotalInvoice();
-    
-    ///////////////////////////////////////////////////////
+    $("#edit-maintenance-description").modal('hide');
+}
 
-    /* Bind enter key to function */
-    $("#maintenance-list").bind('keypress', function (e) {
-        if( $("#plate-no").val() === null)
-            alert("กรุณาเลือกทะเบียนรถ");
-        
-        var code = e.keyCode || e.which;
-        if (code == 13) {
-                enterDescription();
-        }
-    });
-    $("#maintenance-price").bind('keypress', function (e) {
-        if( $("#plate-no").val() === null)
-            alert("กรุณาเลือกทะเบียนรถ");
-        
-        var code = e.keyCode || e.which;
-        if (code == 13) {
-            //console.log("enter");
-            enterDescription();
-        }
-    });
-    $("#part-list").bind('keypress', function (e) {
-        if( $("#plate-no").val() === null)
-            alert("กรุณาเลือกทะเบียนรถ");
-        
-        var code = e.keyCode || e.which;
-        if (code == 13) {
-            //console.log("enter");
-            enterDescription();
-        }
-    });
-    $("#part-price").bind('keypress', function (e) {
-        if( $("#plate-no").val() === null)
-            alert("กรุณาเลือกทะเบียนรถ");
-        
-        var code = e.keyCode || e.which;
-        if (code == 13) {
-            //console.log("enter");
-            enterDescription();
-        }
-    });
-    $("#maintenance-add").click(function () {
-        enterDescription();
-    });
-    $("#part-add").click(function () {
-        enterDescription();
-    });
-
-    function renderTableBody() {
+function renderTableBody() {
         /* append row when plus button clicked  */
         /* update 20161019: render table based on presented objects */
         // find len
@@ -167,7 +102,10 @@ $(document).ready(function () {
                     <td>' + maintenance[i].price + '</td>';
                 // col 3
                 appendRow += '<td>\
-                    <button id="maintenance-del" class="btn btn-danger btn-xs"> \
+                    <button id="maintenance-update" data-i="' + i + '" data-toggle="modal" data-target="#edit-maintenance-description" class="btn btn-default btn-xs"> \
+                        <span class="glyphicon glyphicon-pencil"></span> \
+                    </button>\
+                    <button id="maintenance-del" class="btn btn-default btn-xs"> \
                         <span class="glyphicon glyphicon-remove"></span> \
                     </button></td>';
             }
@@ -179,7 +117,10 @@ $(document).ready(function () {
                 appendRow += '<td>' + part[i].list + '</td>\
                     <td>' + part[i].price + '</td>';
                 appendRow += '<td>\
-                    <button id="part-del" class="btn btn-danger btn-xs"> \
+                    <button id="part-update" data-i="' + i + '" data-toggle="modal" data-target="#edit-description" class="btn btn-default btn-xs"> \
+                        <span class="glyphicon glyphicon-pencil"></span> \
+                    </button>\
+                    <button id="part-del" class="btn btn-default btn-xs"> \
                         <span class="glyphicon glyphicon-remove"></span> \
                     </button></td>';
             }
@@ -244,6 +185,102 @@ $(document).ready(function () {
         /* Increment ID */
         id++;
     }
+
+function calTotal() {
+        var total_maintenance = 0;
+        var total_part = 0;
+        for (var i = 0, len = maintenance.length; i < len; i++) {
+            total_maintenance += parseFloat(maintenance[i].price);
+        }
+        for (var i = 0, len = part.length; i < len; i++) {
+            total_part += parseFloat(part[i].price);
+        }
+        var total = total_maintenance + total_part;
+        // update DOM
+        $("#maintenance-total").text(formatMoney(total_maintenance, 2));
+        $("#part-total").text(formatMoney(total_part, 2)); // toFixed - number of digit
+        $("#total").text(formatMoney(total, 2));
+    }
+
+$('body').on("click", "#btn-search", function(){
+    $.get("index.php?r=invoice/customer-search",{
+        type: $("#customer-type option:selected").val(),
+        fullname: $("#fullname").val()
+    }, function(data){
+        $("#result").html("");
+        $("#result").html( data );
+    });
+});
+
+$(document).ready(function () {
+//    var maintenance = globalMaintenance;
+//    var part = globaPart;
+//    var qid = globalQid;
+//    var invoice = globalInvoice;
+    var id = 1;
+    var list = [];
+    ///////////////////////////////////////////////////////
+    /* Initial calculation for edit page */
+
+    /* Quotation */
+    renderTableBody();
+    calTotal();
+    updateTableIndex();
+
+    /* Invoice */
+//    rederTableInvoice();
+//    calTotalInvoice();
+
+    ///////////////////////////////////////////////////////
+
+    /* Bind enter key to function */
+    $("#maintenance-list").bind('keypress', function (e) {
+        if( $("#plate-no").val() === null)
+            alert("กรุณาเลือกทะเบียนรถ");
+
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+                enterDescription();
+        }
+    });
+    $("#maintenance-price").bind('keypress', function (e) {
+        if( $("#plate-no").val() === null)
+            alert("กรุณาเลือกทะเบียนรถ");
+
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            //console.log("enter");
+            enterDescription();
+        }
+    });
+    $("#part-list").bind('keypress', function (e) {
+        if( $("#plate-no").val() === null)
+            alert("กรุณาเลือกทะเบียนรถ");
+
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            //console.log("enter");
+            enterDescription();
+        }
+    });
+    $("#part-price").bind('keypress', function (e) {
+        if( $("#plate-no").val() === null)
+            alert("กรุณาเลือกทะเบียนรถ");
+
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            //console.log("enter");
+            enterDescription();
+        }
+    });
+    $("#maintenance-add").click(function () {
+        enterDescription();
+    });
+    $("#part-add").click(function () {
+        enterDescription();
+    });
+
+
     $("table#myTable").on("click", "#maintenance-del", function (event) {
         var closestRow = $(this).closest("tr");
         removeIndex = closestRow[0].id;
@@ -274,21 +311,7 @@ $(document).ready(function () {
         return -1;
     }
 
-    function calTotal() {
-        var total_maintenance = 0;
-        var total_part = 0;
-        for (var i = 0, len = maintenance.length; i < len; i++) {
-            total_maintenance += parseFloat(maintenance[i].price);
-        }
-        for (var i = 0, len = part.length; i < len; i++) {
-            total_part += parseFloat(part[i].price);
-        }
-        var total = total_maintenance + total_part;
-        // update DOM
-        $("#maintenance-total").text(formatMoney(total_maintenance, 2));
-        $("#part-total").text(formatMoney(total_part, 2)); // toFixed - number of digit
-        $("#total").text(formatMoney(total, 2));
-    }
+
 
     function updateTableIndex() {
 //        var row = $("tbody > tr");
@@ -524,6 +547,17 @@ $(document).ready(function () {
                 updateTableIndex();
                 
         } );
+    });
+
+    $('#edit-maintenance-description').on('show.bs.modal', function(event){
+        //console.log(invoice);
+        var button = $(event.relatedTarget);
+        var i = button.data('i');
+
+        var modal = $(this);
+        modal.find('.modal-body input#list').val( maintenance[i].list );
+        modal.find('.modal-body input#price').val( maintenance[i].price );
+        modal.find('.modal-footer button#desc-update').attr("onclick", "updateMaintenanceDescription(" + i + ")");
     });
 /////////////////////////////////////////////////////////////////////////////
 ////////////// Invoice //////////////////////////////////////////////////////

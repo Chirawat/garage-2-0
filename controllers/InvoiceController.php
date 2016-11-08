@@ -186,8 +186,8 @@ class InvoiceController extends Controller
 //        }
 
 
-        $iid = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
-        $iid = ($iid + 1) . "/" . (date('Y')+543);
+        $invoiceId = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
+        $invoiceId = ($invoiceId + 1) . "/" . (date('Y')+543);
 
         // list in combobox
         $viecleList = Viecle::find()->all();
@@ -205,8 +205,7 @@ class InvoiceController extends Controller
         return $this->render('index',[
             'invoice' => $invoice,
 
-            'iid' => $iid,
-//            'customer' => $customer,
+            'invoiceId' => $invoiceId,
             'customer_t' => $customer_t, //
             'customers' => $customers,
 
@@ -303,6 +302,9 @@ class InvoiceController extends Controller
 
         $viecle = $invoice->viecle;
 
+        $invoiceId = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
+        $invoiceId = $invoiceId . "/" . (date('Y')+543);
+
         return $this->render('view', [
             'dateLists' => $dateLists,
             'dateIndex' => $dateIndex,
@@ -314,7 +316,7 @@ class InvoiceController extends Controller
             'vat' => $vat,
             'grandTotal' => $grandTotal,
 
-
+            'invoiceId' => $invoiceId,
         ]);
     }
 
@@ -323,6 +325,10 @@ class InvoiceController extends Controller
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         // Create invoice
         $invoice = new Invoice();
+
+        $invoiceId = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
+        $invoiceId = ($invoiceId + 1) . "/" . (date('Y')+543);
+        $invoice->invoice_id = $invoiceId;
 
         $invoice->CID = $request->post('CID');
         $invoice->VID = $request->post('VID');
@@ -466,11 +472,15 @@ class InvoiceController extends Controller
         $query = InvoiceDescription::find()->where(['IID' => $iid, 'date' => $dateLists[$dateIndex]->date ]);
         $invoiceDescriptions = $query->all();
 
+        $invoiceId = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
+        $invoiceId = $invoiceId . "/" . (date('Y')+543);
+
         return $this->render('edit',[
             'invoice' => $invoice,
             'customer' => $customer,
             'viecle' => $viecle,
             'invoiceDescriptions' => $invoiceDescriptions,
+            'invoiceId' => $invoiceId,
         ]);
     }
     

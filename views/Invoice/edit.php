@@ -91,8 +91,8 @@ $url = Url::to(['customer-list']);
     <div class="row">
         <div class="container col-sm-6">
             <div class="col-sm-6">
-                <label>เล่มที่ ...... เลขที่ ..............</label><br>
-                <label>วันที่ ..............</label>
+                <label>เลขที่ <?=$invoiceId?></label><br>
+                <label>วันที่ <?=date('d-m-Y')?></label>
             </div>
         </div>
         <div class="container col-sm-6">

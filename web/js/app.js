@@ -615,15 +615,15 @@ $("#btn-save-invoice").on("click", function (event, ui) {
     }, function(data){
         if( data.status ){
             var r = confirm("บันทึกเรียบร้อย\r\nคุณต้องการพิมพ์ใบแจ้งหนี้เลยหรือไม่");
-            
+
             if(r){
                 // print
-                window.location.replace("?r=invoice/report&iid=" + data.IID);
+                 window.open(
+                      '?r=invoice/report&iid=' + data.IID,
+                      '_blank' // <- This is what makes it open in a new window.
+                );
             }
-            else{
-                // view
-                window.location.replace("?r=invoice/view&iid=" + data.IID);
-            }
+            window.location.replace("?r=invoice/view&iid=" + data.IID);
         }
     });
 });
@@ -640,8 +640,7 @@ $("#btn-edit-invoice").click(function(){
                  window.open(
                       '?r=invoice/report&iid=' + data.IID,
                       '_blank' // <- This is what makes it open in a new window.
-                    );
-                window.location.replace("?r=invoice/report&iid=" + data.IID);
+                );
             }
             window.location.replace("?r=invoice/view&iid=" + data.IID);
         }

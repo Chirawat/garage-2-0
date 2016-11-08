@@ -141,7 +141,10 @@ class ReceiptController extends Controller{
 
 
         /* Update Reciept Info */
-        $reciept = new Reciept();
+        $reciept = Reciept::find()->where(['IID' => $iid])->one();
+        if(sizeof($reciept) == 0)
+            $reciept = new Reciept();
+
         $reciept->IID = $invoice->IID;
         $reciept->date = date('Y-m-d H:i:s');
         $reciept->total = $grandTotal;
@@ -152,7 +155,7 @@ class ReceiptController extends Controller{
         }
         else{
             // failed
-            echo $reciept->errors;
+            var_dump( $reciept->errors );
             die();
         }
 

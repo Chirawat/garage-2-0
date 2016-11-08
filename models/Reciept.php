@@ -11,7 +11,7 @@ use Yii;
  * @property integer $IID
  * @property string $reciept_id
  * @property string $date
- * @property integer $total
+ * @property double $total
  * @property integer $EID
  *
  * @property Employee $e
@@ -34,9 +34,10 @@ class Reciept extends \yii\db\ActiveRecord
     {
         return [
             [['IID'], 'required'],
-            [['IID', 'total', 'EID'], 'integer'],
+            [['IID', 'EID'], 'integer'],
             [['reciept_id'], 'string'],
             [['date'], 'safe'],
+            [['total'], 'number'],
             [['EID'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['EID' => 'EID']],
             [['IID'], 'exist', 'skipOnError' => true, 'targetClass' => Invoice::className(), 'targetAttribute' => ['IID' => 'IID']],
         ];

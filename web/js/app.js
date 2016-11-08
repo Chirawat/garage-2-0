@@ -448,19 +448,12 @@ $(document).ready(function () {
     });
     /* edit description, save button clicked */
     $("#btn-edit-save").click(function () {
-        console.log({
-            qid: qid
-            , maintenance_list: maintenance
-            , part_list: part
-        });
         $.ajax({
             url: "index.php?r=description/update"
             , type: 'json'
             , data: {
                 //quotation_info: quotation_info, 
-                qid: qid
-                , maintenance_list: maintenance
-                , part_list: part
+                qid: getUrlVars()['qid'], maintenance_list: maintenance, part_list: part
             }
             , success: function (data) {
                 // confirmation dialog

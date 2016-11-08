@@ -146,6 +146,16 @@ function renderTableBody() {
         $("table#myTable > tbody").html(appendRow);
     }
 
+    function updateTableIndex() {
+        var row = $("#myTable tbody > tr");
+        for (var i = 0, nRow = row.size(); i < nRow; i++) {
+            // select first column
+            var col = $(row).eq(i).find("td");
+            // update text
+            $(col).eq(0).text(i + 1);
+        }
+    }
+
     function enterDescription() {
         // check, empty?
         ///////////////////////////////////////////////////////////////////////////////
@@ -167,16 +177,12 @@ function renderTableBody() {
         ///////////////////////////////////////////////////////////////////////////////
         if ($("#maintenance-list").val() != "") {
             maintenance.push({
-                row: id
-                , list: $("#maintenance-list").val()
-                , price: $("#maintenance-price").val()
+                list: $("#maintenance-list").val(), price: $("#maintenance-price").val()
             });
         }
         if ($("#part-list").val() != "") {
             part.push({
-                row: id
-                , list: $("#part-list").val()
-                , price: $("#part-price").val()
+                list: $("#part-list").val(), price: $("#part-price").val()
             });
         }
 
@@ -193,7 +199,7 @@ function renderTableBody() {
         updateTableIndex();
 
         /* Increment ID */
-        id++;
+//        id++;
     }
 
 function calTotal() {
@@ -323,15 +329,7 @@ $(document).ready(function () {
 
 
 
-    function updateTableIndex() {
-//        var row = $("tbody > tr");
-//        for (var i = 0, nRow = row.size(); i < nRow; i++) {
-//            // select first column
-//            var col = $(row).eq(i).find("td");
-//            // update text
-//            $(col).eq(0).text(i + 1);
-//        }
-    }
+
     $("#maintenance-list").autocomplete({
         source: function (request, response) {
             $.ajax({
@@ -575,8 +573,8 @@ $(document).ready(function () {
         var i = button.data('i');
 
         var modal = $(this);
-        modal.find('.modal-body input#list').val( maintenance[i].list );
-        modal.find('.modal-body input#price').val( maintenance[i].price );
+        modal.find('.modal-body input#list').val( part[i].list );
+        modal.find('.modal-body input#price').val( part[i].price );
         modal.find('.modal-footer button#desc-update').attr("onclick", "updatePartDescription(" + i + ")");
     });
 /////////////////////////////////////////////////////////////////////////////

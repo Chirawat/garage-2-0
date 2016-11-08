@@ -230,7 +230,7 @@ class QuotationController extends Controller
         $descriptions = $quotation->descriptions;
         
         // find date
-        $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['date' => SORT_DESC])->all();
+        $dateLists = Description::find()->select(['date'])->distinct()->where(['QID' => $qid])->orderBy(['date' => SORT_DESC])->all();
         $dateIndex = 0;
         if($request->isAjax){
             $dateIndex = $request->post('dateIndex');
@@ -276,12 +276,19 @@ class QuotationController extends Controller
         $viecle = $quotation->viecle;
         $descriptions = $quotation->descriptions;
         
+         // find date
+        $dateLists = Description::find()->select(['date'])->distinct()->where(['qid' => $qid])->orderBy(['date'=>SORT_DESC])->all();
+        $dateIndex = 0;
+//        if($request->isAjax){
+//            $dateIndex = $request->post('dateIndex');
+//        }
+
         // Description
-        $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE']);
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE', 'date' => $dateLists[$dateIndex]]);
         $maintenanceDescriptionModel = $query->all();
         $sumMaintenance = $query->sum('price');
         
-        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART']);
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART', 'date' => $dateLists[$dateIndex]]);
         $partDescriptionModel = $query->all();
         $sumPart = $query->sum('price');
         

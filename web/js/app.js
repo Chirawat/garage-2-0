@@ -1,9 +1,3 @@
-//var globalMaintenance = [];
-//var globaPart = [];
-//var globalQid;
-//var globalInvoice = [];
-
-
 var maintenance = [];
 var part = [];
 var qid = undefined;
@@ -477,16 +471,12 @@ $(document).ready(function () {
         return vars;
     }
     $("#btn-print").click(function () {
-        if( maintenance.length != 0 || part.length != 0){
-            var qid = getUrlVars()["qid"];
-            var dateIndex = $("#history-date").val();
-            var hrefStr = "index.php?r=quotation/report&qid=" + qid + "&dateIndex=" + dateIndex;
-
-            $("#btn-print").attr("href", hrefStr);
-        }
-        else{
-            alert("กรุณาใส่รายละเอียดใบเสนอราคา");
-        }
+        var qid = getUrlVars()["qid"];
+        var dateIndex = $("#history-date").val();
+        window.open(
+          '?r=quotation/report&qid=' + qid + '&dateIndex=' + dateIndex,
+          '_blank' // <- This is what makes it open in a new window.
+        );
     });
 //    $("#history-date").change( function(){
 //        //console.log( $("#history-date option:selected").text() ) ;

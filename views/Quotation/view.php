@@ -92,7 +92,7 @@ $this->title = "ใบเสนอราคา";
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label" for="phone">ลูกค้า</label>
+                        <label class="col-sm-3 control-label" for="phone">นามลูกค้า</label>
                         <div class="col-sm-9">
                             <input type="text" disabled class="form-control input-sm" value="<?=$quotation->customer['fullname']?>"/>
                         </div>

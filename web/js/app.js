@@ -84,7 +84,17 @@ function updateMaintenanceDescription( i ){
     calTotal();
     $("#edit-maintenance-description").modal('hide');
 }
+function updatePartDescription( i ){
+    //console.log(i);
+    var modal = $('#edit-part-description');
+    part[i].list = modal.find('.modal-body input#list').val();
+    part[i].price = modal.find('.modal-body input#price').val();
 
+    //console.log(invoice);
+    renderTableBody();
+    calTotal();
+    $("#edit-part-description").modal('hide');
+}
 function renderTableBody() {
         /* append row when plus button clicked  */
         /* update 20161019: render table based on presented objects */
@@ -117,7 +127,7 @@ function renderTableBody() {
                 appendRow += '<td>' + part[i].list + '</td>\
                     <td>' + part[i].price + '</td>';
                 appendRow += '<td>\
-                    <button id="part-update" data-i="' + i + '" data-toggle="modal" data-target="#edit-description" class="btn btn-default btn-xs"> \
+                    <button id="part-update" data-i="' + i + '" data-toggle="modal" data-target="#edit-part-description" class="btn btn-default btn-xs"> \
                         <span class="glyphicon glyphicon-pencil"></span> \
                     </button>\
                     <button id="part-del" class="btn btn-default btn-xs"> \
@@ -558,6 +568,16 @@ $(document).ready(function () {
         modal.find('.modal-body input#list').val( maintenance[i].list );
         modal.find('.modal-body input#price').val( maintenance[i].price );
         modal.find('.modal-footer button#desc-update').attr("onclick", "updateMaintenanceDescription(" + i + ")");
+    });
+    $('#edit-part-description').on('show.bs.modal', function(event){
+        //console.log(invoice);
+        var button = $(event.relatedTarget);
+        var i = button.data('i');
+
+        var modal = $(this);
+        modal.find('.modal-body input#list').val( maintenance[i].list );
+        modal.find('.modal-body input#price').val( maintenance[i].price );
+        modal.find('.modal-footer button#desc-update').attr("onclick", "updatePartDescription(" + i + ")");
     });
 /////////////////////////////////////////////////////////////////////////////
 ////////////// Invoice //////////////////////////////////////////////////////

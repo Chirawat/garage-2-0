@@ -10,7 +10,7 @@ use yii\jui\JuiAsset;
 use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
 use yii\web\View;
-$this->title = 'ใบเสร็จ';
+$this->title = 'ใบเสนอราคา/ใบเสร็จ';
 
 $url = Url::to(['customer-list']);?>
 

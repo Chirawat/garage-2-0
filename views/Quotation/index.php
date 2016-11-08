@@ -5,8 +5,70 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\jui\AutoComplete;
-use yii\web\View;?>
+use yii\web\View;
 
+$this->title = "ใบเสนอราคา";
+?>
+<div id="edit-maintenance-description" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">แก้ไขรายการซ่อม</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">รายการ</label>
+                        <div class="form-group col-sm-10">
+                            <input id="list" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">ราคา</label>
+                        <div class="form-group col-sm-5">
+                            <input id="price" type="number" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+                <div class="modal-footer">
+                <button id="desc-update" type="button" class="btn btn-primary" onclick="updateInvoiceDescription()">บันทึก</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div id="edit-part-description" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">แก้ไขรายการซ่อม</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">รายการ</label>
+                        <div class="form-group col-sm-10">
+                            <input id="list" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">ราคา</label>
+                        <div class="form-group col-sm-5">
+                            <input id="price" type="number" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+                <div class="modal-footer">
+                <button id="desc-update" type="button" class="btn btn-primary" onclick="updateInvoiceDescription()">บันทึก</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <div class="container">
     <div class="col-sm-6">
         <label>เล่มที่ ...... เลขที่ ..............</label><br>
@@ -134,13 +196,13 @@ use yii\web\View;?>
     <div class="container">
         <table class="table table-bordered" id="myTable">
             <thead>
-                <tr bgcolor="#000000">
-                    <th class="text-white" style="color:white;">ลำดับ</th>
-                    <th class="col-sm-4" style="color:white;">รายการซ่อม</th>
-                    <th class="col-sm-2" style="color:white;">ราคา</th>
+               <tr bgcolor="#000000">
+                    <th width="5%" class="text-white" style="color:white;">ลำดับ</th>
+                    <th width="25%" style="color:white;">รายการซ่อม</th>
+                    <th width="15%" style="color:white;">ราคา</th>
                     <th></th>
-                    <th class="col-sm-4" style="color:white;">รายการอะไหล่</th>
-                    <th class="col-sm-2" style="color:white;">ราคา</th>
+                    <th width="25%" style="color:white;">รายการอะไหล่</th>
+                    <th width="15%" style="color:white;">ราคา</th>
                     <th></th>
                 </tr>
                 <tr id="input-row">

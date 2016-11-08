@@ -45,7 +45,7 @@ AppAsset::register($this);
                 ],
             ],
             ['label' => 'เพิ่มรูปภาพ', 'url' => '#'],
-            ['label' => 'สรุปประจำเดือน', 'url' => '#'],
+            ['label' => 'สรุปประจำเดือน', 'url' => Url::to(['receipt/summary'])],
             [
                 'label' => 'ตั้งค่า',
                 'items' => [

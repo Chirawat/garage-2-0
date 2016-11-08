@@ -61,7 +61,7 @@ class Reciept extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getE()
+    public function getEmployee()
     {
         return $this->hasOne(Employee::className(), ['EID' => 'EID']);
     }
@@ -69,7 +69,7 @@ class Reciept extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getI()
+    public function getInvoice()
     {
         return $this->hasOne(Invoice::className(), ['IID' => 'IID']);
     }

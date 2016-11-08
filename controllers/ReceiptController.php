@@ -204,5 +204,70 @@ class ReceiptController extends Controller{
         // return the pdf output as per the destination setting
         return $pdf->render();
     }
+
+    public function actionSummaryReport($startMonth = null, $stopMonth = null){
+
+        $receipts = Reciept::find()->all();
+
+        $content = $this->renderPartial('summary_report', [
+            'receipts' => $receipts,
+        ]);
+
+        // setup kartik\mpdf\Pdf component
+        $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_UTF8,
+        // A4 paper format
+        'format' => Pdf::FORMAT_A4,
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_LANDSCAPE,
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER,
+        // your html content input
+        'content' => $content,
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting
+        'cssFile' => '@app/web/css/pdf.css',
+        // any css to be embedded if required
+        //        'cssInline' => '.kv-heading-1{font-size:18px}',
+        // set mPDF properties on the fly
+        'options' => ['title' => 'ใบเสร็จรับเงิน/ใบกํากับภาษี'],
+        // call mPDF methods on the fly
+        'methods' => [
+            //'SetHeader'=>['Krajee Report Header'],
+            'SetFooter'=>['หน้า {PAGENO} / {nb}'],
+            ]
+        ]);
+
+        $pdf->configure(array(
+            'defaultfooterline' => '0',
+            'defaultfooterfontstyle' => 'R',
+            'defaultfooterfontsize' => '10',
+        ));
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+
+    public function actionSummary(){
+        $request = Yii::$app->request;
+
+        // query date (difference date)
+        $receiptDate = (new Query)->select(['DATE(date) AS dt'])->from('reciept')->distinct()->all();
+
+        // post request/ search by condition
+        $receipts = null;
+        if($request->post()){
+            $startDate = $request->post('start-date');
+            $endDate = $request->post('end-date');
+
+            $receipts = Reciept::find()->all();
+        }
+
+        return $this->render('summary', [
+            'receiptDate' => $receiptDate,
+            'receipts' => $receipts,
+        ]);
+    }
 }
 ?>

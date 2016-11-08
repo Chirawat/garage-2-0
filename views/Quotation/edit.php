@@ -71,8 +71,8 @@ $this->title = "แก้ไขใบเสนอราคา";
 </div><!-- /.modal -->
 <div class="container">
     <div class="col-sm-6">
-        <label>เล่มที่ ...... เลขที่ ..............</label><br>
-        <label>วันที่ ..............</label>
+        <label>เลขที่ <?=$quotationId?></label><br>
+        <label>วันที่ <?=date('d-m-Y')?></label>
     </div>
     <div class="form-group pull-right">
         <a id="btn-edit-save" class="btn btn-primary btn-sm">

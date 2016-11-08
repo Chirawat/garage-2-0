@@ -250,7 +250,7 @@ class QuotationController extends Controller
             $numRow = sizeof($maintenanceDescriptionModel);
         else
             $numRow = sizeof($partDescriptionModel);
-               
+
         return $this->render('view', [
             'quotation' => $quotation,
             'viecle' => $viecle,
@@ -268,6 +268,7 @@ class QuotationController extends Controller
             
             'dateLists' => $dateLists,
             'dateIndex' => $dateIndex,
+            'quotationId' => $quotation->quotation_id,
         ]);
     }
     
@@ -312,6 +313,8 @@ class QuotationController extends Controller
             'partDescriptionModel' => $partDescriptionModel,
             'sumPart' => $sumPart,
             'numRow' => $numRow,
+
+            'quotationId' => $quotation->quotation_id,
         ]);
     }
     

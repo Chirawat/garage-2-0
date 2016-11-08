@@ -71,8 +71,8 @@ $this->title = "ใบเสนอราคา";
 </div><!-- /.modal -->
 <div class="container">
     <div class="col-sm-6">
-        <label>เล่มที่ ...... เลขที่ ..............</label><br>
-        <label>วันที่ ..............</label>
+        <label>เลขที่ <?=$quotationId?></label><br>
+        <label>วันที่ <?=date('d-m-Y')?></label>
     </div>
     <div class="form-group pull-right">
         <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm">

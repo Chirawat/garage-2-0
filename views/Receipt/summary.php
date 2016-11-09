@@ -2,6 +2,8 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+
+$this->title = "รายงานสรุป"
 ?>
     <?php ActiveForm::begin([
     'options' => [
@@ -19,7 +21,7 @@ use yii\widgets\ActiveForm;
         <?php if($month != []): ?>
             <a target="_blank" href="<?=Url::to(['receipt/summary-report', 'startDate' => $startDate , 'endDate' => $endDate ])?>" class="btn btn-success">พิมพ์</a>
         <?php else: ?>
-            <a class="btn btn-success">พิมพ์</a>
+            <a class="btn btn-success disabled">พิมพ์</a>
         <?php endif; ?>
         <?php ActiveForm::end(); ?>
         <br>

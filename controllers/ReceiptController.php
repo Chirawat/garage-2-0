@@ -14,6 +14,7 @@ use app\Models\Customer;
 use yii\helpers\Url;
 use yii\db\Query;
 use app\Models\Reciept;
+use yii\helpers\ArrayHelper;
 
 class ReceiptController extends Controller{
     function num2thai($number){
@@ -205,12 +206,25 @@ class ReceiptController extends Controller{
         return $pdf->render();
     }
 
-    public function actionSummaryReport($startMonth = null, $stopMonth = null){
+    public function actionSummaryReport($startDate = null, $endDate = null){
 
-        $receipts = Reciept::find()->all();
+
+        $receipts = Reciept::find()->where(['between', 'UNIX_TIMESTAMP(date)', strtotime($startDate), strtotime($endDate)])->all();
+
+        $mY_t = 0;
+        foreach($receipts as $key => $receipt){
+            $mY = date("m-Y", strtotime($receipt->date) ); // key
+            if($mY != $mY_t){
+               $mY_t = $mY;
+               $month[$mY_t]= [];
+            }
+           array_push( $month[$mY_t], $key );
+        }
+
 
         $content = $this->renderPartial('summary_report', [
             'receipts' => $receipts,
+            'month' => $month,
         ]);
 
         // setup kartik\mpdf\Pdf component
@@ -249,24 +263,43 @@ class ReceiptController extends Controller{
         return $pdf->render();
     }
 
-    public function actionSummary(){
+    public function actionSummary($startDate=null, $endDate=null){
         $request = Yii::$app->request;
 
         // query date (difference date)
-        $receiptDate = (new Query)->select(['DATE(date) AS dt'])->from('reciept')->distinct()->all();
+        $receiptDates = (new Query)->select(["DATE_FORMAT(date, '%m-%Y') AS dt"])->from('reciept')->distinct()->all();
+        $receiptDates = ArrayHelper::getColumn($receiptDates, 'dt');
 
         // post request/ search by condition
         $receipts = null;
+        $month = [];
         if($request->post()){
-            $startDate = $request->post('start-date');
-            $endDate = $request->post('end-date');
+            $startDate =  date_create( "01-" . $receiptDates[ $request->post('start-date') ] );
+            $startDate = date_format($startDate, "Y-m-d");
 
-            $receipts = Reciept::find()->all();
+            $endDate = date_create( "01-" . $receiptDates[ $request->post('end-date') ] );
+            date_modify($endDate, 'last day of this month');
+            $endDate = date_format($endDate, "Y-m-d");
+
+            $receipts = Reciept::find()->where(['between', 'UNIX_TIMESTAMP(date)', strtotime($startDate), strtotime($endDate)])->all();
+
+            $mY_t = 0;
+            foreach($receipts as $key => $receipt){
+                $mY = date("m-Y", strtotime($receipt->date) ); // key
+                if($mY != $mY_t){
+                   $mY_t = $mY;
+                   $month[$mY_t]= [];
+                }
+               array_push( $month[$mY_t], $key );
+            }
         }
 
         return $this->render('summary', [
-            'receiptDate' => $receiptDate,
+            'receiptDate' => $receiptDates,
             'receipts' => $receipts,
+            'month' => $month,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ]);
     }
 }

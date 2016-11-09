@@ -44,7 +44,7 @@ AppAsset::register($this);
                     ['label' => 'ใบแจ้งหนี้/ใบเสร็จ', 'url' => Url::to(['invoice/index'])],
                 ],
             ],
-            ['label' => 'เพิ่มรูปภาพ', 'url' => '#'],
+            ['label' => 'เพิ่มรูปภาพ', 'url' => Url::to(['photo/index'])],
             ['label' => 'รายงานสรุป', 'url' => Url::to(['receipt/summary'])],
             [
                 'label' => 'ตั้งค่า',

@@ -10,12 +10,13 @@ use Yii;
  * @property integer $IID
  * @property integer $CID
  * @property integer $VID
- * @property string $claim_no
+ * @property integer $CLID
  * @property string $invoice_id
  * @property string $date
  * @property integer $EID
  *
  * @property Employee $e
+ * @property Claim $cL
  * @property Customer $c
  * @property Viecle $v
  * @property InvoiceDescription[] $invoiceDescriptions
@@ -37,11 +38,12 @@ class Invoice extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CID', 'VID', 'EID'], 'required'],
-            [['CID', 'VID', 'EID'], 'integer'],
-            [['claim_no', 'invoice_id'], 'string'],
+            [['CID', 'VID', 'CLID', 'EID'], 'required'],
+            [['CID', 'VID', 'CLID', 'EID'], 'integer'],
+            [['invoice_id'], 'string'],
             [['date'], 'safe'],
             [['EID'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['EID' => 'EID']],
+            [['CLID'], 'exist', 'skipOnError' => true, 'targetClass' => Claim::className(), 'targetAttribute' => ['CLID' => 'CLID']],
             [['CID'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['CID' => 'CID']],
             [['VID'], 'exist', 'skipOnError' => true, 'targetClass' => Viecle::className(), 'targetAttribute' => ['VID' => 'VID']],
         ];
@@ -56,7 +58,7 @@ class Invoice extends \yii\db\ActiveRecord
             'IID' => 'Iid',
             'CID' => 'Cid',
             'VID' => 'Vid',
-            'claim_no' => 'Claim No',
+            'CLID' => 'Clid',
             'invoice_id' => 'Invoice ID',
             'date' => 'Date',
             'EID' => 'Eid',
@@ -69,6 +71,14 @@ class Invoice extends \yii\db\ActiveRecord
     public function getE()
     {
         return $this->hasOne(Employee::className(), ['EID' => 'EID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClaim()
+    {
+        return $this->hasOne(Claim::className(), ['CLID' => 'CLID']);
     }
 
     /**

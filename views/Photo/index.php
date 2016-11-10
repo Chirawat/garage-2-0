@@ -56,8 +56,14 @@ $this->title = "เพิ่มรูปภาพ";
                         <tr>
                             <th scope="row">1</th>
                             <td><img src="upload/sample/home-3" width="500"></td>
-                            <td>เลื่อนขึ้น / เลื่อนลง</td>
-                            <td>Edit / Del</td>
+                            <td>
+                                <button class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                                <button class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                            </td>
+                            <td>
+                                <button class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></button>
+                                <button class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>
+                            </td>
                         </tr>
                         <tr>
                             <th scope="row">1</th>

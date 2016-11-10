@@ -143,7 +143,7 @@ $url = Url::to(['customer-list']);
                             <div class="form-group">
                                 <label class="control-label col-sm-3">เลขที่เคลม</label>
                                 <div class="col-sm-9">
-                                    <input id="claim-no" class="form-control input-sm" value="<?= $invoice->claim_no ?>" readonly>
+                                    <input id="claim-no" class="form-control input-sm" value="<?= $invoice->claim['claim_no'] ?>" readonly>
                                 </div>
                             </div>
                             <div class="form-group">

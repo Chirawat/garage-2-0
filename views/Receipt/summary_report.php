@@ -27,7 +27,7 @@ use yii\helpers\Html;
         <td style="text-align: center;"><?= $receipts[$value]->invoice['invoice_id'] ?></td>
         <td style="text-align: center;"><?= date('d-m-Y', strtotime($receipts[$value]->date)) ?></td>
         <td><?= $receipts[$value]->invoice->customer['fullname']?></td>
-        <td><?= $receipts[$value]->invoice['claim_no'] ?></td>
+        <td><?= $receipts[$value]->invoice->claim['claim_no'] ?></td>
         <td style="text-align: center;"><?= $receipts[$value]->invoice->viecle['plate_no'] ?></td>
         <td style="text-align: right;"><?= number_format($receipts[$value]->total,2) ?></td>
         <td style="text-align: center;"><?= $receipts[$value]->employee['fullname']?></td>

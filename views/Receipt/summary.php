@@ -53,7 +53,7 @@ $this->title = "รายงานสรุป"
                         <td><?= $receipts[$value]->invoice['invoice_id'] ?></td>
                         <td><?= date('d-m-Y', strtotime($receipts[$value]->date)) ?></td>
                         <td><?= $receipts[$value]->invoice->customer['fullname']?></td>
-                        <td><?= $receipts[$value]->invoice['claim_no'] ?></td>
+                        <td><?= $receipts[$value]->invoice->claim['claim_no'] ?></td>
                         <td><?= $receipts[$value]->invoice->viecle['plate_no'] ?></td>
                         <td class="text-right"><?= number_format($receipts[$value]->total, 2) ?></td>
                         <td><?= $receipts[$value]->employee['fullname']?></td>

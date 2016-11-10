@@ -91,7 +91,7 @@ class Quotation extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCustomer()
+    public function getClaim()
     {
         return $this->hasOne(Claim::className(), ['CLID' => 'CLID']);
     }

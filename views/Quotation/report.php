@@ -36,7 +36,7 @@ function DateThai($strDate){
             <td class="text-right">วันที่ <?= DateThai($dt) ?></td>
         </tr>
         <tr>
-            <td><?= $customerModel->fullname ?> เลขที่เคลม <?= $model->claim_no ?></td>
+            <td><?= $customerModel->fullname ?> เลขที่เคลม <?= $model->claim['claim_no'] ?></td>
         </tr>
     </table>
 <br/>

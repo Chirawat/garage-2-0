@@ -11,6 +11,7 @@ use app\Models\InvoiceDescription;
 use app\Models\Viecle;
 use app\Models\Quotation;
 use app\Models\Customer;
+use app\Models\Claim;
 use yii\helpers\Url;
 use yii\db\Query;
 
@@ -333,7 +334,13 @@ class InvoiceController extends Controller
         $invoice->CID = $request->post('CID');
         $invoice->VID = $request->post('VID');
         $invoice->EID = Yii::$app->user->identity->getId();
-        $invoice->claim_no = $request->post('claim_no');
+
+        $claim = new Claim();
+        $claim->claim_no = $request->post('claim_no');
+        $cliam->save();
+
+        $claim = Claim::find()->orderBy(['CLID' => SORT_DESC])->one();
+        $invoice->claim_no = $claim->CLID;
 
         $dt = date('Y-m-d H:i:s');
         $invoice->date = $dt;

@@ -142,7 +142,7 @@ $this->title = "ใบเสนอราคา";
                         <div class="form-group">
                             <label class="control-label col-sm-3">เลขที่เคลม</label>
                             <div class="col-sm-9">
-                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim_no ?>">
+                                <input id="claim-no" class="form-control input-sm" value="<?= $quotation->claim['claim_no'] ?>">
                             </div>
                         </div>
                         <div class="form-group">

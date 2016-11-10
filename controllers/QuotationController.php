@@ -11,6 +11,7 @@ use app\models\Customer;
 use app\models\Quotation;
 use app\models\Viecle;
 use app\models\Description;
+use app\models\Claim;
 use yii\db\Query;
 use yii\Helpers\ArrayHelper;
 use kartik\mpdf\Pdf;
@@ -148,7 +149,12 @@ class QuotationController extends Controller
            $quotation->quotation_date = date("Y-m-d");
            
            // claim no
-            $quotation->claim_no = $data["quotation_info"]["claimNo"];
+           $claim = new Claim();
+           $claim->claim_no = $data["quotation_info"]["claimNo"];
+           $cliam->save();
+
+           $claim = Claim::find()->orderBy(['CLID' => SORT_DESC])->one();
+           $quotation->CLID = $claim->CLID;
            
            // damage level
            $quotation->damage_level = $data["quotation_info"]["damageLevel"];

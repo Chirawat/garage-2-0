@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\BaseFileHelper;
 
 /**
  * This is the model class for table "photo".
@@ -18,6 +19,7 @@ use Yii;
  */
 class Photo extends \yii\db\ActiveRecord
 {
+    public $imageFile;
     /**
      * @inheritdoc
      */
@@ -38,6 +40,7 @@ class Photo extends \yii\db\ActiveRecord
             [['last_update'], 'safe'],
             [['type'], 'string', 'max' => 45],
             [['CLID'], 'exist', 'skipOnError' => true, 'targetClass' => Claim::className(), 'targetAttribute' => ['CLID' => 'CLID']],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'jpg'],
         ];
     }
 
@@ -59,8 +62,21 @@ class Photo extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCL()
+    public function getClaim()
     {
         return $this->hasOne(Claim::className(), ['CLID' => 'CLID']);
+    }
+
+    public function upload($CLID, $claim_no){
+        if( $this->validate()){
+            $path = 'upload/' . $CLID . '-' . $claim_no;
+            if( !is_dir($path) )
+                $r = BaseFileHelper::createDirectory($path, 0777, true);
+            $this->imageFile->saveAs( $path . '/' . $this->imageFile->baseName . '.' . $this->imageFile->extension );
+            return true;
+        }
+        else{
+            return $this->errors;
+        }
     }
 }

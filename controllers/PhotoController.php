@@ -58,10 +58,11 @@ class PhotoController extends Controller
             $CLID = $request->get('CLID');
 
             // query photo corresponding to CLID, type = BEFORE
-            $details = $this->detailRender($CLID, 'BEFORE');
+            $selectedType = $request->get('type');
             $selectedKey = $CLID;
 
-            $selectedType = $request->get('type');
+            $details = $this->detailRender($CLID, $selectedType);
+
         }
 
         // when upload file

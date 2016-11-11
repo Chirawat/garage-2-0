@@ -107,7 +107,8 @@ class PhotoController extends Controller
                 $CLID = $photo->CLID;
                 $type = $photo->type;
                 $file = 'upload/' . $photo->CLID . '-' . $photo->claim['claim_no'] . '/' . $photo->type . '/' . $photo->filename;
-                unlink($file);
+                if(file_exists($file))
+                    unlink($file);
                 $photo->delete();
             }
 

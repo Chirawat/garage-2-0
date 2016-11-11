@@ -736,5 +736,20 @@ $("#type").change( function(){
             $("#result").html(data);
     });
 });
-
+$("table#detail").bind("click", "#photo-inc", function(event){
+    var closestRow = $(this).closest("tr");
+    console.log(closestRow);
+//    PID = closestRow[0].id;
+//    
+//    //console.log( PID );
+//    // swap
+//    $.get("?r=photo/swap", { CLID: $("#claim-no option:selected").val(), type: $("#type option:selected").val(), PID: PID, dir: 'inc' }, function(data){
+//        console.log(data);
+//    });
+    
+    // refresh
 });
+});
+
+    
+    

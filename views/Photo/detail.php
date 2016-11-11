@@ -7,7 +7,7 @@ use yii\helpers\Url;
     <?php if(sizeof($details) == 0):?>
         ยังไม่มีรูปภาพ
         <?php else:?>
-            <table class="table" width="100%">
+            <table id="detail" class="table" width="100%">
                 <caption>พบข้อมูล <?=sizeof($details)?> รายการ
                 </caption>
                 <thead>
@@ -20,14 +20,14 @@ use yii\helpers\Url;
                 </thead>
                 <tbody>
                     <?php $i = 1; foreach($details as $detail): ?>
-                        <tr>
+                        <tr id="<?=$detail->PID?>">
                             <th scope="row">
                                 <?=($i++)?>
                             </th>
                             <td><img src="upload/<?=$detail->CLID?>-<?=$detail->claim['claim_no']?>/<?=$type?>/<?=$detail->filename?>" width="520px"></td>
                             <td>
-                                <button id="order-inc" class="btn btn-default" title="เลื่อนขึ้น"><span class="glyphicon glyphicon-arrow-up"></span></button>
-                                <button id="order-dec" class="btn btn-default" title="เลื่อนลง"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                                <button id="photo-inc" class="btn btn-default" title="เลื่อนขึ้น"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                                <button id="photo-dec" class="btn btn-default" title="เลื่อนลง"><span class="glyphicon glyphicon-arrow-down"></span></button>
                             </td>
                             <td>
                                 <button id="photo-update" class="btn btn-default" title="อัพโหลดรูปภาพใหม่"><span class="glyphicon glyphicon-pencil"></span></button>

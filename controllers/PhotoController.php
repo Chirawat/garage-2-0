@@ -92,10 +92,25 @@ class PhotoController extends Controller
         ]);
     }
 
- public function actionDetail($CLID=null, $type=null){
-        //$details = Photo::find()->where(['CLID' => $CLID, 'type' => $type])->all();
+    public function actionDetail($CLID=null, $type=null){
         $content = $details = $this->detailRender($CLID, $type);
         echo $content;
+    }
+    
+    public function actionSwap($CLID=null, $type=null, $PID=null, $dir=null){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//        
+//        $Photo1 = Photo::findOne($PID1);
+//        $Photo1_order_t = $Photo1->order;
+//        
+//        $Photo2 = Photo::findOne($PID2);
+//        $Photo1->order = $Photo2->order;
+//        $Photo2->order = $Photo1_order_t;
+//        
+//        $Photo1->save();
+//        $Photo2->save();
+        $ret = [$CLID, $type, $PID, $dir];
+        return $ret;
     }
 
 }

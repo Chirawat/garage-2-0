@@ -8,9 +8,12 @@ use yii\filters\VerbFilter;
 use app\models\Claim;
 use app\models\Photo;
 use yii\web\UploadedFile;
+use kartik\mpdf\Pdf;
 
 class PhotoController extends Controller
 {
+    public $types_t = ['BEFORE', 'DURING', 'COMPARE', 'AFTER', 'OTHER'];
+
     public function behaviors()
     {
         return [
@@ -116,4 +119,85 @@ class PhotoController extends Controller
             $this->redirect(['photo/index', 'CLID' => $CLID, 'type' => $type]);
         }
     }
+
+    public function typeStr($type){
+        switch($type){
+            case 'BEFORE':
+                return 'ภาพก่อนซ่อม';
+            case 'DURING':
+                return 'ภาพขณะซ่อม';
+            case 'COMPARE':
+                return 'เทียบอะไหล่';
+            case 'AFTER':
+                return 'ซ่อมเสร็จ';
+            case 'OTHER':
+                return 'อื่น ๆ';
+        }
+    }
+    public function actionReport($CLID=null, $type=null){
+        $content = null;
+        if($type != null){
+            $details = Photo::find()->where(['CLID' => $CLID, 'type' => $type])->all();
+            $claim_no = Claim::findOne($CLID)['claim_no'];
+            $content = $this->renderPartial('report', [
+                'claim_no' => $claim_no,
+                'type' => $this->typeStr($type),
+                'details' => $details,
+            ]);
+        }
+        else{
+            $page = 1;
+            foreach($this->types_t as $type_t){
+                $details = Photo::find()->where(['CLID' => $CLID, 'type' => $type_t])->all();
+                $claim_no = Claim::findOne($CLID)['claim_no'];
+                if( sizeof($details) != 0 ){
+                    if($page != 1)
+                        $content .= "<pagebreak />";
+                     $content .= $this->renderPartial('report', [
+                        'claim_no' => $claim_no,
+                        'type' => $this->typeStr($type_t),
+                        'details' => $details,
+                    ]);
+                }
+                $page++;
+            }
+        }
+
+
+        // setup kartik\mpdf\Pdf component
+        $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_UTF8,
+        // A4 paper format
+        'format' => Pdf::FORMAT_A4,
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_PORTRAIT,
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER,
+        // your html content input
+        'content' => $content,
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting
+        'cssFile' => '@app/web/css/pdf.css',
+        // any css to be embedded if required
+        //        'cssInline' => '.kv-heading-1{font-size:18px}',
+        // set mPDF properties on the fly
+        'options' => ['title' => 'ใบเสร็จรับเงิน/ใบกํากับภาษี'],
+        // call mPDF methods on the fly
+        'methods' => [
+            //'SetHeader'=>['หมายเลขเคลม XXXX / ประเภท XXXX'],
+            'SetFooter'=>['หน้า {PAGENO} / {nb}'],
+            ]
+        ]);
+
+        $pdf->configure(array(
+            'defaultfooterline' => '0',
+            'defaultfooterfontstyle' => 'R',
+            'defaultfooterfontsize' => '10',
+        ));
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+
 }

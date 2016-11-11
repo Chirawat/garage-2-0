@@ -31,8 +31,8 @@ $this->title = "เพิ่มรูปภาพ";
     <div class="row">
         <div class="container">
             <div class="pull-right">
-                <a href="#" class="btn btn-success btn-sm">พิมพ์หน้าปัจจุบัน</a>
-                <a href="#" class="btn btn-success btn-sm">พิมพ์ทั้งหมด</a> </div>
+                <a id="photo-print-current-page" href="#" class="btn btn-success btn-sm">พิมพ์หน้าปัจจุบัน</a>
+                <a id="photo-print-all" href="#" class="btn btn-success btn-sm">พิมพ์ทั้งหมด</a> </div>
         </div>
     </div>
     <br>

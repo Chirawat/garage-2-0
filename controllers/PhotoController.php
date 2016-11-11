@@ -163,7 +163,6 @@ class PhotoController extends Controller
             }
         }
 
-
         // setup kartik\mpdf\Pdf component
         $pdf = new Pdf([
         // set to use core fonts only

@@ -736,7 +736,18 @@ $("#type").change( function(){
             $("#result").html(data);
     });
 });
-
+$("#photo-print-current-page").click( function(){
+    window.open(
+          "?r=photo/report&CLID=" + $("#claim-no option:selected").val() + "&type=" + $("#type option:selected").val(),
+          '_blank' // <- This is what makes it open in a new window.
+        );
+});
+$("#photo-print-all").click( function(){
+    window.open(
+          "?r=photo/report&CLID=" + $("#claim-no option:selected").val(),
+          '_blank' // <- This is what makes it open in a new window.
+        );
+});
 });
 
     

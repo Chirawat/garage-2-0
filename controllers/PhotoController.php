@@ -37,7 +37,7 @@ class PhotoController extends Controller
 
     function detailRender($CLID=null, $type=null){
 //        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $details = Photo::find()->where(['CLID' => $CLID, 'type' => $type])->all();
+        $details = Photo::find()->where(['CLID' => $CLID, 'type' => $type])->orderBy('order')->all();
 
 //        return $details;
 

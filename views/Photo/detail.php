@@ -26,12 +26,12 @@ use yii\helpers\Url;
                             </th>
                             <td><img src="upload/<?=$detail->CLID?>-<?=$detail->claim['claim_no']?>/<?=$type?>/<?=$detail->filename?>" width="520px"></td>
                             <td>
-                                <button class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span></button>
-                                <button class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                                <button id="order-inc" class="btn btn-default" title="เลื่อนขึ้น"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                                <button id="order-dec" class="btn btn-default" title="เลื่อนลง"><span class="glyphicon glyphicon-arrow-down"></span></button>
                             </td>
                             <td>
-                                <button class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></button>
-                                <button class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>
+                                <button id="photo-update" class="btn btn-default" title="อัพโหลดรูปภาพใหม่"><span class="glyphicon glyphicon-pencil"></span></button>
+                                <button id="photo-del" class="btn btn-default" title="ลบ"><span class="glyphicon glyphicon-remove"></span></button>
                             </td>
                         </tr>
                         <?php endforeach; ?>

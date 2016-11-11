@@ -723,11 +723,17 @@ $("#btn-print-receipt").click( function(){
 /////////////////////////////////////////////////////////
 $("#claim-no").select2();
 $("#claim-no").change( function(){
+    window.location.replace("?r=photo/index&CLID=" + $("#claim-no").val() );
+
+
+});
+
+$("#type").change( function(){
     $.get("?r=photo/detail", {
         CLID: $("#claim-no option:selected").val(),
         type: $("#type option:selected").val() }, function(data){
-        $("#result").html("");
-        $("#result").html(data);
+            $("#result").html("");
+            $("#result").html(data);
     });
 });
 

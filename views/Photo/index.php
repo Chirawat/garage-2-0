@@ -47,7 +47,8 @@ $this->title = "เพิ่มรูปภาพ";
                         <?= Html::activeDropDownList($photo, 'CLID', ArrayHelper::map($claim_t, 'CLID', 'claim_no'), [
                             'id' => 'claim-no',
                             'class' => 'form-control',
-                            'options' => [$selectedKey => ['Selected' => true],]]) ?>
+                        //    'options' => [$selectedKey => ['Selected' => true],]
+                        ]) ?>
                     </div> <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add-claim-no">เพิ่ม</a> </div>
                 <div class="form-group">
                     <label class="control-label col-sm-2">ช่วงเวลา</label>
@@ -59,7 +60,7 @@ $this->title = "เพิ่มรูปภาพ";
                             'AFTER' => 'ซ่อมเสร็จ',
                             'OTHER' => 'อื่น ๆ'
                         ],[
-                            'id' => 'claim-no',
+                            'id' => 'type',
                             'class' => 'form-control input-sm']) ?>
                     </div>
                 </div>
@@ -79,11 +80,12 @@ $this->title = "เพิ่มรูปภาพ";
                 <?php ActiveForm::end(); ?>
         </div>
     </div>
-    <div id="result">asas</div>
-    <div>
+    <div id="result">
+        <?php if(sizeof($details) == 0):?>
+            <caption>ยังไม่มีรูปภาพ</caption>
+        <?php else:?>
         <table class="table" width="100%">
-
-            <caption>###### ของ ######## จำนวน X รูปภาพ</caption>
+            <caption>พบข้อมูลจำนวน <?=sizeof($details)?> รูปภาพ ของหมายเลขเคลม <?=$details[0]->claim['claim_no']?></caption>
             <thead>
                 <tr>
                     <th width="5%">#</th>
@@ -93,24 +95,21 @@ $this->title = "เพิ่มรูปภาพ";
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td><img src="upload/sample/home-3" width="500"></td>
-                    <td>
-                        <button class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span></button>
-                        <button class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span></button>
-                    </td>
-                    <td>
-                        <button class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></button>
-                        <button class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">1</th>
-                    <td><img src="upload/sample/sample.jpg" width="500"></td>
-                    <td>เลื่อนขึ้น / เลื่อนลง</td>
-                    <td>Edit / Del</td>
-                </tr>
+                <?php $i = 1; foreach($details as $detail): ?>
+                    <tr>
+                        <th scope="row"><?=($i++)?></th>
+                        <td><img src="upload/<?=$detail->CLID?>-<?=$detail->claim['claim_no']?>/<?=$detail->filename?>" width="520px"></td>
+                        <td>
+                            <button class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                            <button class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></button>
+                            <button class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
+        <?php endif; ?>
     </div>

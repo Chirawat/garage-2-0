@@ -42,13 +42,20 @@ class PhotoController extends Controller
         $photo = new Photo();
 
         $claim_t  = Claim::find()->all();
-        if($CLID = $request->get('CLID')){
-            $selectedKey = $CLID;
-        }
-        else{
+
+        $selectedKey = 0;
+        if($CLID = $request->isGet){
+            $selectedKey = $request->get('CLID');
+
+            // query photo corresponding to CLID, type = BEFORE
+            $details = Photo::find()->where(['CLID' => $CLID, 'type' => 'BEFORE'])->all();
             $selectedKey = $claim_t[0]->CLID;
         }
 
+//        var_dump($selectedKey);
+//        die();
+
+        // when upload file
         if($request->isPost){
             $photo->load( $request->post() );
             $photo->imageFile = UploadedFile::getInstance($photo, 'imageFile');
@@ -66,17 +73,12 @@ class PhotoController extends Controller
             'claim' => $claim,
             'claim_t' => $claim_t,
             'selectedKey' => $selectedKey,
-
             'photo' => $photo,
+            'details' => $details,
         ]);
     }
 
-    public function view($CLID){
-
-    }
-
     public function actionDetail($CLID=null, $type=null){
-        $photo = Photo::find()->where(['CLID' => $CLID, 'type' => $type])->all();
-
+        $details = Photo::find()->where(['CLID' => $CLID, 'type' => $type])->all();
     }
 }

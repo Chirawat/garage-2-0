@@ -37,4 +37,4 @@ use yii\helpers\Url;
                         <?php endforeach; ?>
                 </tbody>
             </table>
-            <?php endif;
+            <?php endif;?>

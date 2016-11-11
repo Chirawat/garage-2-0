@@ -47,7 +47,7 @@ $this->title = "เพิ่มรูปภาพ";
                         <?= Html::activeDropDownList($photo, 'CLID', ArrayHelper::map($claim_t, 'CLID', 'claim_no'), [
                             'id' => 'claim-no',
                             'class' => 'form-control',
-                        //    'options' => [$selectedKey => ['Selected' => true],]
+                            'options' => [$selectedKey => ['Selected' => true],]
                         ]) ?>
                     </div> <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add-claim-no">เพิ่ม</a> </div>
                 <div class="form-group">
@@ -61,7 +61,9 @@ $this->title = "เพิ่มรูปภาพ";
                             'OTHER' => 'อื่น ๆ'
                         ],[
                             'id' => 'type',
-                            'class' => 'form-control input-sm']) ?>
+                            'class' => 'form-control input-sm',
+                            'options' => [$selectedType => ['Selected' => true]],
+                        ]) ?>
                     </div>
                 </div>
                 <div class="form-group">
@@ -80,36 +82,8 @@ $this->title = "เพิ่มรูปภาพ";
                 <?php ActiveForm::end(); ?>
         </div>
     </div>
-    <div id="result">
-        <?php if(sizeof($details) == 0):?>
-            <caption>ยังไม่มีรูปภาพ</caption>
-        <?php else:?>
-        <table class="table" width="100%">
-            <caption>พบข้อมูลจำนวน <?=sizeof($details)?> รูปภาพ ของหมายเลขเคลม <?=$details[0]->claim['claim_no']?></caption>
-            <thead>
-                <tr>
-                    <th width="5%">#</th>
-                    <th width="50%">รูปภาพ</th>
-                    <th width="15%">ลำดับ</th>
-                    <th width="15%">จัดการรูปภาพ</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $i = 1; foreach($details as $detail): ?>
-                    <tr>
-                        <th scope="row"><?=($i++)?></th>
-                        <td><img src="upload/<?=$detail->CLID?>-<?=$detail->claim['claim_no']?>/<?=$detail->filename?>" width="520px"></td>
-                        <td>
-                            <button class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span></button>
-                            <button class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span></button>
-                        </td>
-                        <td>
-                            <button class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></button>
-                            <button class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-        <?php endif; ?>
+    <div class="row">
+        <div class="container">
+            <div id="result"><?=$details?></div>
+        </div>
     </div>

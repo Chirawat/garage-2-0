@@ -67,9 +67,9 @@ class Photo extends \yii\db\ActiveRecord
         return $this->hasOne(Claim::className(), ['CLID' => 'CLID']);
     }
 
-    public function upload($CLID, $claim_no){
+    public function upload($CLID, $claim_no, $type){
         if( $this->validate()){
-            $path = 'upload/' . $CLID . '-' . $claim_no;
+            $path = 'upload/' . $CLID . '-' . $claim_no . '/' . $type;
             if( !is_dir($path) )
                 $r = BaseFileHelper::createDirectory($path, 0777, true);
             $this->imageFile->saveAs( $path . '/' . $this->imageFile->baseName . '.' . $this->imageFile->extension );

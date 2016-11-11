@@ -36,10 +36,7 @@ class PhotoController extends Controller
 
 
     function detailRender($CLID=null, $type=null){
-//        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $details = Photo::find()->where(['CLID' => $CLID, 'type' => $type])->orderBy('order')->all();
-
-//        return $details;
 
         return $content = $this->renderPartial('detail', [
             'type' => $type,
@@ -93,24 +90,28 @@ class PhotoController extends Controller
     }
 
     public function actionDetail($CLID=null, $type=null){
-        $content = $details = $this->detailRender($CLID, $type);
+        $content = $this->detailRender($CLID, $type);
         echo $content;
     }
     
-    public function actionSwap($CLID=null, $type=null, $PID=null, $dir=null){
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-//        
-//        $Photo1 = Photo::findOne($PID1);
-//        $Photo1_order_t = $Photo1->order;
-//        
-//        $Photo2 = Photo::findOne($PID2);
-//        $Photo1->order = $Photo2->order;
-//        $Photo2->order = $Photo1_order_t;
-//        
-//        $Photo1->save();
-//        $Photo2->save();
-        $ret = [$CLID, $type, $PID, $dir];
-        return $ret;
-    }
+    public function actionDel(){
+        $request = Yii::$app->request;
 
+        if($request->isPost){
+            $CLID = null;
+            $type = null;
+            $PID = $request->post('PID');
+            foreach($PID as $PID_t){
+                $photo = Photo::findOne($PID_t);
+
+                $CLID = $photo->CLID;
+                $type = $photo->type;
+                $file = 'upload/' . $photo->CLID . '-' . $photo->claim['claim_no'] . '/' . $photo->type . '/' . $photo->filename;
+                unlink($file);
+                $photo->delete();
+            }
+
+            $this->redirect(['photo/index', 'CLID' => $CLID, 'type' => $type]);
+        }
+    }
 }

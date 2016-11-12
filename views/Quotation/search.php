@@ -49,7 +49,7 @@ $this->title = "ค้นหาใบเสนอราคา";
                 [
                     'label' => '',
                     'value' => function($model){
-                        return Html::a('ดู', ['invoice/view', 'qid' => $model->QID], ['class' => 'btn btn-default btn-sm']);
+                        return Html::a('ดู', ['quotation/view', 'qid' => $model->QID], ['class' => 'btn btn-default btn-sm']);
                     },  
                     'format' => 'html',
                 ],

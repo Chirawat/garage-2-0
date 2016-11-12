@@ -243,9 +243,10 @@ $(document).ready(function () {
     calTotal();
     updateTableIndex();
 
-    /* Invoice */
-//    rederTableInvoice();
-//    calTotalInvoice();
+    /* Invoice
+    - 20161112 if remove, edit invoice won't load'*/ 
+    rederTableInvoice();
+    calTotalInvoice();
 
     ///////////////////////////////////////////////////////
 

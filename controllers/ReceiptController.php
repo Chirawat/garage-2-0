@@ -330,19 +330,6 @@ class ReceiptController extends Controller{
                 'pageSize' => 20,
                 ],
             ]);
-
-//            var_dump($dataProvider);
-//            die();
-
-//            $mY_t = 0;
-//            foreach($receipts as $key => $receipt){
-//                $mY = date("m-Y", strtotime($receipt->date) ); // key
-//                if($mY != $mY_t){
-//                   $mY_t = $mY;
-//                   $month[$mY_t]= [];
-//                }
-//               array_push( $month[$mY_t], $key );
-//            }
         }
         else{
             $dataProvider = new ActiveDataProvider([

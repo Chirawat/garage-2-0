@@ -9,18 +9,16 @@ $this->title = "ค้นหาใบเสนอราคา";
 ?>
 <div class="row">
     <div class="container">
-        <div class="col-sm-4">
-            <?php ActiveForm::begin(['options' => ['class' => 'form-inline']]); ?>
-            <div class="form-group"> 
-                <label>เลขทะเบียน</label>
-                <?= Html::input('text', 'plate_no', '', ['class' => 'form-control']) ?>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">ค้นหา</button>
-            </div>
-            <?php ActiveForm::end(); ?>
-            <br>
+        <?php ActiveForm::begin(['options' => ['class' => 'form-inline']]); ?>
+        <div class="form-group"> 
+            <label>เลขทะเบียน</label>
+            <?= Html::input('text', 'plate_no', '', ['class' => 'form-control']) ?>
         </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">ค้นหา</button>
+        </div>
+        <?php ActiveForm::end(); ?>
+        <br>
     </div>
 </div>
 <div class="row">

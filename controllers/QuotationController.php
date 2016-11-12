@@ -15,6 +15,7 @@ use app\models\Claim;
 use yii\db\Query;
 use yii\Helpers\ArrayHelper;
 use kartik\mpdf\Pdf;
+use yii\data\ActiveDataProvider;
 
 class QuotationController extends Controller
 {
@@ -83,27 +84,27 @@ class QuotationController extends Controller
     
     public function actionSearch(){
         $request = Yii::$app->request;
-        ///$quotation = null;
+        $dataProvider = new ActiveDataProvider([
+                'query' => Quotation::find()->joinWith(['viecle', 'claim', 'customer']),
+                'pagination' => [
+                'pageSize' => 20,
+                ],
+            ]);
         
-        // Search by plate no.
-        if($request->post('plate_no')){
-            $VID = Viecle::find()->where(['plate_no' => $request->post('plate_no')])->all();
-            $quotations = Quotation::find()->where(['VID' => $VID])->orderBy(['qid' => SORT_DESC])->all();
-            
-            if( !empty($quotations) )
-                return $this->render('search', [
-                   'quotations'  => $quotations,
-                    'status' => 'success',
-                ]);
-            
-            else
-                return $this->render('search', [
-                   'quotations'  => $quotations,
-                    'status' => 'failed',
-                ]);
+         if($request->isPost){
+            $plate_no = $request->post('plate_no');
+            $dataProvider = new ActiveDataProvider([
+                'query' => Quotation::find()->joinWith(['viecle', 'claim'])->where(['like', 'viecle.plate_no', $plate_no]),
+                'pagination' => [
+                'pageSize' => 20,
+                ],
+            ]);
         }
-                
-        return $this->render('search');
+
+        return $this->render('search', [
+            'dataProvider' => $dataProvider,
+        ]);
+        
     }
     
     public function actionQuotationSave(){
@@ -151,7 +152,7 @@ class QuotationController extends Controller
            // claim no
            $claim = new Claim();
            $claim->claim_no = $data["quotation_info"]["claimNo"];
-           $cliam->save();
+           $claim->save();
 
            $claim = Claim::find()->orderBy(['CLID' => SORT_DESC])->one();
            $quotation->CLID = $claim->CLID;

@@ -3,54 +3,59 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
+use yii\grid\GridView;
 
 $this->title = "ค้นหาใบเสนอราคา";
 ?>
-<div class="col-sm-4">
-    <?php ActiveForm::begin(['options' => ['class' => 'form-inline']]); ?>
-    
-    <div class="form-group">
-        <label>เลขทะเบียน</label>
-        <?= Html::input('text', 'plate_no', '', ['class' => 'form-control']) ?>
+<div class="row">
+    <div class="container">
+        <?php ActiveForm::begin(['options' => ['class' => 'form-inline']]); ?>
+        <div class="form-group"> 
+            <label>เลขทะเบียน</label>
+            <?= Html::input('text', 'plate_no', '', ['class' => 'form-control']) ?>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">ค้นหา</button>
+        </div>
+        <?php ActiveForm::end(); ?>
+        <br>
     </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">ค้นหา</button>
-    </div>
-    <?php ActiveForm::end(); ?>
-    <br>
 </div>
-<?php if( isset($quotations) && sizeof($quotations) > 1 ): ?>
-    <div class="col-sm-12">
-        <div class="alert alert-success" role="alert"> พบข้อมูลจำนวน <?= sizeof($quotations) ?> รายการ </div>
-    </div>
-    <div class="col-sm-12">
-        <table width="100%" class="table table-hover" id="search-table">
-            <tbody>
-                <tr>
-                    <th>#</th>
-                    <th>เลขที่เคลม</th>
-                    <th>วันที่</th>
-                </tr>
-                <?php $row = 1; foreach($quotations as $quotation): ?>
-                    <tr data-href="<?= Url::to(['quotation/view', 'qid' => $quotation->QID ]) ?>" style="cursor: pointer;">
-                        <td><?=$row++?></td>
-                        <td> <?= $quotation->claim['claim_no'] ?></td>
-                        <td> <?= $quotation->quotation_date ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-<?php endif; ?>
+<div class="row">
+    <div class="container">
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                [
+                    'class' => 'yii\grid\SerialColumn'
+                ],
+                [
+                    'attribute' => 'quotation_date',
+                    'label' => 'วันที่ออกใบแจ้งหนี้',
+                    'format' => ['date', 'php: d/m/Y'], 
+                ],
+                [
+                    'attribute' => 'quotation_id',
+                    'label' => 'เลขที่ใบแจ้งหนี้',
+                ],
+                [
+                    'attribute' => 'customer.fullname',
+                    'label' => 'ในนาม',
+                ],
+                [
+                    'attribute' => 'claim.claim_no',
+                    'label' => 'หมายเลขเคลม',
+                ],
+                [
+                    'label' => '',
+                    'value' => function($model){
+                        return Html::a('ดู', ['invoice/view', 'qid' => $model->QID], ['class' => 'btn btn-default btn-sm']);
+                    },  
+                    'format' => 'html',
+                ],
+            ],
+        ]);?>
 
-
-<!--In case of not found-->
-<?php if(isset($status) && $status == 'failed'):?>
-    <div class="col-sm-12">
-        <div class="alert alert-danger" role="alert"> <strong>ไม่พบข้อมูล!</strong> ไม่มีประวัติรถในฐานข้อมูล </div>
     </div>
-<?php endif; ?>
+</div>
 
-<?php
-$this->registerJs('$("table#search-table tbody tr").click(function(){ window.document.location = $(this).data("href")});', VIEW::POS_READY);
-?>

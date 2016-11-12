@@ -5,28 +5,25 @@ use yii\widgets\ActiveForm;
 
 $this->title = "รายงานสรุป"
 ?>
-    <?php ActiveForm::begin([
-    'options' => [
-        'class' => 'form-inline'
-    ]]) ?>
-        <div class="form-group">
-            <label>จาก</label>
-            <?= Html::dropDownList('start-date', null, $receiptDate, ['class' => 'form-control']) ?>
-        </div>
-        <div class="form-group">
-            <label>ถึง</label>
-            <?= Html::dropDownList('end-date', null, $receiptDate, ['class' => 'form-control']) ?>
-        </div>
-        <button type="submit" class="btn btn-primary">ตกลง</button>
-        <?php if($month != []): ?>
-            <a target="_blank" href="<?=Url::to(['receipt/summary-report', 'startDate' => $startDate , 'endDate' => $endDate ])?>" class="btn btn-success">พิมพ์</a>
-        <?php else: ?>
-            <a class="btn btn-success disabled">พิมพ์</a>
-        <?php endif; ?>
-        <?php ActiveForm::end(); ?>
-        <br>
-
-
+<?php ActiveForm::begin([
+'options' => [
+    'class' => 'form-inline' ]]) ?>
+    <div class="form-group">
+        <label>จาก</label>
+        <?= Html::dropDownList('start-date', null, $receiptDate, ['class' => 'form-control']) ?>
+    </div>
+    <div class="form-group">
+        <label>ถึง</label>
+        <?= Html::dropDownList('end-date', null, $receiptDate, ['class' => 'form-control']) ?>
+    </div>
+    <button type="submit" class="btn btn-primary">ตกลง</button>
+    <?php if($month != []): ?>
+        <a target="_blank" href="<?=Url::to(['receipt/summary-report', 'startDate' => $startDate , 'endDate' => $endDate ])?>" class="btn btn-success">พิมพ์</a>
+    <?php else: ?>
+        <a class="btn btn-success disabled">พิมพ์</a>
+    <?php endif; ?>
+<?php ActiveForm::end(); ?>
+<br>
 <?php if( isset($receipts) ): ?>
     <div class="alert alert-success" role="alert"><strong>ค้นพบ <?= sizeof($receipts) ?> รายการ</strong> จาก <?= $startDate ?> ถึง <?= $endDate ?></div>
     <?php foreach($month as $key => $values): ?>

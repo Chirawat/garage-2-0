@@ -108,8 +108,8 @@ class Invoice extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getReciepts()
+    public function getReciept()
     {
-        return $this->hasMany(Reciept::className(), ['IID' => 'IID']);
+        return $this->hasOne(Reciept::className(), ['IID' => 'IID']);
     }
 }

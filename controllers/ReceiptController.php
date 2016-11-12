@@ -302,5 +302,45 @@ class ReceiptController extends Controller{
             'endDate' => $endDate,
         ]);
     }
+
+    public function actionDept($startDate=null, $endDate=null){
+        $request = Yii::$app->request;
+
+        // query date (difference date)
+        $receiptDates = (new Query)->select(["DATE_FORMAT(date, '%m-%Y') AS dt"])->from('invoice')->distinct()->all();
+        $receiptDates = ArrayHelper::getColumn($receiptDates, 'dt');
+
+        // post request/ search by condition
+        $invoices = null;
+        $month = [];
+        if($request->post()){
+            $startDate =  date_create( "01-" . $receiptDates[ $request->post('start-date') ] );
+            $startDate = date_format($startDate, "Y-m-d");
+
+            $endDate = date_create( "01-" . $receiptDates[ $request->post('end-date') ] );
+            date_modify($endDate, 'last day of this month');
+            $endDate = date_format($endDate, "Y-m-d");
+
+            $invoices = Invoice::find()->where(['between', 'UNIX_TIMESTAMP(date)', strtotime($startDate), strtotime($endDate)])->all();
+
+            $mY_t = 0;
+            foreach($invoices as $key => $invoice){
+                $mY = date("m-Y", strtotime($invoice->date) ); // key
+                if($mY != $mY_t){
+                   $mY_t = $mY;
+                   $month[$mY_t]= [];
+                }
+               array_push( $month[$mY_t], $key );
+            }
+        }
+
+        return $this->render('dept', [
+            'receiptDate' => $receiptDates,
+            'invoices' => $invoices,
+            'month' => $month,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
+    }
 }
 ?>

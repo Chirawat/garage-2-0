@@ -45,7 +45,13 @@ AppAsset::register($this);
                 ],
             ],
             ['label' => 'เพิ่มรูปภาพ', 'url' => Url::to(['photo/index'])],
-            ['label' => 'รายงานสรุป', 'url' => Url::to(['receipt/summary'])],
+            [
+                'label' => 'รายงาน',
+                'items' => [
+                    ['label' => 'รายงานสรุปการออกใบเสร็จ', 'url' => Url::to(['receipt/summary'])],
+                    ['label' => 'รายงานค้างจ่าย', 'url' => Url::to(['receipt/dept'])],
+                ],
+            ],
             [
                 'label' => 'ตั้งค่า',
                 'items' => [

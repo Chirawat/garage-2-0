@@ -3,56 +3,61 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
+use yii\grid\GridView;
 
 $this->title = "ค้นหาใบเสนอราคา";
 ?>
-<div class="col-sm-4">
-    <?php ActiveForm::begin(['options' => ['class' => 'form-inline']]); ?>
-
-    <div class="form-group">
-        <label>ชื่อลูกค้า</label>
-        <?= Html::input('text', 'fullname', '', ['class' => 'form-control']) ?>
+<div class="row">
+    <div class="container">
+        <div class="col-sm-4">
+            <?php ActiveForm::begin(['options' => ['class' => 'form-inline']]); ?>
+            <div class="form-group"> 
+                <label>เลขทะเบียน</label>
+                <?= Html::input('text', 'plate_no', '', ['class' => 'form-control']) ?>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">ค้นหา</button>
+            </div>
+            <?php ActiveForm::end(); ?>
+            <br>
+        </div>
     </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">ค้นหา</button>
-    </div>
-    <?php ActiveForm::end(); ?>
-    <br>
 </div>
-<?php if( isset($customers) && sizeof($customers) > 0 ): ?>
-    <div class="col-sm-12">
-        <div class="alert alert-success" role="alert"> พบข้อมูลจำนวน <?= sizeof($customers) ?> รายการ </div>
-    </div>
-    <div class="col-sm-12">
-        <table width="100%" class="table table-hover" id="search-table">
-            <tbody>
-                <tr>
-                    <th>#</th>
-                    <th>ชื่อลูกค้า</th>
-                    <th>จำนวน</th>
-                    <th>ข้อมูลล่าสุด</th>
-                </tr>
-                <?php foreach($customers as $customer): ?>
-                    <tr data-href="<?= Url::to(['invocie/view', 'iid' => 0 ]) ?>" style="cursor: pointer;">
-                        <td></td>
-                        <td> <?= $customer->fullname ?></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-<?php endif; ?>
+<div class="row">
+    <div class="container">
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                [
+                    'class' => 'yii\grid\SerialColumn'
+                ],
+                [
+                    'attribute' => 'date',
+                    'label' => 'วันที่ออกใบแจ้งหนี้',
+                    'format' => ['date', 'php: d/m/Y'], 
+                ],
+                [
+                    'attribute' => 'invoice_id',
+                    'label' => 'เลขที่ใบแจ้งหนี้',
+                ],
+                [
+                    'attribute' => 'customer.fullname',
+                    'label' => 'ในนาม',
+                ],
+                [
+                    'attribute' => 'claim.claim_no',
+                    'label' => 'หมายเลขเคลม',
+                ],
+                [
+                    'label' => '',
+                    'value' => function($model){
+                        return Html::a('ดู', ['invoice/view', 'iid' => $model->IID], ['class' => 'btn btn-default btn-sm']);
+                    },  
+                    'format' => 'html',
+                ],
+            ],
+        ]);?>
 
-
-<!--In case of not found-->
-<?php if(isset($status) && $status == 'failed'):?>
-    <div class="col-sm-12">
-        <div class="alert alert-danger" role="alert"> <strong>ไม่พบข้อมูล!</strong> ไม่มีประวัติรถในฐานข้อมูล </div>
     </div>
-<?php endif; ?>
+</div>
 
-<?php
-$this->registerJs('$("table#search-table tbody tr").click(function(){ window.document.location = $(this).data("href")});', VIEW::POS_READY);
-?>

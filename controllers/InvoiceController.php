@@ -14,6 +14,7 @@ use app\Models\Customer;
 use app\Models\Claim;
 use yii\helpers\Url;
 use yii\db\Query;
+use yii\data\ActiveDataProvider;
 
 class InvoiceController extends Controller
 {
@@ -555,41 +556,25 @@ class InvoiceController extends Controller
 
     public function actionSearch(){
         $request = Yii::$app->request;
-
-        if($request->post()){
-            $fullname = $request->post('fullname');
-            $customers = Customer::find()->where(['like', 'fullname', $fullname])->all();
-
-            if( sizeof($customers) != 0 ){
-                return $this->render('search', [
-                    'status' => 'success',
-                    'customers' => $customers,
-                ]);
-            }
-            else{
-                return $this->render('search', [
-                    'status' => 'failed',
-                ]);
-            }
-        }
-        if($request->post()){
-            $CID = Customer::findOne($CID);
-            $invoice = Invoice::find()->where(['CID' => $CID ])->all();
-
-            if( !empty( $invoice ) )
-                return $this->render('search', [
-                   'invoice'  => $invoice,
-                    'status' => 'success',
-                ]);
-
-            else
-                return $this->render('search', [
-                   'invoice'  => $invoice,
-                    'status' => 'failed',
-                ]);
+        $dataProvider = new ActiveDataProvider([
+                'query' => Invoice::find()->joinWith(['viecle', 'claim', 'customer']),
+                'pagination' => [
+                'pageSize' => 20,
+                ],
+            ]);
+        if($request->isPost){
+            $plate_no = $request->post('plate_no');
+            $dataProvider = new ActiveDataProvider([
+                'query' => Invoice::find()->joinWith(['viecle', 'claim'])->where(['like', 'viecle.plate_no', $plate_no]),
+                'pagination' => [
+                'pageSize' => 20,
+                ],
+            ]);
         }
 
-        return $this->render('search');
+        return $this->render('search', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     public function actionUpdateDetail( $CID ){

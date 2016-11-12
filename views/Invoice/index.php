@@ -113,13 +113,7 @@ $url = Url::to(['customer-list']);?>
     </div>
 </div>
 <div class="row">
-    <div class="container col-sm-6">
-        <div class="col-sm-6">
-            <label>เลขที่ <?=$invoiceId?></label><br>
-            <label>วันที่ <?=date('d-m-Y')?></label>
-        </div>
-    </div>
-    <div class="container col-sm-6">
+    <div class="container col-sm-6 col-sm-offset-6">
         <div class="pull-right">
             <a href="<?=Url::to(['invoice/search'])?>" class="btn btn-primary btn-sm">
                 <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบแจ้งหนี้</a>
@@ -127,10 +121,10 @@ $url = Url::to(['customer-list']);?>
                 <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a>
             <a id="btn-save-invoice" class="btn btn-primary btn-sm">
                 <span class="glyphicon glyphicon-save-file"></span> บันทึก</a>
-
         </div>
     </div>
 </div>
+<br>
 <div class="row">
     <div class="container">
         <div class="panel panel-default">

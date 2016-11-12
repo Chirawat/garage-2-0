@@ -31,9 +31,9 @@ $this->title = "ค้นหาใบเสนอราคา";
                     <th>เลขที่เคลม</th>
                     <th>วันที่</th>
                 </tr>
-                <?php foreach($quotations as $quotation): ?>
+                <?php $row = 1; foreach($quotations as $quotation): ?>
                     <tr data-href="<?= Url::to(['quotation/view', 'qid' => $quotation->QID ]) ?>" style="cursor: pointer;">
-                        <td></td>
+                        <td><?=$row++?></td>
                         <td> <?= $quotation->claim['claim_no'] ?></td>
                         <td> <?= $quotation->quotation_date ?></td>
                     </tr>

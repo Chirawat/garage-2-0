@@ -337,10 +337,10 @@ class InvoiceController extends Controller
 
         $claim = new Claim();
         $claim->claim_no = $request->post('claim_no');
-        $cliam->save();
+        $claim->save();
 
         $claim = Claim::find()->orderBy(['CLID' => SORT_DESC])->one();
-        $invoice->claim_no = $claim->CLID;
+        $invoice->CLID = $claim->CLID;
 
         $dt = date('Y-m-d H:i:s');
         $invoice->date = $dt;

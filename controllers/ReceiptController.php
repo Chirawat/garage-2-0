@@ -15,6 +15,7 @@ use yii\helpers\Url;
 use yii\db\Query;
 use app\Models\Reciept;
 use yii\helpers\ArrayHelper;
+use yii\data\ActiveDataProvider;
 
 class ReceiptController extends Controller{
     function num2thai($number){
@@ -304,43 +305,66 @@ class ReceiptController extends Controller{
     }
 
     public function actionDept($startDate=null, $endDate=null){
+        Yii::$app->formatter->nullDisplay = '-';
         $request = Yii::$app->request;
 
-        // query date (difference date)
-        $receiptDates = (new Query)->select(["DATE_FORMAT(date, '%m-%Y') AS dt"])->from('invoice')->distinct()->all();
-        $receiptDates = ArrayHelper::getColumn($receiptDates, 'dt');
 
-        // post request/ search by condition
-        $invoices = null;
+
+        // query date (difference date)
+        $invocieDates = (new Query)->select(["DATE_FORMAT(date, '%m-%Y') AS dt"])->from('invoice')->distinct()->all();
+        $invoiceDates = ArrayHelper::getColumn($invocieDates, 'dt');
+
         $month = [];
-        if($request->post()){
-            $startDate =  date_create( "01-" . $receiptDates[ $request->post('start-date') ] );
+        $dataProvider = null;
+        if( $request->post() ){
+            $startDate =  date_create( "01-" . $invoiceDates[ $request->post('start-date') ] );
             $startDate = date_format($startDate, "Y-m-d");
 
-            $endDate = date_create( "01-" . $receiptDates[ $request->post('end-date') ] );
+            $endDate = date_create( "01-" . $invoiceDates[ $request->post('end-date') ] );
             date_modify($endDate, 'last day of this month');
             $endDate = date_format($endDate, "Y-m-d");
 
-            $invoices = Invoice::find()->where(['between', 'UNIX_TIMESTAMP(date)', strtotime($startDate), strtotime($endDate)])->all();
+            $dataProvider = new ActiveDataProvider([
+                'query' => Invoice::find()->with('reciept')->where(['between', 'UNIX_TIMESTAMP(date)', strtotime($startDate), strtotime($endDate)]),
+                'pagination' => [
+                'pageSize' => 20,
+                ],
+            ]);
 
-            $mY_t = 0;
-            foreach($invoices as $key => $invoice){
-                $mY = date("m-Y", strtotime($invoice->date) ); // key
-                if($mY != $mY_t){
-                   $mY_t = $mY;
-                   $month[$mY_t]= [];
-                }
-               array_push( $month[$mY_t], $key );
-            }
+//            var_dump($dataProvider);
+//            die();
+
+//            $mY_t = 0;
+//            foreach($receipts as $key => $receipt){
+//                $mY = date("m-Y", strtotime($receipt->date) ); // key
+//                if($mY != $mY_t){
+//                   $mY_t = $mY;
+//                   $month[$mY_t]= [];
+//                }
+//               array_push( $month[$mY_t], $key );
+//            }
+        }
+        else{
+            $dataProvider = new ActiveDataProvider([
+                'query' => Invoice::find()->with('reciept'),
+                'pagination' => [
+                'pageSize' => 20,
+                ],
+            ]);
         }
 
+
         return $this->render('dept', [
-            'receiptDate' => $receiptDates,
-            'invoices' => $invoices,
+            'dataProvider' => $dataProvider,
+            'invoiceDates' => $invoiceDates,
             'month' => $month,
             'startDate' => $startDate,
             'endDate' => $endDate,
         ]);
+    }
+
+    public function actionDeptReport(){
+        var_dump( Yii::$app->request->get() );
     }
 }
 ?>

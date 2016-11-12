@@ -22,8 +22,6 @@ $this->title = "รายงานค้างจ่าย";
         <?= Html::dropDownList('end-date', null, $invoiceDates, ['class' => 'form-control']) ?>
     </div>
     <button type="submit" class="btn btn-primary">ตกลง</button>
-    <a target="_blank" href="<?=Url::to(['receipt/dept-report', 'dataProvider' => $dataProvider])?>" class="btn btn-success">พิมพ์</a>
-
 <?php ActiveForm::end() ?>
 <br>
 

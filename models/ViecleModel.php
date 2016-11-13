@@ -44,8 +44,8 @@ class ViecleModel extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'viecle_name' => 'Viecle Name',
-            'model' => 'Model',
+            'viecle_name' => 'ชื่อรถยนต์',
+            'model' => 'ชื่อรุ่น',
         ];
     }
 

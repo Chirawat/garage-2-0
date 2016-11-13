@@ -40,7 +40,7 @@ class ViecleName extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'ชื่อรถยนต์',
         ];
     }
 

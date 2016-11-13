@@ -765,6 +765,14 @@ $("#photo-print-all").click( function(){
           '_blank' // <- This is what makes it open in a new window.
         );
 }); 
+$("#filter-viecle-name").change(function(){
+//    console.log( $(this).val() );
+    $.get("?r=config/viecle-model", {
+        viecleName: $(this).val()
+    }, function(data){
+        $("#viecle-model-result").html(data);
+    });
+});
 });
 
 $(".modal-update").click( function(){

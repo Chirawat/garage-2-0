@@ -8,12 +8,14 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use app\models\Customer;
+use app\models\ViecleName;
+use app\models\ViecleModel;
 
 
 class ConfigController extends Controller{
     public function actionInsuranceCompany(){
-        Yii::$app->formatter->nullDisplay = '-';
         $request = Yii::$app->request;
+        Yii::$app->formatter->nullDisplay = '-';
         $query = Customer::find()->where(['type' => 'INSURANCE_COMP']);
         $dataProvider  = new ActiveDataProvider([
             'query' => $query,
@@ -55,8 +57,52 @@ class ConfigController extends Controller{
     }
     
     public function actionViecle(){
+        $request = Yii::$app->request;
+        Yii::$app->formatter->nullDisplay = '-';
+        
+        $query = ViecleModel::find();
+        $dataProvider  = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+        
+        $viecleName = ViecleName::find()->all();
+        
+        $viecleName_t = new ViecleName();
+        
+        if($viecleName_t->load( $request->post() ) && $viecleName_t->validate()){
+            $viecleName_t->save();
+            return $this->redirect(['viecle']);
+        }
+        
+        $viecleModel = new ViecleModel();
+        
+        if($viecleModel->load($request->post()) && $viecleModel->validate()){
+            $viecleModel->save();
+            return $this->redirect(['viecle']);
+        }
+        
         return $this->render('viecle',[
+            'dataProvider' => $dataProvider,
+            'viecleName' => $viecleName,
+            'viecleName_t' => $viecleName_t,
+            'viecleModel' => $viecleModel,
             
+        ]);
+    }
+    
+    public function actionViecleModel($viecleName){
+        $query = ViecleModel::find()->where(['viecle_name' => $viecleName]);
+        $dataProvider  = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+        return $this->renderAjax('viecle_model', [
+            'dataProvider' => $dataProvider,
         ]);
     }
     

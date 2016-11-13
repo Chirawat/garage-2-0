@@ -8,6 +8,7 @@ use yii\filters\VerbFilter;
 use kartik\mpdf\Pdf;
 use app\Models\Invoice;
 use app\Models\InvoiceDescription;
+use app\Models\Reciept;
 use app\Models\Viecle;
 use app\Models\Quotation;
 use app\Models\Customer;
@@ -190,6 +191,9 @@ class InvoiceController extends Controller
 
         $invoiceId = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
         $invoiceId = ($invoiceId + 1) . "/" . (date('Y')+543);
+        
+        $receiptId = Reciept::find()->where(['YEAR(date)' => date('Y')])->count();
+        $receiptId = ($receiptId + 1) . "/" . (date('Y')+543);
 
         // list in combobox
         $viecleList = Viecle::find()->all();
@@ -208,6 +212,8 @@ class InvoiceController extends Controller
             'invoice' => $invoice,
 
             'invoiceId' => $invoiceId,
+            'receiptId' => $receiptId,
+            
             'customer_t' => $customer_t, //
             'customers' => $customers,
 

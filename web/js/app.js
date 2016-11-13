@@ -682,14 +682,6 @@ $("#btn-edit-invoice").click(function(){
         }
     });
 });
-
-$("#btn-print-invoice").click(function () {
-    var iid = getUrlVars()["iid"];
-    var dateIndex = $("#history-date").val();
-    var hrefStr = "index.php?r=invoice/report&iid=" + iid + "&dateIndex=" + dateIndex;
-
-    $("#btn-print-invoice").attr("href", hrefStr);
-});
 $("#invoiceId").keyup(function () {
     $("#viewInovoice").removeClass('disabled');
 });
@@ -706,13 +698,19 @@ $("input#customer-type").on('change', function(){
         $("#customer-list").html(data);
     })
 });
+$("#btn-print-invoice").click(function () {
+    var iid = getUrlVars()["iid"];
+    var dateIndex = $("#history-date").val();
+    var hrefStr = "index.php?r=invoice/report&iid=" + iid + "&dateIndex=" + dateIndex;
+
+    $("#btn-print-invoice").attr("href", hrefStr);
+});
 $("#btn-print-receipt").click( function(){
     var r = confirm("คุณต้องการพิมพ์ใบเสร็จใช่หรือไม่")
 
     var iid = getUrlVars()["iid"];
     var dateIndex = $("#history-date").val();
     var str = "index.php?r=receipt/report&iid=" + iid + "&dateIndex=" + dateIndex;
-
     if(r){
         window.open(
           str,
@@ -722,7 +720,7 @@ $("#btn-print-receipt").click( function(){
 });
 
 /////////////////////////////////////////////////////////
-$("#claim-no").select2();
+//******$("#claim-no").select2();
 $("#claim-no").change( function(){
     window.location.replace("?r=photo/index&CLID=" + $("#claim-no").val() );
 

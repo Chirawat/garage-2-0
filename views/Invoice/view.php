@@ -14,8 +14,8 @@ $this->title = "แก้ไขใบแจ้งหนี้";
 ?>
     <div class="row">
         <div class="col-sm-6">
-            <label>เลขที่ <?=$invoiceId?></label><br>
-            <label>วันที่ <?=date('d-m-Y')?></label>
+            <label>เลขที่ใบแจ้งหนี้ <span class="label label-default"><?=$invoice->invoice_id?></span> / ใบเสร็จ <span class="label label-default"><?=$invoice->reciept['reciept_id']?></span></label><br>
+            <label>วันที่ <?=date('d/m/Y')?></label>
         </div>
         <div class="col-sm-6">
             <div class="pull-right"> 

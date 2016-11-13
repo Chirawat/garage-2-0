@@ -89,16 +89,16 @@ $url = Url::to(['customer-list']);
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <div class="row">
-        <div class="container col-sm-6">
+        <div class="container">
             <div class="col-sm-6">
-                <label>เลขที่ <?=$invoiceId?></label><br>
-                <label>วันที่ <?=date('d-m-Y')?></label>
+                <label>เลขที่ใบแจ้งหนี้ <span class="label label-default"><?=$invoice->invoice_id?></span> / ใบเสร็จ <span class="label label-default"><?=$invoice->reciept['reciept_id']?></span></label><br>
+                <label>วันที่ <?=date('d/m/Y')?></label>
             </div>
-        </div>
-        <div class="container col-sm-6">
-            <div class="pull-right"> 
-                <a id="btn-edit-invoice" class="btn btn-primary btn-sm">
-                    <span class="glyphicon glyphicon-save-file"></span> บันทึก</a>
+            <div class="col-sm-6">
+                <div class="pull-right">
+                    <a id="btn-edit-invoice" class="btn btn-primary btn-sm">
+                        <span class="glyphicon glyphicon-save-file"></span> บันทึก</a>
+                </div>
             </div>
         </div>
     </div>

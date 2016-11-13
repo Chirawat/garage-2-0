@@ -22,7 +22,7 @@ class AppAsset extends AssetBundle
         'css/select2.min.css',
     ];
     public $js = [
-        'js/select2.min.js',
+        'js/select2.js',
         'js/app.js',
     ];
     public $depends = [

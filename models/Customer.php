@@ -47,12 +47,12 @@ class Customer extends \yii\db\ActiveRecord
     {
         return [
             'CID' => 'Cid',
-            'fullname' => 'Fullname',
+            'fullname' => 'ชื่อ',
             'type' => 'Type',
-            'address' => 'Address',
-            'phone' => 'Phone',
-            'fax' => 'Fax',
-            'taxpayer_id' => 'Taxpayer ID',
+            'address' => 'ที่อยู่',
+            'phone' => 'โทร',
+            'fax' => 'แฟกซ์',
+            'taxpayer_id' => 'เลขประจำตัวผู้เสียภาษี',
         ];
     }
 

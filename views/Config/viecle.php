@@ -5,7 +5,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 
-$this->title = "บริษัทประกัน";
+$this->title = "ชื่อและรุ่นรถยนต์";
 ?>
 <div id="create-viecle-name" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -57,7 +57,7 @@ $this->title = "บริษัทประกัน";
 <div class="row">
     <div class="container">
         <div class="form-group">
-            <a href="#create-viecle-model" class="btn btn-success" data-toggle="modal">เพิ่มรุ่นรถยนต์</a>
+            <a href="#create-viecle-model" class="btn btn-success" data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> เพิ่มรุ่นรถยนต์</a>
         </div>
         <div id="viecle-model-result">
             <?= GridView::widget([

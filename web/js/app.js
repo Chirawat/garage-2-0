@@ -783,3 +783,12 @@ $(".modal-update").click( function(){
         $("#update-insurance").modal();
     });
 });
+
+$(".modal-employee-update").click( function(){
+     $.get("?r=config/view-employee",{
+        EID: $(this).closest('tr').data('key')
+    }, function(data){
+        $("#modal-employee-update .modal-content").html(data);
+        $("#modal-employee-update").modal();
+    });
+});

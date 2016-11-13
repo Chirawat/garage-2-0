@@ -42,8 +42,8 @@ class Employee extends \yii\db\ActiveRecord
     {
         return [
             'EID' => 'Eid',
-            'fullname' => 'Fullname',
-            'Position' => 'Position',
+            'fullname' => 'ชื่อ-สกุล',
+            'Position' => 'ตำแหน่ง',
         ];
     }
 

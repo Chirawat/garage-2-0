@@ -10,6 +10,7 @@ use yii\data\ActiveDataProvider;
 use app\models\Customer;
 use app\models\ViecleName;
 use app\models\ViecleModel;
+use app\models\Employee;
 
 
 class ConfigController extends Controller{
@@ -107,8 +108,39 @@ class ConfigController extends Controller{
     }
     
     public function actionEmployee(){
-        return $this->render('employee',[
-            
+        $query = Employee::find();
+        $request = Yii::$app->request;
+        $dataProvider  = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
         ]);
+        
+        $employee = new Employee();
+        
+        if( $employee->load($request->post()) && $employee->validate() ){
+            $employee->save();
+        }
+        
+        return $this->render('employee',[
+            'dataProvider' => $dataProvider,
+            'employee' => $employee,
+        ]);
+    }
+    
+    public function actionViewEmployee( $EID ){
+        $employee = Employee::findOne( $EID );
+        
+        return $this->renderAjax('modal_update_employee',[
+            'employee' => $employee,
+        ]);
+    }
+    public function actionUpdateEmployee($EID){
+        $employee = Employee::findOne($EID);
+        if($employee->load(Yii::$app->request->post()) && $employee->validate()){
+            $employee->save();
+            return $this->redirect(['config/employee']);
+        }
     }
 }

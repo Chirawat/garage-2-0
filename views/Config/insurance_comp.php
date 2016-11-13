@@ -79,7 +79,6 @@ $this->title = "บริษัทประกัน";
         [
             'format' => 'html',
             'value' => function($model){
-//                return '<a href="#update-insurance" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>';
                 return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', ['class' => 'btn btn-default btn-sm modal-update']);
             },
         ],

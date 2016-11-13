@@ -511,9 +511,9 @@ $(document).ready(function () {
 //        });
 //    });
     
-    $("#customer-type").change( function(){
-        console.log("test");
-    });
+//    $("#customer-type").change( function(){
+//        console.log("test");
+//    });
     $("#auto-generate").click( function(){
         /* Select plate id first */
         if( $("#plate-no").val() == null ){
@@ -691,6 +691,24 @@ $("#viewInovoice").click(function () {
 $("#customer").select2();
 
 $("input#customer-type").on('change', function(){
+    
+    if( this.value == "INSURANCE_COMP"){
+        invoice.push({
+            list: "ค่าซ่อมทำสีรถยนต์",
+            price: $("#invoice-price").val()
+        });
+        // render table
+        rederTableInvoice();
+        calTotalInvoice();
+    }
+    else{
+        invoice.pop();
+        // render table
+        rederTableInvoice();
+        calTotalInvoice();
+    }
+    
+
     $("#address").html("");
     $("#tax-id").val("");
     $.get("?r=customer/customer-list", {customerType: this.value} , function(data){

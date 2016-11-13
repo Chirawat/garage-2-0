@@ -55,7 +55,16 @@ function DateThai($strDate){
                 <td style="text-align: right;"><?= number_format($description->price, 2) ?></td>
             </tr>
             <?php endforeach; ?>
-
+            <tr>
+                <td></td>
+                <td>หมายเลขเคลม <?=$invoice->claim['claim_no']?></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>ทะเบียน <?=$invoice->viecle['plate_no']?></td>
+                <td></td>
+            </tr>
             <tr>
                 <td colspan="2" style="text-align:right; border: 0px solid transparent;">จำนวนเงิน</td>
                 <td style="text-align: right;"><?= number_format( $total, 2 ) ?></td>

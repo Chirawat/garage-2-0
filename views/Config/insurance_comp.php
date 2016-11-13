@@ -1,6 +1,7 @@
 <?php
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 
 $this->title = "บริษัทประกัน";
@@ -40,10 +41,17 @@ $this->title = "บริษัทประกัน";
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div id="update-insurance" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 
 <h1><?=$this->title?></h1>
 
-<a href="#new-insurance" class="btn btn-success" data-toggle="modal">เพิ่ม</a>
+<a href="#new-insurance" class="btn btn-success" data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> เพิ่ม</a>
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'columns' => [
@@ -69,11 +77,11 @@ $this->title = "บริษัทประกัน";
             'label' => 'หมายเลขประจำตัวผู้เสียภาษี',
         ],
         [
-            'class' => 'yii\grid\ActionColumn',
-            'visibleButtons' => [
-                'view' => false,
-                'delete' => false,
-            ],
+            'format' => 'html',
+            'value' => function($model){
+//                return '<a href="#update-insurance" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>';
+                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', ['class' => 'btn btn-default btn-sm modal-update']);
+            },
         ],
     ],
 ])?>

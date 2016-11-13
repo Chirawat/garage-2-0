@@ -764,7 +764,14 @@ $("#photo-print-all").click( function(){
           "?r=photo/report&CLID=" + $("#claim-no option:selected").val(),
           '_blank' // <- This is what makes it open in a new window.
         );
-});
+}); 
 });
 
-    
+$(".modal-update").click( function(){
+    $.get("?r=config/view-insurance",{
+        CID: $(this).closest('tr').data('key')
+    }, function(data){
+        $("#update-insurance .modal-content").html(data);
+        $("#update-insurance").modal();
+    });
+});

@@ -37,6 +37,23 @@ class ConfigController extends Controller{
         ]);
     }
     
+    public function actionViewInsurance( $CID ){
+        $customer = Customer::findOne( $CID );
+        
+        return $this->renderAjax('update_insurance_modal', [
+            'customer' => $customer,
+        ]);
+    }
+    
+    public function actionUpdateInsurance( $CID ){
+        $customer = Customer::findOne( $CID );
+        
+        if( $customer->load(Yii::$app->request->post()) ){
+            $customer->save();
+            return $this->redirect(['config/insurance-company']);
+        }
+    }
+    
     public function actionViecle(){
         return $this->render('viecle',[
             

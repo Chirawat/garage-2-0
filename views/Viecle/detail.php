@@ -21,7 +21,6 @@ use yii\widgets\Pjax;
 use yii\helpers\Url;
 use yii\web\View;
 $this->title = 'Viecles';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
     <?php $form = ActiveForm::begin(['options' => [ 'class' => 'form-horizontal']]) ?>
         <div class="section">
@@ -71,8 +70,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <label for="inputEmail3" class="control-label">แบบตัวถัง</label>
                             </div>
                             <div class="col-sm-9">
-                                <?= Html::activeDropDownList($model, 'body_type', ArrayHelper::map( $bodyType, 'id', 'type'), [
-                                    'id' => 'body-type',
+                                <?= Html::activeInput('text', $model, 'body_type', [
+                                    'id' => 'body-code',
                                     'class' => 'form-control']) ?>
                             </div>
                         </div>
@@ -223,7 +222,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <h4>ข้อมูลรถ</h4>
                                 <p>เลขทะเบียน <strong id="plate-no_t"><?= $model->plate_no ?></strong></p>
                                 <p>ชื่อรถ <strong id="vielce-name_t"><?= $model->viecleName['name'] ?></strong>  รุ่น <strong id="viecle-model_t"><?= $model->viecleModel['model'] ?></strong> ปี <strong id="viecle-year_t"><?= $model->viecle_year ?></strong></p>
-                                <p>เลขตัวถัง <strong id="body-code_t"><?= $model->body_code ?></strong>  เลขเครื่อง <strong id="engin-code_t"><?= $model->engin_code ?></strong> แบบตัวถัง <strong id="body-type_t"><?= $model->bodyType['type'] ?></strong></p>
+                                <p>เลขตัวถัง <strong id="body-code_t"><?= $model->body_code ?></strong>  เลขเครื่อง <strong id="engin-code_t"><?= $model->engin_code ?></strong> แบบตัวถัง <strong id="body-type_t"><?= $model->body_type ?></strong></p>
                                 <p>ซีซี <strong id="cc_t"><?= $model->cc ?></strong>  ที่นั่ง <strong id="seat_t"><?= $model->seat ?></strong> น้ำหนักรวม <strong id="weight_t"><?= $model->weight ?> กก.</strong></p>
                                 <br>
                                 <h4>ข้อมูลลูกค้า</h4>
@@ -243,7 +242,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <!-- /.modal -->
         </div>
-        <?php ActiveForm::end() ?>
+    <?php ActiveForm::end() ?>
 
 <?php
 // copy info into confirmation modal

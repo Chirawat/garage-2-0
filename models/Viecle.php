@@ -42,9 +42,9 @@ class Viecle extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['plate_no', 'body_code', 'engin_code'], 'string'],
-            [['viecle_name', 'viecle_model', 'viecle_year', 'body_type', 'cc', 'seat', 'weight', 'owner'], 'integer'],
-            [['body_type'], 'exist', 'skipOnError' => true, 'targetClass' => BodyType::className(), 'targetAttribute' => ['body_type' => 'id']],
+            [['plate_no', 'body_code', 'engin_code', 'body_type'], 'string'],
+            [['viecle_name', 'viecle_model', 'viecle_year', 'cc', 'seat', 'weight', 'owner'], 'integer'],
+            //[['body_type'], 'exist', 'skipOnError' => true, 'targetClass' => BodyType::className(), 'targetAttribute' => ['body_type' => 'id']],
             [['owner'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['owner' => 'CID']],
             [['viecle_model'], 'exist', 'skipOnError' => true, 'targetClass' => ViecleModel::className(), 'targetAttribute' => ['viecle_model' => 'id']],
             [['viecle_name'], 'exist', 'skipOnError' => true, 'targetClass' => ViecleName::className(), 'targetAttribute' => ['viecle_name' => 'id']],

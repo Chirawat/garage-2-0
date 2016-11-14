@@ -67,23 +67,29 @@ class ViecleController extends Controller
      */
     public function actionCreate()
     {
+        $request = Yii::$app->request;
         $model = new Viecle();
         $customer = new Customer();
-        $viecleModels = [];
-        $bodyType = BodyType::find()->all();
+        ///$bodyType = BodyType::find()->all();
         $viecleName = ViecleName::find()->all();
+        $viecleModels = ViecleModel::find()->where(['viecle_name' => $viecleName[0]->id])->all();
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->VID]);
-        } else {
-            return $this->render('detail', [
-                'model' => $model,
-                'customer' => $customer,
-                'viecleModels' => $viecleModels,
-                'bodyType' => $bodyType,
-                'viecleName' => $viecleName,
-            ]);
+        if($request->isPost){
+            if ($model->load($request->post()) && $model->validate()) {
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->VID]);
+            } else {
+                var_dump($model->errors);
+                die();
+            }
         }
+        return $this->render('detail', [
+            'model' => $model,
+            'customer' => $customer,
+            'viecleModels' => $viecleModels,
+            //'bodyType' => $bodyType,
+            'viecleName' => $viecleName,
+        ]);
     }
 
     /**

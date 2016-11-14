@@ -20,19 +20,22 @@ use yii\widgets\Pjax;
         </div>
     </div>
     <?php endif; ?>
-    <div class="section">
+    <div class="row">
         <div class="container">
+            <div class="form-group">
+                <label>1) กรณีรถเข้าใหม่ </label>
+                <a href="<?= Url::to(['viecle/create']) ?>" class="btn btn-default">เพิ่ม</a>
+            </div>
+            
             <div class="row">
                 <div class="col-md-4">
                     <?= Html::beginForm(['viecle/detail'], 'get') ?>
                         <div class="form-group">
-                            <label class="control-label" for="plate_id">ทะเบียนรถ</label>
+                            <label class="control-label" for="plate_id">2) ค้นประวัติเดิม</label>
                             <input class="form-control" id="plate_id" name="plate_no" placeholder="ใส่ทะเบียนรถ" type="text"> </div>
-                        <a href="<?= Url::to(['viecle/create']) ?>" class="btn btn-default">เพิ่ม</a>
                         <button type="submit" class="btn btn-default">ค้นหา</button>
                     <?= Html::endForm() ?>
                 </div>
-                <div class="col-md-6"></div>
             </div>
         </div>
     </div>

@@ -45,7 +45,7 @@ $this->title = "เพิ่มรูปภาพ";
                     <label class="control-label col-sm-2">เลขที่เคลม</label>
                     <div class="col-sm-3">
                         <?= Html::activeDropDownList($photo, 'CLID', ArrayHelper::map($claim_t, 'CLID', 'claim_no'), [
-                            'id' => 'claim-no',
+                            'id' => 'photo-claim-no',
                             'class' => 'form-control',
                             'prompt' => 'เลือกเลขที่เคลม',
                             'options' => [$selectedKey => ['Selected' => true],]

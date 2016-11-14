@@ -62,6 +62,9 @@ class PhotoController extends Controller
 
             // query photo corresponding to CLID, type = BEFORE
             $selectedType = $request->get('type');
+            if($selectedType == null)
+                $selectedType = "BEFORE";
+            //if($selectedType)
             $selectedKey = $CLID;
 
             $details = $this->detailRender($CLID, $selectedType);

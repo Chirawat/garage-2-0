@@ -113,7 +113,7 @@ class ReceiptController extends Controller{
             ],
             'access' => [
                 'class' => \yii\filters\AccessControl::className(),
-                'only' => ['create'],
+                'only' => ['create','summary', 'dept'],
                 'rules' => [
                     // allow authenticated users
                     [

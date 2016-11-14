@@ -14,6 +14,30 @@ use app\models\Employee;
 
 
 class ConfigController extends Controller{
+    
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'only' => ['insurance-company', 'viecle'],
+                'rules' => [
+                    // allow authenticated users
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+    
     public function actionInsuranceCompany(){
         $request = Yii::$app->request;
         Yii::$app->formatter->nullDisplay = '-';

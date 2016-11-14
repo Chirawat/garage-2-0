@@ -114,7 +114,7 @@ class InvoiceController extends Controller
             ],
             'access' => [
                 'class' => \yii\filters\AccessControl::className(),
-                'only' => ['create'],
+                'only' => ['create', 'index'],
                 'rules' => [
                     // allow authenticated users
                     [

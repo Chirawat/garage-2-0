@@ -57,7 +57,8 @@ AppAsset::register($this);
                 'items' => [
                     ['label' => 'บริษัทประกัน', 'url' => Url::to(['config/insurance-company'])],
                     ['label' => 'ชื่อและรุ่นรถยนต์', 'url' => Url::to(['config/viecle'])],
-                    ['label' => 'ตั้งค่าพนักงาน', 'url' => Url::to(['config/employee'])],
+                    ['label' => 'ตั้งค่าพนักงาน', 'url' => '#'],
+//                    ['label' => 'ตั้งค่าพนักงาน', 'url' => Url::to(['config/employee'])],
                     '<li class="divider"></li>',
                     ['label' => 'ตรวจสอบรุ่นโปรแกรม', 'url' => '#'],
                 ],

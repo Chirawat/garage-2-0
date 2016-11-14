@@ -42,6 +42,7 @@ class Viecle extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['plate_no'], 'required'],
             [['plate_no', 'body_code', 'engin_code', 'body_type'], 'string'],
             [['viecle_name', 'viecle_model', 'viecle_year', 'cc', 'seat', 'weight', 'owner'], 'integer'],
             //[['body_type'], 'exist', 'skipOnError' => true, 'targetClass' => BodyType::className(), 'targetAttribute' => ['body_type' => 'id']],
@@ -61,14 +62,14 @@ class Viecle extends \yii\db\ActiveRecord
             'plate_no' => 'Plate No',
             'viecle_name' => 'Viecle Name',
             'viecle_model' => 'Viecle Model',
-            'body_code' => 'Body Code',
-            'engin_code' => 'Engin Code',
+            'body_code' => 'หมายเลขตัวถัง',
+            'engin_code' => 'หมายเลขเครื่องยนต์',
             'viecle_year' => 'Viecle Year',
             'body_type' => 'Body Type',
             'cc' => 'Cc',
             'seat' => 'Seat',
             'weight' => 'Weight',
-            'owner' => 'Owner',
+            'owner' => 'ชื่อผู้เอาประกัน',
         ];
     }
 

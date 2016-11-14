@@ -12,6 +12,7 @@ use app\models\Customer;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 /**
  * ViecleController implements the CRUD actions for Viecle model.
@@ -39,12 +40,19 @@ class ViecleController extends Controller
      */
     public function actionIndex()
     {
-        //$searchModel = new ViecleSearch();
-        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $query = Viecle::find()->with(['owner0', 'viecleName', 'viecleModel'])->orderBy(['VID'=>SORT_DESC]);
+        $dataProvider  = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 25,
+            ],
+        ]);
+        
+        $viecle = new Viecle();
+        
         return $this->render('index', [
-            //'searchModel' => $searchModel,
-            //'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider,
+            'viecle' => $viecle,
         ]);
     }
 
@@ -68,26 +76,39 @@ class ViecleController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
+        
         $model = new Viecle();
         $customer = new Customer();
-        ///$bodyType = BodyType::find()->all();
+        
         $viecleName = ViecleName::find()->all();
         $viecleModels = ViecleModel::find()->where(['viecle_name' => $viecleName[0]->id])->all();
         
-        if($request->isPost){
+        if($request->isPost){ 
+            // customer
+            if( $customer->load($request->post()) && $customer->validate() ){
+                $customer->type = "GENERAL";
+                $customer->save();
+            }
+            else{
+                var_dump($customer->errors);
+                die();
+            }
+            // viecle
             if ($model->load($request->post()) && $model->validate()) {
+                $lastCustomer = Customer::find()->orderBy(['CID' => SORT_DESC])->one(); 
+                $model->owner = $lastCustomer->CID;
                 $model->save();
-                return $this->redirect(['view', 'id' => $model->VID]);
-            } else {
+            } 
+            else {
                 var_dump($model->errors);
                 die();
             }
+            return $this->redirect(['index']);
         }
-        return $this->render('detail', [
-            'model' => $model,
+        return $this->render('create', [
+            'model' => $model, // viecle
             'customer' => $customer,
             'viecleModels' => $viecleModels,
-            //'bodyType' => $bodyType,
             'viecleName' => $viecleName,
         ]);
     }

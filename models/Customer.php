@@ -35,6 +35,7 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['fullname'], 'required'],
             [['fullname', 'type', 'address'], 'string'],
             [['phone', 'fax', 'taxpayer_id'], 'integer'],
         ];
@@ -47,7 +48,7 @@ class Customer extends \yii\db\ActiveRecord
     {
         return [
             'CID' => 'Cid',
-            'fullname' => 'ชื่อ',
+            'fullname' => 'ชื่อผู้เอาประกัน',
             'type' => 'Type',
             'address' => 'ที่อยู่',
             'phone' => 'โทร',

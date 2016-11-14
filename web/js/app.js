@@ -739,11 +739,11 @@ $("#btn-print-receipt").click( function(){
 
 /////////////////////////////////////////////////////////
 //******$("#claim-no").select2();
-$("#claim-no").change( function(){
-    window.location.replace("?r=photo/index&CLID=" + $("#claim-no").val() );
-
-
-});
+//$("#claim-no").change( function(){
+//    window.location.replace("?r=photo/index&CLID=" + $("#claim-no").val() );
+//
+//
+//});
 
 $("#type").change( function(){
     $.get("?r=photo/detail", {

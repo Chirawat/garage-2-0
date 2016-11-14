@@ -144,14 +144,24 @@ class ReceiptController extends Controller{
 
         /* Update Reciept Info */
         $reciept = Reciept::find()->where(['IID' => $iid])->one();
-        if(sizeof($reciept) == 0)
+//        var_dump( count($reciept) );
+//        die();
+        if( count($reciept) == null ){
             $reciept = new Reciept();
+            
+            $receiptId = Reciept::find()->where(['YEAR(date)' => date('Y')])->count();
+            $receiptId = ($receiptId + 1) . "/" . (date('Y')+543);
+            
+            $reciept->reciept_id = $receiptId;
+            $reciept->IID = $invoice->IID;
 
-        $reciept->IID = $invoice->IID;
-        $reciept->date = date('Y-m-d H:i:s');
+            
+
+        }
         $reciept->total = $grandTotal;
+        $reciept->date = date('Y-m-d H:i:s');
         $reciept->EID = Yii::$app->user->identity->getId();
-
+        
         if($reciept->validate() && $reciept->save()){
             // success
         }
@@ -161,6 +171,8 @@ class ReceiptController extends Controller{
             die();
         }
 
+        
+       
         $content = $this->renderPartial('report', [
             'invoice' => $invoice,
 

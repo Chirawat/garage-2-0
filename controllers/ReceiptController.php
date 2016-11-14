@@ -155,24 +155,21 @@ class ReceiptController extends Controller{
             $reciept->reciept_id = $receiptId;
             $reciept->IID = $invoice->IID;
 
-            
+            $reciept->total = $grandTotal;
+            $reciept->date = date('Y-m-d H:i:s');
+            $reciept->EID = Yii::$app->user->identity->getId();
+
+            if($reciept->validate() && $reciept->save()){
+                // success
+            }
+            else{
+                // failed
+                var_dump( $reciept->errors );
+                die();
+            }    
 
         }
-        $reciept->total = $grandTotal;
-        $reciept->date = date('Y-m-d H:i:s');
-        $reciept->EID = Yii::$app->user->identity->getId();
         
-        if($reciept->validate() && $reciept->save()){
-            // success
-        }
-        else{
-            // failed
-            var_dump( $reciept->errors );
-            die();
-        }
-
-        
-       
         $content = $this->renderPartial('report', [
             'invoice' => $invoice,
 

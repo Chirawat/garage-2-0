@@ -168,7 +168,7 @@ $this->title = 'เพิ่มข้อมูลรถ';
                         </div>
                         <div class="form-group">
                             <div class="col-sm-3">
-                                <label for="inputEmail3" class="control-label">เบอร์โทรศัพท์</label>
+                                <label for="inputEmail3" class="control-label">เบอร์โทรศัพท์ 1</label>
                             </div>
                             <div class="col-sm-9">
                                 <?= Html::activeInput('text', $customer, 'phone', [
@@ -178,15 +178,14 @@ $this->title = 'เพิ่มข้อมูลรถ';
                         </div>
                         <div class="form-group">
                             <div class="col-sm-3">
-                                <label for="inputEmail3" class="control-label">เบอร์แฟกซ์</label>
+                                <label for="inputEmail3" class="control-label">เบอร์โทรศัพท์ 2</label>
                             </div>
                             <div class="col-sm-9">
-                                <?= Html::activeInput('text', $customer, 'fax', [
+                                <?= Html::activeInput('text', $customer, 'phone2', [
                                     'id' => 'fax' , 
                                     'class' => 'form-control']) ?>
                             </div>
                         </div>
-                        <!--                    </form>-->
                     </div>
                     <div class="col-md-6"></div>
                 </div>

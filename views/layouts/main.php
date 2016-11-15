@@ -55,10 +55,9 @@ AppAsset::register($this);
             [
                 'label' => 'ตั้งค่า',
                 'items' => [
-                    ['label' => 'บริษัทประกัน', 'url' => Url::to(['config/insurance-company'])],
-                    ['label' => 'ชื่อและรุ่นรถยนต์', 'url' => Url::to(['config/viecle'])],
-                    ['label' => 'ตั้งค่าพนักงาน', 'url' => '#'],
-//                    ['label' => 'ตั้งค่าพนักงาน', 'url' => Url::to(['config/employee'])],
+                    ['label' => 'บริษัทประกัน', 'url' => Url::to(['config/insurance-company']), 'linkOptions' => ['target' => '_blank']],
+                    ['label' => 'ชื่อและรุ่นรถยนต์', 'url' => Url::to(['config/viecle']), 'linkOptions' => ['target' => '_blank']],
+                    ['label' => 'ตั้งค่าพนักงาน', 'url' => '#', 'visible' => false],
                     '<li class="divider"></li>',
                     ['label' => 'ตรวจสอบรุ่นโปรแกรม', 'url' => '#'],
                 ],

@@ -5,8 +5,9 @@ use yii\helpers\Url;
 use yii\web\View;
 use yii\grid\GridView;
 
-$this->title = "ค้นหาใบเสนอราคา";
+$this->title = "ค้นหาใบแจ้งหนี้";
 ?>
+<h1><?=$this->title?></h1>
 <div class="row">
     <div class="container">
         <?php ActiveForm::begin(['options' => ['class' => 'form-inline']]); ?>

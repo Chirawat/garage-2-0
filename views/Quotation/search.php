@@ -7,6 +7,7 @@ use yii\grid\GridView;
 
 $this->title = "ค้นหาใบเสนอราคา";
 ?>
+<h1><?=$this->title?></h1>
 <div class="row">
     <div class="container">
         <?php ActiveForm::begin(['options' => ['class' => 'form-inline']]); ?>

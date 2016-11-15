@@ -39,7 +39,7 @@ $this->title = "รายงานสรุป"
                     <th>เลขที่เคลม</th>
                     <th>เลขทะเบียน</th>
                     <th>ยอดเงิน</th>
-                    <th>ผู้ออก</th>
+<!--                    <th>ผู้ออก</th>-->
                 </tr>
             </thead>
             <tbody>
@@ -53,7 +53,7 @@ $this->title = "รายงานสรุป"
                         <td><?= $receipts[$value]->invoice->claim['claim_no'] ?></td>
                         <td><?= $receipts[$value]->invoice->viecle['plate_no'] ?></td>
                         <td class="text-right"><?= number_format($receipts[$value]->total, 2) ?></td>
-                        <td><?= $receipts[$value]->employee['fullname']?></td>
+<!--                        <td><?= $receipts[$value]->employee['fullname']?></td>-->
                     </tr>
                 <?php endforeach;  ?>
                 <tr>

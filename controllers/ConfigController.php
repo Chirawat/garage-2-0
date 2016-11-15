@@ -41,7 +41,7 @@ class ConfigController extends Controller{
     public function actionInsuranceCompany(){
         $request = Yii::$app->request;
         Yii::$app->formatter->nullDisplay = '-';
-        $query = Customer::find()->where(['type' => 'INSURANCE_COMP']);
+        $query = Customer::find()->where(['type' => 'INSURANCE_COMP'])->orderBy(['CID' => SORT_DESC]);
         $dataProvider  = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [

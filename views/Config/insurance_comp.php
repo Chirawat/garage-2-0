@@ -23,6 +23,8 @@ $this->title = "บริษัทประกัน";
                 <div class="modal-body">
 
                     <?= $form->field($customer, 'fullname')->textInput()?>
+                    
+                    <?= $form->field($customer, 'branch')->textInput()?>
 
                     <?= $form->field($customer, 'address')->textArea() ?>
 

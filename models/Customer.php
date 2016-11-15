@@ -37,8 +37,7 @@ class Customer extends \yii\db\ActiveRecord
         return [
            [['fullname'], 'required'],
            [['fullname', 'type', 'address'], 'string'],
-           [['phone', 'fax', 'taxpayer_id'], 'integer'],
-           [['fullname', 'type', 'address', 'phone', 'fax', 'taxpayer_id', 'phone2'], 'string'],
+           [['fullname', 'type', 'address', 'phone', 'fax', 'taxpayer_id', 'phone2', 'branch'], 'string'],
         ];
     }
 
@@ -55,6 +54,7 @@ class Customer extends \yii\db\ActiveRecord
             'phone' => 'โทร',
             'fax' => 'แฟกซ์',
             'taxpayer_id' => 'เลขประจำตัวผู้เสียภาษี',
+            'branch' => 'สาขา',
         ];
     }
 

@@ -36,14 +36,16 @@ function DateThai($strDate){
         </tr>
         <tr>
             <td>
-                <h3><?= $customerModel->fullname ?> เลขที่เคลม <?= $model->claim['claim_no'] ?></h3>
+                <h3>
+                    <?= $customerModel->fullname ?> เลขที่เคลม <?= $model->claim['claim_no'] ?>
+                </h3>
             </td>
         </tr>
     </table>
 <br/>
     <table class="table_bordered" width="100%" border="0" cellpadding="2" cellspacing="0" style="border: 0px solid transparent;">
         <tr>
-            <td width="20%" class="column-header">ชื่อรถยนต์ / รุ่น</td>
+            <td height="40" width="20%" class="column-header">ชื่อรถยนต์ / รุ่น</td>
             <td width="20%" class="column-header">เลขทะเบียน</td>
             <td width="40%" class="column-header">เลขตัวถัง</td>
             <td width="10%" class="column-header">เลขเครื่องยนต์</td>
@@ -60,7 +62,7 @@ function DateThai($strDate){
     <!--<pagebreak />-->
     <table class="table_bordered" width="100%" border="0" cellpadding="2" cellspacing="0" style="border: 0px solid transparent;">
         <tr>
-            <td width="5%" class="column-header">ลำดับ</td>
+            <td height="40" width="5%" class="column-header">ลำดับ</td>
             <td width="30%" class="column-header">รายการซ่อม</td>
             <td width="15%" class="column-header">ราคา</td>
             <td width="5%" class="column-header">ลำดับ</td>

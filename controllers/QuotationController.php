@@ -294,10 +294,10 @@ class QuotationController extends Controller
         $model = Quotation::find()->where(['QID' => $qid])->one();
         
         // Customer
-        $customerModel = Customer::find()->where(['CID' => $model->CID])->one();
+        $customerModel = $model->customer;
         
         // Viecle
-        $viecleModel = Viecle::find()->where(['VID' => $model->VID])->one();
+        $viecleModel = $model->viecle;
         
         // find date
         $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['date' => SORT_DESC])->all();

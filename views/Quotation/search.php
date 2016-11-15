@@ -29,19 +29,24 @@ $this->title = "ค้นหาใบเสนอราคา";
                 [
                     'class' => 'yii\grid\SerialColumn'
                 ],
+                
                 [
                     'attribute' => 'quotation_date',
-                    'label' => 'วันที่ออกใบแจ้งหนี้',
+                    'label' => 'วันที่ออก',
                     'format' => ['date', 'php: d/m/Y'], 
                 ],
                 [
                     'attribute' => 'quotation_id',
-                    'label' => 'เลขที่ใบแจ้งหนี้',
+                    'label' => 'เลขที่',
+                ],
+                [
+                    'attribute' => 'viecle.plate_no',
                 ],
                 [
                     'attribute' => 'customer.fullname',
                     'label' => 'ในนาม',
                 ],
+                
                 [
                     'attribute' => 'claim.claim_no',
                     'label' => 'หมายเลขเคลม',

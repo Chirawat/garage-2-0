@@ -59,7 +59,7 @@ class Viecle extends \yii\db\ActiveRecord
     {
         return [
             'VID' => 'Vid',
-            'plate_no' => 'Plate No',
+            'plate_no' => 'เลขทะเบียน',
             'viecle_name' => 'Viecle Name',
             'viecle_model' => 'Viecle Model',
             'body_code' => 'หมายเลขตัวถัง',

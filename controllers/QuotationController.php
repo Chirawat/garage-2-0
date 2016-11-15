@@ -83,8 +83,9 @@ class QuotationController extends Controller
     
     public function actionSearch(){
         $request = Yii::$app->request;
+        Yii::$app->formatter->nullDisplay = '-';
         $dataProvider = new ActiveDataProvider([
-                'query' => Quotation::find()->joinWith(['viecle', 'claim', 'customer']),
+                'query' => Quotation::find()->joinWith(['viecle', 'claim', 'customer'])->orderBy(['QID' => SORT_DESC]),
                 'pagination' => [
                 'pageSize' => 20,
                 ],

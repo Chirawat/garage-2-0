@@ -105,7 +105,7 @@ function renderTableBody() {
         var appendRow = "";
         for (var i = 0; i < objLen; i++) {
             // col 1
-            appendRow += '<tr id="' + i + '"><td style="text-align: Center;">' + i + '</td>';
+            appendRow += '<tr id="' + i + '"><td style="text-align: Center;">' + (i+1) + '</td>';
             if (typeof maintenance[i] !== 'undefined') {
                 // col 2
                 appendRow += '<td>' + maintenance[i].list + '</td>\

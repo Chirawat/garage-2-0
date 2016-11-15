@@ -40,6 +40,7 @@ class ViecleController extends Controller
      */
     public function actionIndex()
     {
+        Yii::$app->formatter->nullDisplay = '-';
         $query = Viecle::find()->with(['owner0', 'viecleName', 'viecleModel'])->orderBy(['VID'=>SORT_DESC]);
         $dataProvider  = new ActiveDataProvider([
             'query' => $query,

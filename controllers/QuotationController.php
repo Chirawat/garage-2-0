@@ -288,7 +288,7 @@ class QuotationController extends Controller
     public function actionReport($qid, $dateIndex = null) {
         $request = Yii::$app->request;
         
-        $qid = Quotation::findOne($qid);
+        //$qid = Quotation::findOne($qid);
         
         // Quotation
         $model = Quotation::find()->where(['QID' => $qid])->one();
@@ -306,11 +306,7 @@ class QuotationController extends Controller
             $dateIndex = 0;
         
         $dt = date_create($dateLists[$dateIndex]->date);
-        //if($request->isAjax){
-            //$dateIndex = $request->get('dateIndex');
-            //$dateIndex = $dateIndex_t;
-        //}
-        
+
         // Description
         $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE', 'date' => $dateLists[$dateIndex]->date ]);
         $maintenanceDescriptionModel = $query->all();

@@ -420,15 +420,9 @@ $(document).ready(function () {
         /* Send information to server */
         $.ajax({
             url: "index.php?r=quotation/quotation-save"
-            , type: 'json'
-            , data: {
-                quotation_info: quotation_info
-                , maintenance_list: maintenance
-                , part_list: part
-            , }
-            , success: function (data) {
-                //console.log("Success data = ");
-                //console.log( data );
+            , type: 'json', data: {
+                quotation_info: quotation_info, maintenance_list: maintenance, part_list: part
+            }, success: function (data) {
                 // confirmation dialog
                 var r = confirm("บันทึกเรียบร้อย\n\rต้องการพิมพ์ใบเสนอราคานี้เลยหรือไม่");
                 if (r == true) { // press OK
@@ -439,11 +433,8 @@ $(document).ready(function () {
                     );
                 }
                 
+                // redirect
                 window.location.replace("?r=quotation/view&qid=" + data.QID);
-                
-                //if()
-                //var id = $("#quotationId").val()
-                //window.location.replace("?r=quotation/view&quotation_id=" + id);
             }
         });
     });

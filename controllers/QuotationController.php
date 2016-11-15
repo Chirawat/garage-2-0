@@ -1,10 +1,6 @@
-
 <?php
-
 // rev 20161115-1617
-
 namespace app\controllers;
-
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;

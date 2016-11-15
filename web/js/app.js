@@ -422,7 +422,7 @@ $(document).ready(function () {
         $.post("index.php?r=quotation/quotation-save",{
             quotation_info: quotation_info, maintenance_list: maintenance, part_list: part
         },function(data){
-            //console.log(data);
+            console.log(data);
             // confirmation dialog
             var r = confirm(data.message);
             if (r === true && data.status === true) { // press OK

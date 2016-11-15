@@ -562,8 +562,9 @@ class InvoiceController extends Controller
 
     public function actionSearch(){
         $request = Yii::$app->request;
+        Yii::$app->formatter->nullDisplay = '-';
         $dataProvider = new ActiveDataProvider([
-                'query' => Invoice::find()->joinWith(['viecle', 'claim', 'customer']),
+                'query' => Invoice::find()->joinWith(['viecle', 'claim', 'customer'])->orderBy(['IID' => SORT_DESC]),
                 'pagination' => [
                 'pageSize' => 20,
                 ],

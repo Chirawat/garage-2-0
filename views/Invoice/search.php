@@ -38,6 +38,7 @@ $this->title = "ค้นหาใบเสนอราคา";
                     'attribute' => 'invoice_id',
                     'label' => 'เลขที่ใบแจ้งหนี้',
                 ],
+                'viecle.plate_no',
                 [
                     'attribute' => 'customer.fullname',
                     'label' => 'ในนาม',

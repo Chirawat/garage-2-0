@@ -62,6 +62,7 @@ $this->title = "บริษัทประกัน";
             'attribute' => 'fullname',
             'label' => 'บริษัทประกัน',
         ],
+        'branch',
         [
             'attribute' => 'address',
             'label' => 'ที่อยู่',

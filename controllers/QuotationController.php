@@ -156,7 +156,7 @@ class QuotationController extends Controller
 
                         }
                         else{
-                            return "Error: " . $description->errors;
+                            return ['status' => false, 'message' => $description->errors];
                         }
                     }
                 }
@@ -176,13 +176,13 @@ class QuotationController extends Controller
 
                         }
                         else{
-                            return ['status' => false, 'message' => "Error: " . $description->errors];
+                            return ['status' => false, 'message' => $description->errors];
                         }
                     }
                 }
             }
             else{
-                return ['status' => false, 'message' => "Error: " . $quotation->errors];
+                return ['status' => false, 'message' => $quotation->errors];
             }
             
             return ['status' => true, 'message' => "บันทึกเสร็จเรียบร้อย", 'QID' => $quotation->QID];

@@ -149,11 +149,12 @@ class ReceiptController extends Controller{
         if( count($reciept) == null ){
             $reciept = new Reciept();
             
-            $receiptId = Reciept::find()->where(['YEAR(date)' => date('Y')])->count();
-            $receiptId = ($receiptId + 1) . "/" . (date('Y')+543);
+            $number = Reciept::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count();
+            $receiptId = ($number + 1) . "/" . (( date('Y') + 543 ) - 2500);
             
-            $reciept->reciept_id = $receiptId;
+            $reciept->reciept_id = "TAX " . $receiptId;
             $reciept->IID = $invoice->IID;
+            $reciept->book_number = date('m') . '/' . ((date('Y') + 543) - 2500);
 
             $reciept->total = $grandTotal;
             $reciept->date = date('Y-m-d H:i:s');

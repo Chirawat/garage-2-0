@@ -38,6 +38,7 @@ $this->title = "รายงานค้างจ่าย";
                 'date', 'php: d/m/Y',
             ],
         ],
+        'book_number',
         [
             'attribute' => 'invoice_id',
             'label' => 'เลขที่ใบแจ้งหนี้'
@@ -60,6 +61,7 @@ $this->title = "รายงานค้างจ่าย";
             'attribute' => 'reciept.reciept_id',
             'label' => 'เลขที่ใบเสร็จ',
         ],
+        'reciept.book_number',
         [
             'attribute' => 'reciept.date',
             'label' => 'วันที่ออกใบเสร็จ',

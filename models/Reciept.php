@@ -35,7 +35,7 @@ class Reciept extends \yii\db\ActiveRecord
         return [
             [['IID'], 'required'],
             [['IID', 'EID'], 'integer'],
-            [['reciept_id'], 'string'],
+            [['reciept_id', 'book_number'], 'string'],
             [['date'], 'safe'],
             [['total'], 'number'],
             [['EID'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['EID' => 'EID']],
@@ -55,6 +55,7 @@ class Reciept extends \yii\db\ActiveRecord
             'date' => 'Date',
             'total' => 'Total',
             'EID' => 'Eid',
+            'book_number' => 'เล่มที่',
         ];
     }
 

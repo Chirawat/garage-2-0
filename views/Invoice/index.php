@@ -115,7 +115,7 @@ $url = Url::to(['customer-list']);?>
 <div class="row">
     <div class="container">
         <div class="col-sm-6">
-            <label>เลขที่ใบแจ้งหนี้ <span class="label label-default"><?=$invoiceId?></span> / ใบเสร็จ <span class="label label-default"><?=$receiptId?></span></label><br>
+            <label>เล่มที่ <span class="label label-default"><?= $book_number ?></span> ใบแจ้งหนี้ <span class="label label-default"><?=$invoiceId?></span> / ใบเสร็จ <span class="label label-default"><?=$receiptId?></span></label><br>
             <label>วันที่ <?=date('d/m/Y')?></label>
         </div>
         <div class="col-sm-6">

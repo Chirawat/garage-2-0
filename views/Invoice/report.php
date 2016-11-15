@@ -37,7 +37,7 @@ function DateThai($strDate){
                 <?php if($invoice->customer->taxpayer_id != null): ?>
                 <br /> เลขประจำตัวผู้เสียภาษีอากร <?= $invoice->customer->taxpayer_id ?></td>
                 <?php endif; ?>
-            <td width="30%" style="padding: 10px;">เล่มที่ <?=date('m', strtotime($invoice->date) )?> เลขที่ IN <?= $invoice->invoice_id ?> <br>
+            <td width="30%" style="padding: 10px;">เล่มที่ <?= $invoice->book_number ?> เลขที่ <?= $invoice->invoice_id ?> <br>
                 วันที่ <?= DateThai( $invoice->date ) ?>
                 <br /> เลขประจำตัวผู้เสียภาษีอากร 0353556000391
                 <br />  สาขา สำนักงานใหญ่</td>

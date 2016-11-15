@@ -128,6 +128,9 @@ class InvoiceController extends Controller
 
 
     public function actionIndex(){
+//        var_dump (date('m')); 
+//        die();
+        
         $request = Yii::$app->request;
 
         $invoice = new Invoice();
@@ -143,6 +146,7 @@ class InvoiceController extends Controller
 
             $invoice->date = date('Y-m-d');
             $invoice->invoice_id = Yii::$app->request->post('invoice_id');
+            
             $invoice->employee = Yii::$app->user->identity->getId();
 
             if( $invoice->validate() ){
@@ -173,27 +177,15 @@ class InvoiceController extends Controller
             return $this->redirect(['invoice/view', 'iid' => $IID]);
         }
 
-//        if($request->get('cid'))
-//            $customer = Customer::findOne($request->get('cid'));
-//        else
-//            $customer = new Customer();
-//
-//        // Create Customer
         $customer_t = new Customer();
-//        if( $customer_t->load($request->post()) && $customer_t->validate() ){
-//            $customer_t->save();
-//
-//            // find latest record
-//            $customer = Customer::find()->orderBy(['CID' => SORT_DESC])->one();
-//            return $this->redirect(['invoice/index', 'cid'=>$customer->CID]);
-//        }
 
-
-        $invoiceId = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
-        $invoiceId = ($invoiceId + 1) . "/" . (date('Y')+543);
+        $number = Invoice::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count();
+        $invoiceId = ($number + 1) . "/" . (( date('Y') + 543 ) - 2500);
         
-        $receiptId = Reciept::find()->where(['YEAR(date)' => date('Y')])->count();
-        $receiptId = ($receiptId + 1) . "/" . (date('Y')+543);
+        $number = Reciept::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count();
+        $receiptId = ($number + 1) . "/" . (( date('Y') + 543 ) - 2500);
+        
+        $book_number = date('m') . "/" . (( date('Y') + 543 ) - 2500);
 
         // list in combobox
         $viecleList = Viecle::find()->all();
@@ -220,6 +212,8 @@ class InvoiceController extends Controller
             'viecleList' => $viecleList,
             'insuranceCompanies' => $insuranceCompanies,
             'viecle' => $viecle,
+            
+            'book_number' =>$book_number,
         ]);
     }
 
@@ -334,9 +328,10 @@ class InvoiceController extends Controller
         // Create invoice
         $invoice = new Invoice();
 
-        $invoiceId = Invoice::find()->where(['YEAR(date)' => date('Y')])->count();
-        $invoiceId = ($invoiceId + 1) . "/" . (date('Y')+543);
-        $invoice->invoice_id = $invoiceId;
+        $number = Invoice::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count();
+        $invoiceId = ($number + 1) . "/" . (( date('Y') + 543 ) - 2500);
+        $invoice->invoice_id = "IV " . $invoiceId;
+        $invoice->book_number = date('m') . '/' . ( (date('Y') + 543) - 2500 );
 
         $invoice->CID = $request->post('CID');
         $invoice->VID = $request->post('VID');

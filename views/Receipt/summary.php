@@ -33,6 +33,7 @@ $this->title = "รายงานสรุป"
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>เล่มที่</th>
                     <th>เลขที่ใบเสร็จ</th>
                     <th>วันที่ออกใบเสร็จ</th>
                     <th>ในนาม</th>
@@ -47,6 +48,7 @@ $this->title = "รายงานสรุป"
                     <?php $total += $receipts[$value]->total; ?>
                     <tr>
                         <th scope="row"><?= ($i++) ?></th>
+                        <td><?= $receipts[$value]->invoice['book_number'] ?></td>
                         <td><?= $receipts[$value]->invoice['invoice_id'] ?></td>
                         <td><?= date('d-m-Y', strtotime($receipts[$value]->date)) ?></td>
                         <td><?= $receipts[$value]->invoice->customer['fullname']?></td>

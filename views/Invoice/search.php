@@ -35,6 +35,7 @@ $this->title = "ค้นหาใบแจ้งหนี้";
                     'label' => 'วันที่ออกใบแจ้งหนี้',
                     'format' => ['date', 'php: d/m/Y'], 
                 ],
+                'book_number',
                 [
                     'attribute' => 'invoice_id',
                     'label' => 'เลขที่ใบแจ้งหนี้',

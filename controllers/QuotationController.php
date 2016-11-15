@@ -142,7 +142,7 @@ class QuotationController extends Controller
            
            
            // quotation id
-           $quotationId = Quotation::find()->where(['YEAR(quotation_date)' => date('Y')])->count() + 1;
+           $quotationId = Quotation::find()->where(['YEAR(quotation_date)' => date('Y'), 'MONTH(quotation_date)' => date('m')])->count() + 1;
            $quotationId = $quotationId . "/" . (date('Y') + 543);
            $quotation->quotation_id = $quotationId;
 

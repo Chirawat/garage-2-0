@@ -14,7 +14,12 @@ $this->title = "แก้ไขใบแจ้งหนี้";
 ?>
     <div class="row">
         <div class="col-sm-6">
-            <label>เลขที่ใบแจ้งหนี้ <span class="label label-default"><?=$invoice->invoice_id?></span> / ใบเสร็จ <span class="label label-default"><?=$invoice->reciept['reciept_id']?></span></label><br>
+            <label>
+                ใบแจ้งหนี้ <span class="label label-default"><?=$invoice->book_number?> - <?=$invoice->invoice_id?></span> 
+                <?php if( isset($invoice->reciept['reciept_id']) ): ?>
+                    / ใบเสร็จ <span class="label label-default"><?=$invoice->reciept['book_number']?>-<?=$invoice->reciept['reciept_id']?></span>
+                <?php endif;?>
+            </label><br>
             <label>วันที่ <?=date('d/m/Y')?></label>
         </div>
         <div class="col-sm-6">

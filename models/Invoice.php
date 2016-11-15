@@ -40,7 +40,7 @@ class Invoice extends \yii\db\ActiveRecord
         return [
             [['CID', 'VID', 'CLID', 'EID'], 'required'],
             [['CID', 'VID', 'CLID', 'EID'], 'integer'],
-            [['invoice_id'], 'string'],
+            [['invoice_id', 'book_number'], 'string'],
             [['date'], 'safe'],
             [['EID'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['EID' => 'EID']],
             [['CLID'], 'exist', 'skipOnError' => true, 'targetClass' => Claim::className(), 'targetAttribute' => ['CLID' => 'CLID']],
@@ -62,6 +62,7 @@ class Invoice extends \yii\db\ActiveRecord
             'invoice_id' => 'Invoice ID',
             'date' => 'Date',
             'EID' => 'Eid',
+            'book_number' => 'เล่มที่',
         ];
     }
 

@@ -338,7 +338,7 @@ $(document).ready(function () {
                 , dataType: "json"
                 , data: {
                     term: request.term,
-                    vid: $("select#plate-no").val()
+                    vid: $("#plate-no").val()
                 }
                 , success: function (data) {
                     //console.log(data);
@@ -369,7 +369,7 @@ $(document).ready(function () {
                 , dataType: "json"
                 , data: {
                     term: request.term,
-                    vid: $("select#plate-no").val()
+                    vid: $("#plate-no").val()
                 }
                 , success: function (data) {
                     list = data;
@@ -396,12 +396,12 @@ $(document).ready(function () {
         //if (maintenance.length != 0 || part.length != 0) {
         // get quotation info
         quotation_info = {
-            customerType: $("#customer-type:checked").val()
-            , claimNo: $("#claim-no").val()
-            , CID: $("#customer option:selected").val()
-            , damageLevel: $("#damage-level").val()
-            , damagePosition: $("#damage-position").val()
-            , vieclePlateNo: $("#plate-no option:selected").val()
+            CID: $("#customer option:selected").val(), 
+            customerType: $("#customer-type:checked").val(), 
+            claimNo: $("#claim-no").val(), 
+            damageLevel: $("#damage-level").val(), 
+            damagePosition: $("#damage-position").val(), 
+            VID: $("#plate-no option:selected").val()
         };
         // check empty
         if (quotation_info.vieclePlateNo == "") {
@@ -416,26 +416,23 @@ $(document).ready(function () {
             alert("กรุณาเพิ่มรายการ");
             return false;
         }
-        //console.log(quotation_info);
+        
         /* Send information to server */
-        $.ajax({
-            url: "index.php?r=quotation/quotation-save"
-            , type: 'json', data: {
-                quotation_info: quotation_info, maintenance_list: maintenance, part_list: part
-            }, success: function (data) {
-                // confirmation dialog
-                var r = confirm("บันทึกเรียบร้อย\n\rต้องการพิมพ์ใบเสนอราคานี้เลยหรือไม่");
-                if (r == true) { // press OK
-                    // print quotation
-                    window.open(
-                      '?r=quotation/report&qid=' + data.QID,
-                      '_blank' // <- This is what makes it open in a new window.
-                    );
-                }
-                
-                // redirect
-                window.location.replace("?r=quotation/view&qid=" + data.QID);
+        $.post("index.php?r=quotation/quotation-save",{
+            quotation_info: quotation_info, maintenance_list: maintenance, part_list: part
+        },function(data){
+            //console.log(data);
+            // confirmation dialog
+            var r = confirm(data.message);
+            if (r === true && data.status === true) { // press OK
+                // print quotation
+                window.open(
+                  '?r=quotation/report&qid=' + data.QID,
+                  '_blank' // <- This is what makes it open in a new window.
+                );
             }
+            // redirect
+            window.location.replace("?r=quotation/view&qid=" + data.QID);
         });
     });
     /* edit description, save button clicked */

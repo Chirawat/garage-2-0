@@ -88,6 +88,7 @@ $this->title = "แก้ไขใบเสนอราคา";
                         <label class="col-sm-3 control-label">ทะเบียน</label>
                         <div class="col-sm-4">
                             <input disabled value="<?= $viecle->plate_no ?>" class="form-control input-sm">
+                            <input type="hidden" id="plate-no" value="<?=$viecle->VID?>">
                         </div>
                         <label class="col-sm-2 control-label">ชื่อรถ</label>
                         <div class="col-sm-3">

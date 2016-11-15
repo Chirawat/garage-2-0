@@ -108,124 +108,85 @@ class QuotationController extends Controller
     }
     
     public function actionQuotationSave(){
-       if( Yii::$app->request->isAjax){    
-            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-
-            $request = Yii::$app->request;
-            $data = $request->bodyParams;
-
-            // Quation data
-            ///////////////////////////////////////////////////////////////////////////////
+        $request = Yii::$app->request;
+        
+        //return var_dump($request->post('maintenance_list'));
+        
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if( $request->isPost ){    
+            $quotationInfo = $request->post('quotation_info');
+                        
             $quotation = new Quotation();
+            
+            $quotation->CID = $quotationInfo['CID'];
+            $quotation->VID = $quotationInfo['VID'];
 
-           // get customer id from viecle detail
-            $VID = $data["quotation_info"]["vieclePlateNo"];
-            $viecle = Viecle::findOne($VID);
-           
-            // Fill up CID / based on customer type
-            $customerType = $data["quotation_info"]["customerType"];
-            if($customerType == "GENERAL") { // general customer
-                // Fill up Quotation's VID
-                $quotation->CID = $viecle->owner0['CID'];
-            }
-           else{ // insurance company
-               // get customer id from customer with type 'insurance' / key already represents VID
-               $quotation->CID =  $data["quotation_info"]["CID"];
-               
-           }
-           
-            // Fill up VID
-            $quotation->VID = $viecle->VID;
+            $quotationId = Quotation::find()->where(['YEAR(quotation_date)' => date('Y'), 'MONTH(quotation_date)' => date('m')])->count() + 1;
+            $quotationId = $quotationId . "/" . (date('Y') + 543);
+            $quotation->quotation_id = $quotationId;
 
-            // Fill up EID
-            $quotation->EID = Yii::$app->user->identity->getId();
-           
-           
-           // quotation id
-           $quotationId = Quotation::find()->where(['YEAR(quotation_date)' => date('Y'), 'MONTH(quotation_date)' => date('m')])->count() + 1;
-           $quotationId = $quotationId . "/" . (date('Y') + 543);
-           $quotation->quotation_id = $quotationId;
-
-           // quotation date
-           $quotation->quotation_date = date("Y-m-d");
-           
-           // claim no
-           $claim = new Claim();
-           $claim->claim_no = $data["quotation_info"]["claimNo"];
-           $claim->save();
-
-           $claim = Claim::find()->orderBy(['CLID' => SORT_DESC])->one();
-           $quotation->CLID = $claim->CLID;
-           
-           // damage level
-           $quotation->damage_level = $data["quotation_info"]["damageLevel"];
-           
-           //damage position
-           $quotation->damage_position = $data["quotation_info"]["damagePosition"];
-           
-           // Save Model
-            if( $quotation->validate() ){
-                $ret = $quotation->save();
-            }
-           else{
-               return $quotation->errors;
-           }
-
-           // find latest id
-           $QID = Quotation::find()->select(['QID'])->orderBy(['QID' => SORT_DESC])->one()["QID"];
-           
-            // Description data
-            ///////////////////////////////////////////////////////////////////////////////
-
-            // Maintenance
-            if(!empty($data["maintenance_list"])){
-                for($i = 0; $i < sizeOf($data["maintenance_list"]); $i++){
-                    $description = new Description();
-
-                    $description->QID = $QID;
-                    $description->row = 1;
-                    $description->description = $data["maintenance_list"][$i]["list"];
-                    $description->type = "MAINTENANCE";
-                    $description->price = $data["maintenance_list"][$i]["price"];
-                    
-                    /* update 20161019: for history of description */
-                    $description->date = date('Y-m-d H:i:s');
-
-                    if( $description->validate() )
-                        $ret = $description->save();
-                    else
-                        return $description->errors;
-                }
-            }
-
-            // Part
-            if(!empty($data["part_list"])){
-                for($i = 0; $i < sizeOf($data["part_list"]); $i++){
-                    $description = new Description();
-
-                    $description->QID = $QID;
-                    $description->row = 1;
-                    $description->description = $data["part_list"][$i]["list"];
-                    $description->type = "PART";
-                    $description->price = $data["part_list"][$i]["price"];
-                    
-                    /* update 20161019: for history of description */
-                    $description->date = date('Y-m-d H:i:s');
-
-                    if( $description->validate() )
-                        $ret = $description->save();
-                    else
-                        return $description->errors;
-                }
+            $claim = Claim::find()->where(['claim_no' => $quotationInfo['claimNo']])->one();
+            if($claim == null){
+                $claim = new Claim();
+                $claim->claim_no = $quotationInfo['claimNo'];
+                $claim->save();
             }
             
+            $quotation->CLID = $claim->CLID;
+            $quotation->quotation_date = date("Y-m-d");
+            $quotation->damage_level = $quotationInfo['damageLevel'];
+            $quotation->damage_position = $quotationInfo['damagePosition'];            
+            $quotation->EID = Yii::$app->user->identity->getId();
+            
+            if($quotation->validate() && $quotation->save()){
+                $quotation = Quotation::find()->orderBy(['QID' => SORT_DESC])->one();
+                
+                $dt = date('Y-m-d H:i:s');
+                $maintenances = $request->post('maintenance_list');
+                if($maintenances != null){
+                    foreach($maintenances as $maintenance){
+                        $description = new Description();
 
-            if( $ret ){
-               return ['status' => 'sucess', 'QID' => $QID];
+                        $description->QID = $quotation->QID;
+                        $description->description = $maintenance["list"];
+                        $description->type = "MAINTENANCE";
+                        $description->price = $maintenance["price"];
+                        $description->date = $dt;
+
+                        if($description->validate() && $description->save()){
+
+                        }
+                        else{
+                            return "Error: " + $description->errors;
+                        }
+                    }
+                }
+                
+                $parts = $request->post('part_list');
+                if($parts != null){
+                    foreach($parts as $part){
+                        $description = new Description();
+
+                        $description->QID = $quotation->QID;
+                        $description->description = $part["list"];
+                        $description->type = "PART";
+                        $description->price = $part["price"];
+                        $description->date = $dt;
+
+                        if($description->validate() && $description->save()){
+
+                        }
+                        else{
+                            return ['status' => false, 'message' => "Error: " + $description->errors];
+                        }
+                    }
+                }
             }
-           else{
-               return ['status' => 'failed', 'error' => $ret];
-           }
+            else{
+                return ['status' => false, 'message' => "Error: " + $quotation->errors];
+            }
+            
+            return ['status' => true, 'message' => "บันทึกเสร็จเรียบร้อย", 'QID' => $quotation->QID];
        }
    }
     

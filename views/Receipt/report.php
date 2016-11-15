@@ -22,21 +22,24 @@ function DateThai($strDate){
                 <?=Html::img(Yii::getAlias('@app').'/web/img/logo_t.jpg', ['width' => 60])?><br>
             </td>
             <td>
-                <h3>ยโสธรเจริญการช่าง</h3> <small>345 ม.3 บ้านดอนมะยาง ต.ตาดทอง อ.เมืองยโสธร จ.ยโสธร 35000<br/>
-                เบอร์โทรศัพท์ 045-712911, 082-7565361 เบอร์แฟกซ์ 045-712911</small>
+                <h3>ห้างหุ้นส่วนจำกัดยโสธรเจริญการช่าง</h3>
+                <h3>YASOTHON JAROEN KARN CHANG LIMITED PARTNERSHIP</h3> 
+                <small>345 ม.3 บ้านดอนมะยาง ต.ตาดทอง อ.เมืองยโสธร จ.ยโสธร 35000<br/>
+                เบอร์โทรศัพท์ 045-712911, 099-2309916, 063-2362878 เบอร์แฟกซ์ 045-712911</small> 
             </td>
         </tr>
     </table>
     <br/>
-    <h3 class="header">ใบเสร็จรับเงิน/ใบกำกับภาษี</h3>
+    <h2 class="header">ใบเสร็จรับเงิน/ใบกำกับภาษี</h2>
     <table class="table_bordered" width="100%" border="0" cellpadding="2" cellspacing="0" style="border: 0px solid transparent;">
         <tr>
-            <td width="50%" style="padding: 10px;">ชื่อ <?= $invoice->customer->fullname ?>
-                <br /> ที่อยู่ <?= $invoice->customer->address ?>
+            <td width="70%" style="padding: 10px;"><b>ชื่อ <?= $invoice->customer->fullname ?>
+                <br /> ที่อยู่</b> <?= $invoice->customer->address ?>
                 <?php if($invoice->customer->taxpayer_id != null): ?>
                 <br /> เลขประจำตัวผู้เสียภาษีอากร <?= $invoice->customer->taxpayer_id ?></td>
                 <?php endif; ?>
-            <td width="50%" style="padding: 10px;">เล่มที่ <?=date('m', strtotime($invoice->date) )?> เลขที่ <?= $invoice->reciept['reciept_id'] ?> วันที่ <?= DateThai( $invoice->date ) ?>
+            <td width="30%" style="padding: 10px;">เล่มที่ <?=date('m', strtotime($invoice->date) )?> เลขที่ TAX <?= $invoice->reciept['reciept_id'] ?><br>
+                วันที่ <?= DateThai( $invoice->date ) ?>
                 <br /> เลขประจำตัวผู้เสียภาษีอากร 0353556000391
                 <br />  สาขา สำนักงานใหญ่</td>
         </tr>

@@ -404,7 +404,8 @@ class QuotationController extends Controller
         // call mPDF methods on the fly
         'methods' => [ 
             //'SetHeader'=>['Krajee Report Header'], 
-            'SetFooter'=>['หน้า {PAGENO} / {nb}'],
+            'SetFooter'=>['ลงชื่อ&emsp;............................................ ผู้เสนอราคา<br>
+            (&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;)&emsp;&emsp;&emsp;&emsp;&emsp;<br>หน้า {PAGENO} / {nb}'],
             ]
         ]);
 

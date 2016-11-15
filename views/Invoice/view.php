@@ -177,7 +177,7 @@ $this->title = "แก้ไขใบแจ้งหนี้";
                     <td></td>
                     <td>จำนวนเงิน</td>
                     <td>
-                        <div id="invoice-total"><?= number_format( $total, 2 ) ?></div>
+                        <div><?= number_format( $total, 2 ) ?></div>
                     </td>
                     <td></td>
                 </tr>
@@ -185,7 +185,7 @@ $this->title = "แก้ไขใบแจ้งหนี้";
                     <td></td>
                     <td>ภาษีมูลค่าเพิ่ม (7%)</td>
                     <td>
-                        <div id="invoice-tax"><?= number_format( $vat, 2 ) ?></div>
+                        <div><?= number_format( $vat, 2 ) ?></div>
                     </td>
                     <td></td>
                 </tr>
@@ -193,7 +193,7 @@ $this->title = "แก้ไขใบแจ้งหนี้";
                     <td></td>
                     <td>ยอดรวมทั้งสิ้น</td>
                     <td>
-                        <div id="invoice-grand-total"><?= number_format( $grandTotal, 2 ) ?></div>
+                        <div><?= number_format( $grandTotal, 2 ) ?></div>
                     </td>
                     <td></td>
                 </tr>

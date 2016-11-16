@@ -328,9 +328,11 @@ class InvoiceController extends Controller
         // Create invoice
         $invoice = new Invoice();
 
-        $number = Invoice::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count();
-        $invoiceId = ($number + 1) . "/" . (( date('Y') + 543 ) - 2500);
-        $invoice->invoice_id = "IV " . $invoiceId;
+        $number = Invoice::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count() + 1;
+        $number = str_pad($number, 4, "0", STR_PAD_LEFT);
+        $invoiceId = $number . "/" . (( date('Y') + 543 ) - 2500);
+        $invoice->invoice_id = "IV-" . $invoiceId;
+
         $invoice->book_number = date('m') . '/' . ( (date('Y') + 543) - 2500 );
 
         $invoice->CID = $request->post('CID');

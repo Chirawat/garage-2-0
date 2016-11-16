@@ -779,3 +779,12 @@ $(".modal-employee-update").click( function(){
         $("#modal-employee-update").modal();
     });
 });
+
+    //$(".update-viecle").click( function(){
+    //    $.get("?r=viecle/view",{ 
+    //        VID: $(this).closest('tr').data('key') 
+    //    }, function(data){
+    //        $("#update-viecle .modal-content").html(data);
+    //        $("#update-viecle").modal();
+    //    });
+    //});

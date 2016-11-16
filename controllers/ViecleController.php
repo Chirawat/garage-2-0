@@ -62,11 +62,9 @@ class ViecleController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($VID)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        
     }
 
     /**
@@ -120,17 +118,44 @@ class ViecleController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate( $VID )
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->VID]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        $request = Yii::$app->request;
+        $model = Viecle::findOne($VID);
+        $customer = $model->owner0;
+        
+        if($request->isPost){ 
+            // customer
+            if( $customer->load($request->post()) && $customer->validate() ){
+                $customer->type = "GENERAL";
+                $customer->save();
+            }
+            else{
+                var_dump($customer->errors);
+                die();
+            }
+            // viecle
+            if ($model->load($request->post()) && $model->validate()) {
+                $lastCustomer = Customer::find()->orderBy(['CID' => SORT_DESC])->one(); 
+                $model->owner = $lastCustomer->CID;
+                $model->save();
+            } 
+            else {
+                var_dump($model->errors);
+                die();
+            }
+            return $this->redirect(['index']);
         }
+        
+        $viecleName = ViecleName::find()->all();
+        $viecleModels = ViecleModel::find()->where(['viecle_name' => $model->viecle_name])->all();
+        
+        return $this->render('update', [
+            'model' => $model,
+            'customer' => $customer,
+            'viecleName' =>$viecleName,
+            'viecleModels' => $viecleModels,
+        ]);
     }
 
     /**

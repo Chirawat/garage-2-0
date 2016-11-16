@@ -3,46 +3,15 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Viecle */
-
-$this->title = $model->VID;
-$this->params['breadcrumbs'][] = ['label' => 'Viecles', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="viecle-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->VID], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->VID], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'VID',
-            'viecle_type:ntext',
-            'plate_no:ntext',
-            'viecle_name:ntext',
-            'brand:ntext',
-            'model:ntext',
-            'body_code:ntext',
-            'engin_code:ntext',
-            'viecle_year',
-            'body_type:ntext',
-            'cc',
-            'seat',
-            'weight',
-            'owner',
-        ],
-    ]) ?>
-
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">แก้ไขข้อมูลรถ</h4>
+</div>
+<div class="modal-body">
+    <p>One fine body&hellip;</p>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary">Save changes</button>
 </div>

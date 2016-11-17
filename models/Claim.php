@@ -34,6 +34,7 @@ class Claim extends \yii\db\ActiveRecord
             [['claim_no'], 'required'],
             [['claim_no'], 'string'],
             [['create_time'], 'safe'],
+            [['VID'], 'exist', 'skipOnError' => true, 'targetClass' => Viecle::className(), 'targetAttribute' => ['VID' => 'VID']], 
         ];
     }
 
@@ -78,5 +79,10 @@ class Claim extends \yii\db\ActiveRecord
     public function getQuotations()
     {
         return $this->hasMany(Quotation::className(), ['CLID' => 'CLID']);
+    }
+    
+    public function getViecle() 
+    { 
+       return $this->hasOne(Viecle::className(), ['VID' => 'VID']); 
     }
 }

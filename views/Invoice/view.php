@@ -10,7 +10,7 @@ use yii\bootstrap\Modal;
 use yii\jui\AutoComplete;
 use yii\helpers\ArrayHelper;
 
-$this->title = "แก้ไขใบแจ้งหนี้";
+$this->title = "ใบแจ้งหนี้";
 ?>
     <div class="row">
         <div class="col-sm-6">

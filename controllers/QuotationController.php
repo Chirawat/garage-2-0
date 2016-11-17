@@ -129,6 +129,7 @@ class QuotationController extends Controller
             if($claim == null){
                 $claim = new Claim();
                 $claim->claim_no = $quotationInfo['claimNo'];
+                $claim->VID = $quotation->VID;
                 $claim->create_time = $dt;
                 $claim->save();
             }

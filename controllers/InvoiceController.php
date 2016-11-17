@@ -337,7 +337,13 @@ class InvoiceController extends Controller
         $invoice->EID = Yii::$app->user->identity->getId();
 
         $claim = new Claim();
-        $claim->claim_no = $request->post('claim_no');
+        $claim_no = $request->post('claim_no');
+        
+        $claim = Claim::find()->where(['claim_no' => $claim_no])->one();
+        if($claim == null){
+            $claim = new Claim();
+        }
+        $claim->claim_no = $claim_no;
         $claim->save();
 
         $claim = Claim::find()->orderBy(['CLID' => SORT_DESC])->one();
@@ -494,7 +500,7 @@ class InvoiceController extends Controller
     
     public function actionReport($iid, $dateIndex = null){
         // find date
-        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->orderBy(['date' => SORT_DESC])->all();
+        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->where(['IID' => $iid])->orderBy(['date' => SORT_DESC])->all();
 
         if( $dateIndex == null)
             $dateIndex = 0;

@@ -31,39 +31,46 @@ $this->title = "รายงานค้างจ่าย";
         [
             'class' => 'yii\grid\SerialColumn'
         ],
+        'claim_no',
+        //'create_time',
         [
-            'attribute' => 'date',
+            'attribute' => 'paymentStatus.reciept.invoice.date',
             'label' => 'วันที่ออกใบแจ้งหนี้',
             'format' => [
                 'date', 'php: d/m/Y',
             ],
         ],
-        'book_number',
         [
-            'attribute' => 'invoice_id',
+            'attribute' => 'paymentStatus.reciept.invoice.book_number', 'label' => 'เล่มที่'
+        ],
+        [
+            'attribute' => 'paymentStatus.reciept.invoice.invoice_id',
             'label' => 'เลขที่ใบแจ้งหนี้'
         ],
         [
-            'attribute' => 'customer.fullname',
+            'attribute' => 'paymentStatus.reciept.invoice.customer.fullname',
             'label' => 'ในนาม',
         ],
         [
             'label' => 'สถานะ',
             'format' => 'html',
             'value' => function($model){
-                if( $model->reciept['RID'] != "")
+                if( $model->paymentStatus != null)
                     return '<span class="label label-success">จ่ายแล้ว</span>';
                 else
                     return '<span class="label label-danger">ค้างจ่าย</span>';
             },
         ],
         [
-            'attribute' => 'reciept.reciept_id',
+            'attribute' => 'paymentStatus.reciept.book_number', 
+            'label' => 'เล่มที่',
+        ],
+        [
+            'attribute' => 'paymentStatus.reciept.reciept_id',
             'label' => 'เลขที่ใบเสร็จ',
         ],
-        'reciept.book_number',
         [
-            'attribute' => 'reciept.date',
+            'attribute' => 'paymentStatus.reciept.date',
             'label' => 'วันที่ออกใบเสร็จ',
             'format' => ['date', 'php: d/m/Y'],
         ],

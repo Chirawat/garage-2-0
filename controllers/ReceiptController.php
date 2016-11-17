@@ -321,8 +321,6 @@ class ReceiptController extends Controller{
         Yii::$app->formatter->nullDisplay = '-';
         $request = Yii::$app->request;
 
-
-
         // query date (difference date)
         $invocieDates = (new Query)->select(["DATE_FORMAT(date, '%m-%Y') AS dt"])->from('invoice')->distinct()->all();
         $invoiceDates = ArrayHelper::getColumn($invocieDates, 'dt');
@@ -346,9 +344,9 @@ class ReceiptController extends Controller{
         }
         else{
             $dataProvider = new ActiveDataProvider([
-                'query' => Invoice::find()->with('reciept')->orderBy(['IID' => SORT_DESC]),
+                'query' => Claim::find()->with('paymentStatus')->where(['not', ['create_time' => null]])->orderBy(['CLID' => SORT_DESC]),
                 'pagination' => [
-                'pageSize' => 20,
+                'pageSize' => 25,
                 ],
             ]);
         }

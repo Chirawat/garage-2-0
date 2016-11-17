@@ -45,7 +45,6 @@ class Viecle extends \yii\db\ActiveRecord
             [['plate_no'], 'required'],
             [['plate_no', 'body_code', 'engin_code', 'body_type'], 'string'],
             [['viecle_name', 'viecle_model', 'viecle_year', 'cc', 'seat', 'weight', 'owner'], 'integer'],
-            //[['body_type'], 'exist', 'skipOnError' => true, 'targetClass' => BodyType::className(), 'targetAttribute' => ['body_type' => 'id']],
             [['owner'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['owner' => 'CID']],
             [['viecle_model'], 'exist', 'skipOnError' => true, 'targetClass' => ViecleModel::className(), 'targetAttribute' => ['viecle_model' => 'id']],
             [['viecle_name'], 'exist', 'skipOnError' => true, 'targetClass' => ViecleName::className(), 'targetAttribute' => ['viecle_name' => 'id']],
@@ -112,4 +111,9 @@ class Viecle extends \yii\db\ActiveRecord
     {
         return $this->hasOne(ViecleName::className(), ['id' => 'viecle_name']);
     }
+    
+    public function getClaims() 
+    { 
+        return $this->hasMany(Claim::className(), ['VID' => 'VID']); 
+    } 
 }

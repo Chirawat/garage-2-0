@@ -142,7 +142,8 @@ $url = Url::to(['customer-list']);?>
                                 <?=Html::DropDownList('plate_no', 0, ArrayHelper::map($viecleList, 'VID', 'plate_no'),[
                                     'id' => 'plate-no',
                                     'class' => 'form-control',
-                                    'onchange' => '$.post("' . Url::to(['viecle/viecle-detail']) . '", {VID: $(this).val()}, function(data){ updateViecleDetail( data ); });']) ?>
+                                    'prompt' => 'เลือกทะเบียนรถ',
+                                ]);?>
                             </div>
                             <label class="col-sm-2 control-label">ชื่อรถ</label>
                             <div class="col-sm-3">
@@ -256,22 +257,3 @@ $url = Url::to(['customer-list']);?>
         </table>
     </div>
 </div>
-<?php
-$this->registerJS('$("#plate-no").select2();', View::POS_READY);
-//$this->registerJS('$("#customer").select2();', View::POS_READY);
-
-$str = 'function updateViecleDetail(data){
-            $("#viecle-name").val( data.viecle_name );
-            $("#viecle-model").val( data.viecle_model );
-            $("#year").val( data.year );
-            $("#engine-code").val( data.engine_code );
-            $("#body-code").val( data.body_code );
-}';
-$this->registerJS( $str, View::POS_BEGIN);
-$this->registerJS( $str, View::POS_BEGIN);
-
-if( $viecle->plate_no != "" )
-    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>'.$viecle->plate_no.'</option>")', View::POS_READY );
-else
-    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>เลือกทะเบียนรถ</option>")', View::POS_READY );
-?>

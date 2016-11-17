@@ -92,9 +92,9 @@ $this->title = "ใบเสนอราคา";
                             <label class="col-sm-3 control-label">ทะเบียน</label>
                             <div class="col-sm-4">
                                 <?=Html::DropDownList('plate_no', 0, ArrayHelper::map($viecleList, 'VID', 'plate_no'),[
+                                    'prompt' => 'เลือกทะเบียนรถ',
                                     'id' => 'plate-no',
-                                    'class' => 'form-control',
-                                    'onchange' => '$.post("' . Url::to(['viecle/viecle-detail']) . '", {VID: $(this).val()}, function(data){ updateViecleDetail( data ); });']) ?>
+                                    'class' => 'form-control',])?>
                             </div>
                             <label class="col-sm-2 control-label">ชื่อรถ</label>
                             <div class="col-sm-3">
@@ -248,22 +248,9 @@ $this->title = "ใบเสนอราคา";
         </table>
     </div>
 <?php
-$this->registerJS('$("#plate-no").select2();', View::POS_READY);
-$str = 'function updateViecleDetail(data){ 
-    $("#viecle-name").val( data.viecle_name );
-    $("#viecle-model").val( data.viecle_model );
-    $("#year").val( data.year );
-    $("#engine-code").val( data.engine_code );
-    $("#body-code").val( data.body_code );
-    
-    $("#fullname").val( data.fullname );
-    $("#viecle-address").val( data.address );
-    $("#phone").val( data.phone );
-}';
-$this->registerJS( $str, View::POS_BEGIN);
 
-if( $viecle->plate_no != "" )
-    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>'.$viecle->plate_no.'</option>")', View::POS_READY );
-else
-    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>เลือกทะเบียนรถ</option>")', View::POS_READY );
+//if( $viecle->plate_no != "" )
+//    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>'.$viecle->plate_no.'</option>")', View::POS_READY );
+//else
+//    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>เลือกทะเบียนรถ</option>")', View::POS_READY );
 ?>

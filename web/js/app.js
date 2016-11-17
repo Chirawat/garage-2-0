@@ -241,9 +241,12 @@ $('body').on("click", "#btn-search", function(){
     });
 });
 
+
+
 $(document).ready(function () {
     
     $("#multiple-claim-no").select2();
+    $("#plate-no").select2();
 //    var maintenance = globalMaintenance;
 //    var part = globaPart;
 //    var qid = globalQid;
@@ -861,4 +864,31 @@ $("#update-multiple-claim").click(function(){
             window.location.replace("?r=receipt/view-multiple-claim&rid=" + rid);
         }
     });
+});
+
+$("#plate-no").change(function(){
+    $.get("?r=viecle/viecle-detail", {
+        VID: $(this).val()
+    }, function(data){
+        $("#viecle-name").val( data.viecle_name );
+        $("#viecle-model").val( data.viecle_model );
+        $("#year").val( data.year );
+        $("#engine-code").val( data.engine_code );
+        $("#body-code").val( data.body_code );
+
+        $("#fullname").val( data.fullname );
+        $("#viecle-address").val( data.address );
+        $("#phone").val( data.phone );
+    });
+});
+
+$("#claim-no").autocomplete({
+    source: function(request, response){
+        $.get("?r=viecle/claim", {
+            VID: $("#plate-no").val(), 
+            term: request.term
+        }, function(data){
+           response(data);
+        });
+    },
 });

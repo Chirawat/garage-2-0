@@ -7,12 +7,14 @@ use app\models\Viecle;
 use app\models\ViecleSearch;
 use app\models\ViecleName;
 use app\models\ViecleModel;
+use app\models\Claim;
 use app\models\BodyType;
 use app\models\Customer;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 
 /**
  * ViecleController implements the CRUD actions for Viecle model.
@@ -241,11 +243,11 @@ class ViecleController extends Controller
 //        }
     }
     
-    public function actionViecleDetail(){
+    public function actionViecleDetail($VID){
         $request = Yii::$app->request;
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
-        $viecle = Viecle::findOne( $request->post('VID') );
+        $viecle = Viecle::findOne( $VID );
         
         $ret = [];
         
@@ -262,5 +264,14 @@ class ViecleController extends Controller
         $ret['phone'] = $viecle->owner0['phone'];
         
         return $ret;
+    }
+    
+    public function actionClaim($VID=null, $term=null){
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $query = Claim::find()->where(['VID' => $VID]);
+        $query->andWhere(['like', 'claim_no', $term]);
+        $claims = $query->all();
+        
+        return ArrayHelper::getColumn($claims, 'claim_no');
     }
 }

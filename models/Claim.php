@@ -33,6 +33,7 @@ class Claim extends \yii\db\ActiveRecord
         return [
             [['claim_no'], 'required'],
             [['claim_no'], 'string'],
+            [['create_time'], 'safe'],
         ];
     }
 

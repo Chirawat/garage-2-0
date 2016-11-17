@@ -123,11 +123,13 @@ class QuotationController extends Controller
             $quotationId = Quotation::find()->where(['YEAR(quotation_date)' => date('Y'), 'MONTH(quotation_date)' => date('m')])->count() + 1;
             $quotationId = $quotationId . "/" . (date('Y') + 543);
             $quotation->quotation_id = $quotationId;
-
+            
+            $dt = date('Y-m-d H:i:s');
             $claim = Claim::find()->where(['claim_no' => $quotationInfo['claimNo']])->one();
             if($claim == null){
                 $claim = new Claim();
                 $claim->claim_no = $quotationInfo['claimNo'];
+                $claim->create_time = $dt;
                 $claim->save();
             }
             
@@ -140,7 +142,7 @@ class QuotationController extends Controller
             if($quotation->validate() && $quotation->save()){
                 $quotation = Quotation::find()->orderBy(['QID' => SORT_DESC])->one();
                 
-                $dt = date('Y-m-d H:i:s');
+                
                 $maintenances = $request->post('maintenance_list');
                 if($maintenances != null){
                     foreach($maintenances as $maintenance){

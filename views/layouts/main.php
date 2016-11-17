@@ -50,8 +50,8 @@ AppAsset::register($this);
             [
                 'label' => 'รายงาน',
                 'items' => [
-                    ['label' => 'สรุปยอดใบเสร็จ', 'url' => Url::to(['receipt/summary'])],
                     ['label' => 'การค้างจ่าย', 'url' => Url::to(['receipt/dept'])],
+                    ['label' => 'รายการออกใบเสร็จ', 'url' => Url::to(['receipt/search'])],
                 ],
             ],
             [

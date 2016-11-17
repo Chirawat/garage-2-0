@@ -4,7 +4,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 
-$this->title = "ค้นหา"
+$this->title = "รายการออกใบเสร็จ"
 ?>
 <h1><?=$this->title?></h1>
 

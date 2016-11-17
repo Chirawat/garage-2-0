@@ -38,7 +38,7 @@ class Invoice extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CID', 'VID', 'CLID', 'EID'], 'required'],
+            [['CID', 'EID'], 'required'],
             [['CID', 'VID', 'CLID', 'EID'], 'integer'],
             [['invoice_id', 'book_number'], 'string'],
             [['date'], 'safe'],

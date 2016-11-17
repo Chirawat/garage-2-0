@@ -128,9 +128,6 @@ class InvoiceController extends Controller
 
 
     public function actionIndex(){
-//        var_dump (date('m')); 
-//        die();
-        
         $request = Yii::$app->request;
 
         $invoice = new Invoice();
@@ -561,7 +558,7 @@ class InvoiceController extends Controller
         $request = Yii::$app->request;
         Yii::$app->formatter->nullDisplay = '-';
         $dataProvider = new ActiveDataProvider([
-                'query' => Invoice::find()->joinWith(['viecle', 'claim', 'customer'])->orderBy(['IID' => SORT_DESC]),
+                'query' => Invoice::find()->joinWith(['viecle', 'claim', 'customer'])->where(['not', ['invoice.VID' => null]])->orderBy(['IID' => SORT_DESC]),
                 'pagination' => [
                 'pageSize' => 20,
                 ],

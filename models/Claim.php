@@ -11,6 +11,7 @@ use Yii;
  * @property string $claim_no
  *
  * @property Invoice[] $invoices
+ * @property PaymentStatus[] $paymentStatuses
  * @property Photo[] $photos
  * @property Quotation[] $quotations
  */
@@ -30,6 +31,7 @@ class Claim extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['claim_no'], 'required'],
             [['claim_no'], 'string'],
         ];
     }
@@ -51,6 +53,14 @@ class Claim extends \yii\db\ActiveRecord
     public function getInvoices()
     {
         return $this->hasMany(Invoice::className(), ['CLID' => 'CLID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPaymentStatus()
+    {
+        return $this->hasMany(PaymentStatus::className(), ['CLID' => 'CLID']);
     }
 
     /**

@@ -16,6 +16,8 @@ use yii\db\Query;
 use app\Models\Reciept;
 use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
+use app\models\Claim;
+use app\models\PaymentStatus;
 
 class ReceiptController extends Controller{
     function num2thai($number){
@@ -127,7 +129,7 @@ class ReceiptController extends Controller{
 
     public function actionReport($iid = null, $dateIndex = null){
         // find date
-        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->orderBy(['date' => SORT_DESC])->all();
+        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->where(['IID' => $iid])->orderBy(['date' => SORT_DESC])->all();
 
         if( $dateIndex == null)
             $dateIndex = 0;
@@ -336,7 +338,7 @@ class ReceiptController extends Controller{
             $endDate = date_format($endDate, "Y-m-d");
 
             $dataProvider = new ActiveDataProvider([
-                'query' => Invoice::find()->with('reciept')->where(['between', 'UNIX_TIMESTAMP(date)', strtotime($startDate), strtotime($endDate)]),
+                'query' => Invoice::find()->with('reciept')->where(['between', 'UNIX_TIMESTAMP(date)', strtotime($startDate), strtotime($endDate)])->orderBy(['IID' => SORT_DESC]),
                 'pagination' => [
                 'pageSize' => 20,
                 ],
@@ -344,7 +346,7 @@ class ReceiptController extends Controller{
         }
         else{
             $dataProvider = new ActiveDataProvider([
-                'query' => Invoice::find()->with('reciept'),
+                'query' => Invoice::find()->with('reciept')->orderBy(['IID' => SORT_DESC]),
                 'pagination' => [
                 'pageSize' => 20,
                 ],
@@ -363,6 +365,166 @@ class ReceiptController extends Controller{
 
     public function actionDeptReport(){
         var_dump( Yii::$app->request->get() );
+    }
+    
+    public function actionMultipleClaim(){
+        $invoice = new Invoice();
+        $book_number = date('m') . "/" . (( date('Y') + 543 ) - 2500);
+        $number = Reciept::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count();
+        $receiptId = ($number + 1) . "/" . (( date('Y') + 543 ) - 2500);
+        
+        $paymentStatus = PaymentStatus::find()->all();
+        $paymentStatusCLID = ArrayHelper::getColumn($paymentStatus, 'CLID');
+        $claim = Claim::find()->where(['not in', 'CLID', $paymentStatusCLID])->all();
+        
+        $insuranceCompany = Customer::find()->where(['type' => 'INSURANCE_COMP'])->all();
+        
+        return $this->render('multiple_claim',[
+            'book_number' => $book_number,
+            'receiptId' => $receiptId,
+            'invoice' => $invoice,
+            'claim' => $claim,
+            'insuranceCompany' => $insuranceCompany,
+        ]);
+    }
+    
+    public function actionCreateMultiple(){
+        $IID = null;
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $request = Yii::$app->request;
+        
+        // create invoice each claim
+        $claims = $request->post('claims');
+        $descriptions = $request->post('invoice');
+        $CID = $request->post('CID');
+        $dt = date('Y-m-d H:i:s');
+        
+        // invoice
+        $invoice = new Invoice();
+        $invoice->CID = $CID;
+        $invoice->date = $dt;
+        $invoice->EID = Yii::$app->user->identity->getId();
+
+        if($invoice->validate() && $invoice->save()){
+            $IID = Invoice::find()->orderBy(['IID' => SORT_DESC])->one()['IID'];
+            // description
+            foreach($descriptions as $description){
+                $invoiceDescription = new InvoiceDescription();
+                $invoiceDescription->IID = $IID;
+                $invoiceDescription->description = $description['list'];
+                $invoiceDescription->price = $description['price'];
+                $invoiceDescription->date = $dt;
+
+                if($invoiceDescription->validate() && $invoiceDescription->save()){
+                }
+                else{
+                    return $invoiceDescription->errors;
+                }
+            }    
+        }
+        else{
+            return $invoice->errors;
+        }
+        
+        $receipt = new Reciept();
+        $receipt->IID = $IID;
+        
+        $number = Reciept::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count() + 1;
+        $number = str_pad($number, 4, "0", STR_PAD_LEFT);
+        $receiptId = $number . "/" . (( date('Y') + 543 ) - 2500);
+        
+        $receipt->reciept_id = "RE-" . $receiptId;
+        
+        $receipt->total = InvoiceDescription::find()->where(['IID' => $IID])->sum('price');
+        
+        $receipt->IID = $invoice->IID;
+        $receipt->book_number = date('m') . '/' . ((date('Y') + 543) - 2500);
+        
+        $receipt->date = $dt;
+        $receipt->EID = Yii::$app->user->identity->getId();
+        
+        if($receipt->validate() && $receipt->save()){
+            //return true;    
+            $receipt = Reciept::find()->orderBy(['RID' => SORT_DESC])->one();
+        }
+        else{
+            return $receipt->errors;
+        }
+        
+        foreach($claims as $CLID){
+            $paymentStatus = new PaymentStatus();
+            $paymentStatus->RID = $receipt->RID;
+            $paymentStatus->CLID = $CLID;
+            
+            if($paymentStatus->validate() && $paymentStatus->save()){
+                
+            }
+            else{
+                return $paymentStatus->errors;
+            }
+        }
+        return ['status' => true, 'iid' => $IID, 'rid' => $receipt->RID];
+    }
+    
+    public function actionViewMultipleClaim($rid){
+        $receipt = Reciept::find()->with(['invoice', 'paymentStatus'])->where(['RID' => $rid])->one();
+        
+        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->where(['IID' => $receipt->IID])->orderBy(['date' => SORT_DESC])->all();
+        $descriptions = InvoiceDescription::find()->where(['iid' => $receipt->IID, 'date' => $dateLists[0]])->all();
+        
+        return $this->render('view_multiple_claim', [
+            'receipt' => $receipt,
+            'descriptions' => $descriptions,
+            'lastUpdate' => $dateLists[0],
+        ]);
+    }
+    
+    public function actionUpdateMultipleClaim($rid){
+        $request = Yii::$app->request;
+        $receipt = Reciept::find()->with(['invoice', 'paymentStatus'])->where(['RID' => $rid])->one();
+        
+        $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->where(['IID' => $receipt->IID])->orderBy(['date' => SORT_DESC])->all();
+        $descriptions = InvoiceDescription::find()->where(['iid' => $receipt->IID, 'date' => $dateLists[0]])->all();
+        
+        if($request->isAjax){
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $descriptions = $request->post('invoice');
+            $dt = date('Y-m-d H:i:s');
+            foreach($descriptions as $description){
+                $invoiceDescription = new InvoiceDescription();
+                $invoiceDescription->IID = $receipt->IID;
+                $invoiceDescription->description = $description['list'];
+                $invoiceDescription->price = $description['price'];
+                $invoiceDescription->date = $dt;
+                
+                if($invoiceDescription->validate() && $invoiceDescription->save()){
+                    
+                }
+                else{
+                    return $invoiceDescription->errors;
+                }
+            }
+            return ['status' => true, 'IID' => $receipt->IID];
+        }
+        return $this->render('update_multiple_claim', [
+            'receipt' => $receipt,
+            'descriptions' => $descriptions,
+            'lastUpdate' => $dateLists[0],
+        ]);
+    }
+    
+    public function actionSearch(){
+        Yii::$app->formatter->nullDisplay = '-';
+        $query = Reciept::find()->with('invoice')->orderBy(['RID' => SORT_DESC]);
+        $dataProvider  = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 25,
+            ],
+        ]);
+        return $this->render('search',[
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }
 ?>

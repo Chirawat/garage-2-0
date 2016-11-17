@@ -49,11 +49,11 @@ class CustomerController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($CID)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $customer = Customer::findOne($CID);
+        return $customer;
     }
 
     /**

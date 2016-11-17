@@ -51,9 +51,9 @@ class Reciept extends \yii\db\ActiveRecord
         return [
             'RID' => 'Rid',
             'IID' => 'Iid',
-            'reciept_id' => 'Reciept ID',
-            'date' => 'Date',
-            'total' => 'Total',
+            'reciept_id' => 'เลขที่',
+            'date' => 'วันที่',
+            'total' => 'รวม',
             'EID' => 'Eid',
             'book_number' => 'เล่มที่',
         ];
@@ -73,5 +73,10 @@ class Reciept extends \yii\db\ActiveRecord
     public function getInvoice()
     {
         return $this->hasOne(Invoice::className(), ['IID' => 'IID']);
+    }
+    
+    public function getPaymentStatus()
+    {
+       return $this->hasMany(PaymentStatus::className(), ['RID' => 'RID']);
     }
 }

@@ -19,9 +19,11 @@ class ClaimController extends Controller
             $claim = Claim::find()->orderBy(['CLID' => SORT_DESC])->one();
             return $this->redirect(['photo/index', 'CLID' => $claim->CLID]);
         }
-//        return $this->render('create', [
-//            'claim' => $claim,
-//        ]);
     }
-
+    
+    public function actionView($CLID){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $claim = Claim::findOne($CLID);
+        return $claim;
+    }
 }

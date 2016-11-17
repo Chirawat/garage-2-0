@@ -4,6 +4,18 @@ var part = [];
 var qid = undefined;
 var invoice = [];
 
+function getUrlVars() {
+    var vars = []
+        , hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
 function formatMoney(n, c, d, t) {
     //var n = this,
     c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "." : d, t = t == undefined ? "," : t, s = n < 0 ? "-" : "", i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), j = (j = i.length) > 3 ? j % 3 : 0;
@@ -230,6 +242,8 @@ $('body').on("click", "#btn-search", function(){
 });
 
 $(document).ready(function () {
+    
+    $("#multiple-claim-no").select2();
 //    var maintenance = globalMaintenance;
 //    var part = globaPart;
 //    var qid = globalQid;
@@ -473,17 +487,7 @@ $(document).ready(function () {
         $("#btn-save").removeClass('disabled');
     });
 
-    function getUrlVars() {
-        var vars = []
-            , hash;
-        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        for (var i = 0; i < hashes.length; i++) {
-            hash = hashes[i].split('=');
-            vars.push(hash[0]);
-            vars[hash[0]] = hash[1];
-        }
-        return vars;
-    }
+    
     $("#btn-print").click(function () {
         var qid = getUrlVars()["qid"];
         var dateIndex = $("#history-date").val();
@@ -788,3 +792,73 @@ $(".modal-employee-update").click( function(){
     //        $("#update-viecle").modal();
     //    });
     //});
+
+
+$("#add-claim-no").click( function(){
+    $.get("?r=claim/view",{
+        CLID:$("#multiple-claim-no").val()
+    }, function(data){
+        console.log( data );
+        $("#selected-claim").append('<option value="' + data.CLID + '">' + data.claim_no + '</option>');
+    })
+});
+
+$("#remove-selected-claim").click(function(){
+    $("#selected-claim option:selected").remove();
+});
+
+$("#insurance-company").change( function(){
+    $.get("?r=customer/view",{ 
+        CID: $(this).val()
+    }, function(data){
+        console.log( data );
+        $("#address").html( data.address );
+        $("#tax-id").val( data.taxpayer_id)
+    });
+});
+
+$("#btn-save-multiple").click(function(){
+    var claims = [];
+    $("#selected-claim option").each( function(){
+        claims.push($(this).val());
+    });
+    console.log(claims);
+    
+    $.post("?r=receipt/create-multiple",{
+        CID: $("#insurance-company option:selected").val(),
+        claims: claims,
+        invoice: invoice
+    }, function(data){
+        if(data.status){
+            alert('เรียบร้อย');
+            window.open(
+                "index.php?r=receipt/report&iid=" + data.iid,
+                '_blank' // <- This is what makes it open in a new window.
+            );
+            window.location.replace("?r=receipt/view-multiple-claim&rid=" + data.rid);
+        }
+        else{
+            alert('ล้มเหลว\r\n' + data);
+        }
+        
+    });
+});
+
+$("#update-multiple-claim").click(function(){
+    var rid = getUrlVars()["rid"];
+    $.post("?r=receipt/update-multiple-claim&rid=" + rid, {
+        invoice: invoice
+    }, function(data){
+        if( data ){
+            var r = confirm("บันทึกเรียบร้อย");
+            if(r){
+                // print
+                 window.open(
+                      '?r=receipt/report&iid=' + data.IID,
+                      '_blank' // <- This is what makes it open in a new window.
+                );
+            }
+            window.location.replace("?r=receipt/view-multiple-claim&rid=" + rid);
+        }
+    });
+});

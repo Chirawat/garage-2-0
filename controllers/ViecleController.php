@@ -123,7 +123,7 @@ class ViecleController extends Controller
     public function actionUpdate( $VID )
     {
         $request = Yii::$app->request;
-        $model = Viecle::findOne($VID);
+        $model = Viecle::findOne($VID); // viecle
         $customer = $model->owner0;
         
         if($request->isPost){ 
@@ -138,8 +138,8 @@ class ViecleController extends Controller
             }
             // viecle
             if ($model->load($request->post()) && $model->validate()) {
-                $lastCustomer = Customer::find()->orderBy(['CID' => SORT_DESC])->one(); 
-                $model->owner = $lastCustomer->CID;
+//                $lastCustomer = Customer::find()->orderBy(['CID' => SORT_DESC])->one(); 
+//                $model->owner = $lastCustomer->CID;
                 $model->save();
             } 
             else {

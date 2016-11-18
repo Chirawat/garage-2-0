@@ -246,7 +246,7 @@ $('body').on("click", "#btn-search", function(){
 $(document).ready(function () {
     
     $("#multiple-claim-no").select2();
-    $("#plate-no").select2();
+    
 //    var maintenance = globalMaintenance;
 //    var part = globaPart;
 //    var qid = globalQid;
@@ -464,15 +464,22 @@ $(document).ready(function () {
             }
             , success: function (data) {
                 // confirmation dialog
-                var r = confirm("บันทึกเรียบร้อย\n\rต้องการพิมพ์ใบเสนอราคานี้เลยหรือไม่");
+                var r = confirm("บันทึกเรียบร้อย คุณต้องการสร้างเป็นการแก้ไข (revise) ใหม่หรือไม่");
                 if (r == true) { // press OK
-                    // print quotation
-                    window.open(
-                      '?r=quotation/report&qid=' + data.QID,
-                      '_blank' // <- This is what makes it open in a new window.
-                    );
+                    // update revised
+                    $.get("?r=quotation/revised-up", {
+                        QID: getUrlVars()['qid'], up: true
+                    }, function(data){
+                        window.location.replace("?r=quotation/view&qid=" + getUrlVars()['qid']);
+                    });
                 }
-                window.location.replace("?r=quotation/view&qid=" + data.QID);
+                else{
+                    $.get("?r=quotation/revised-up", {
+                        QID: getUrlVars()['qid'], up: false
+                    }, function(data){
+                        window.location.replace("?r=quotation/view&qid=" + getUrlVars()['qid']);
+                    });
+                }
             }
         });
     });

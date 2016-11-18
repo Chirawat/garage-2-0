@@ -1,5 +1,6 @@
 <?php
 // rev 20161115-1617
+// error ONLY_FULL_GROUP_BY : mysql > SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 namespace app\controllers;
 use Yii;
 use yii\filters\AccessControl;
@@ -200,7 +201,15 @@ class QuotationController extends Controller
         $descriptions = $quotation->descriptions;
         
         // find date
-        $dateLists = Description::find()->select(['date'])->distinct()->where(['QID' => $qid])->orderBy(['date' => SORT_DESC])->all();
+        $revises = Description::find()->select('revise')->distinct()->where(['QID' => $qid])->orderBy(['revise' => SORT_DESC])->all();
+        $dateLists = [];
+        foreach($revises as $revise_t){
+            
+            $query = Description::find()->where(['QID' => $qid, 'revise' => $revise_t->revise])->orderBy(['date' => SORT_DESC])->orderBy(['DID' => SORT_DESC]);
+            $temp = $query->all();
+            $dateLists[] = $temp[0];
+        }
+        
         $dateIndex = 0;
         if($request->isAjax){
             $dateIndex = $request->post('dateIndex');
@@ -211,7 +220,7 @@ class QuotationController extends Controller
         $maintenanceDescriptionModel = $query->all();
         $sumMaintenance = $query->sum('price');
         
-        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART', 'date' => $dateLists[$dateIndex]->date]);
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART', 'date' => $dateLists[$dateIndex]->date ]);
         $partDescriptionModel = $query->all();
         $sumPart = $query->sum('price');
         
@@ -243,16 +252,17 @@ class QuotationController extends Controller
     }
     
     public function actionEdit($qid){
+        $request = Yii::$app->request;
         $quotation = Quotation::findOne( $qid );
         $viecle = $quotation->viecle;
         $descriptions = $quotation->descriptions;
         
          // find date
-        $dateLists = Description::find()->select(['date'])->distinct()->where(['qid' => $qid])->orderBy(['date'=>SORT_DESC])->all();
+        $dateLists = Description::find()->select(['date'])->distinct()->where(['QID' => $qid])->orderBy(['date'=>SORT_DESC])->all();
         $dateIndex = 0;
-//        if($request->isAjax){
-//            $dateIndex = $request->post('dateIndex');
-//        }
+        if($request->isAjax){
+            $dateIndex = $request->post('dateIndex');
+        }
 
         // Description
         $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE', 'date' => $dateLists[$dateIndex]]);
@@ -288,7 +298,7 @@ class QuotationController extends Controller
         ]);
     }
     
-    public function actionReport($qid, $dateIndex = null) {
+    public function actionReport($qid, $dateIndex = 0) {
         $request = Yii::$app->request;
         
         //$qid = Quotation::findOne($qid);
@@ -303,19 +313,23 @@ class QuotationController extends Controller
         $viecleModel = $model->viecle;
         
         // find date
-        $dateLists = Description::find()->select(['date'])->distinct()->orderBy(['date' => SORT_DESC])->all();
+        $revises = Description::find()->select('revise')->distinct()->where(['QID' => $qid])->orderBy(['revise' => SORT_DESC])->all();
+        $dateLists = [];
+        foreach($revises as $revise_t){
+            
+            $query = Description::find()->where(['QID' => $qid, 'revise' => $revise_t->revise])->orderBy(['date' => SORT_DESC])->orderBy(['DID' => SORT_DESC]);
+            $temp = $query->all();
+            $dateLists[] = $temp[0];
+        }
         
-        if( $dateIndex == null)
-            $dateIndex = 0;
-        
-        $dt = date_create($dateLists[$dateIndex]->date);
+        $dt = date_create($dateLists[$dateIndex]['date']);
 
         // Description
-        $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE', 'date' => $dateLists[$dateIndex]->date ]);
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE', 'date' => $dateLists[$dateIndex]['date'] ]);
         $maintenanceDescriptionModel = $query->all();
         $sumMaintenance = $query->sum('price');
         
-        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART', 'date' => $dateLists[$dateIndex]->date]);
+        $query = Description::find()->where(['QID' => $qid, 'type' => 'PART', 'date' => $dateLists[$dateIndex]['date']]);
         $partDescriptionModel = $query->all();
         $sumPart = $query->sum('price');
         
@@ -340,34 +354,66 @@ class QuotationController extends Controller
             'numRow' => $numRow,
             
             'dt' => date_format($dt, "Y/m/d") , // 20161027 date in quotation should be description's date
+            
+            //'revise' => $dateLists[$dateIndex]->revise,
         ]);
 
         // setup kartik\mpdf\Pdf component
-        $pdf = new Pdf([
-        // set to use core fonts only
-        'mode' => Pdf::MODE_UTF8, 
-        // A4 paper format
-        'format' => Pdf::FORMAT_A4, 
-        // portrait orientation
-        'orientation' => Pdf::ORIENT_PORTRAIT, 
-        // stream to browser inline
-        'destination' => Pdf::DEST_BROWSER, 
-        // your html content input
-        'content' => $content,  
-        // format content from your own css file if needed or use the
-        // enhanced bootstrap css built by Krajee for mPDF formatting 
-        'cssFile' => '@app/web/css/pdf.css',
-        // any css to be embedded if required
-        //        'cssInline' => '.kv-heading-1{font-size:18px}', 
-        // set mPDF properties on the fly
-        'options' => ['title' => 'ใบเสนอราคา'],
-        // call mPDF methods on the fly
-        'methods' => [ 
-            //'SetHeader'=>['Krajee Report Header'], 
-            'SetFooter'=>['ลงชื่อ&emsp;............................................ ผู้เสนอราคา<br>
-            (&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;)&emsp;&emsp;&emsp;&emsp;&emsp;<br>หน้า {PAGENO} / {nb}'],
-            ]
-        ]);
+        $pdf = null;
+        if( !isset($model->revised) ){
+            $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8, 
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4, 
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT, 
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER, 
+            // your html content input
+            'content' => $content,  
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting 
+            'cssFile' => '@app/web/css/pdf.css',
+            // any css to be embedded if required
+            //        'cssInline' => '.kv-heading-1{font-size:18px}', 
+            // set mPDF properties on the fly
+            'options' => ['title' => 'ใบเสนอราคา'],
+            // call mPDF methods on the fly
+            'methods' => [ 
+                //'SetHeader'=>['Krajee Report Header'], 
+                'SetFooter'=>['ลงชื่อ&emsp;............................................ ผู้เสนอราคา<br>
+                (&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;)&emsp;&emsp;&emsp;&emsp;&emsp;<br>  หน้า {PAGENO} / {nb}'],
+                ]
+            ]);
+        }
+        else{
+            $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8, 
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4, 
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT, 
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER, 
+            // your html content input
+            'content' => $content,  
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting 
+            'cssFile' => '@app/web/css/pdf.css',
+            // any css to be embedded if required
+            //        'cssInline' => '.kv-heading-1{font-size:18px}', 
+            // set mPDF properties on the fly
+            'options' => ['title' => 'ใบเสนอราคา'],
+            // call mPDF methods on the fly
+            'methods' => [ 
+                //'SetHeader'=>['Krajee Report Header'], 
+                'SetFooter'=>['ลงชื่อ&emsp;............................................ ผู้เสนอราคา<br>
+                (&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;)&emsp;&emsp;&emsp;&emsp;&emsp;<br>  REVISED: ' . $dateLists[$dateIndex]->revise . ' หน้า {PAGENO} / {nb}'],
+                ]
+            ]);
+        }
 
         $pdf->configure(array(
             'defaultfooterline' => '0', 
@@ -377,5 +423,46 @@ class QuotationController extends Controller
 
         // return the pdf output as per the destination setting
         return $pdf->render(); 
+    }
+    
+    public function actionRevisedUp($QID=null, $up=false){
+        
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        //return Yii::$app->request->get();
+        $quotation = Quotation::findOne($QID);
+        if($quotation->revised === null){
+            $quotation->revised = 1;
+        }
+        elseif($up === "true"){
+            $quotation->revised += 1;
+        }
+        
+        // update quotation
+        if($quotation->validate() && $quotation->save()){
+            // update description
+            $dateLists = Description::find()->select(['date'])->distinct()->where(['QID' => $QID])->orderBy(['date' => SORT_DESC])->all();
+
+            // Description
+            $query = Description::find()->where(['QID' => $QID, 'type' => 'MAINTENANCE', 'date' => $dateLists[0]->date ]);
+            $maintenances = $query->all();
+            foreach($maintenances as $maintenance){
+                $maintenance_t = Description::findOne($maintenance->DID);
+                $maintenance_t->revise = $quotation->revised;
+                $maintenance_t->save();
+            }
+
+            $query = Description::find()->where(['QID' => $QID, 'type' => 'PART', 'date' => $dateLists[0]->date]);
+            $parts = $query->all();
+            foreach($parts as $part){
+                $part_t = Description::findOne($part->DID);
+                $part_t->revise = $quotation->revised;
+                $part_t->save();
+            }
+            return true;
+        }
+        else{
+            return $quotation->errors;
+        }
     }
 }

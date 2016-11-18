@@ -248,7 +248,7 @@ $this->title = "ใบเสนอราคา";
         </table>
     </div>
 <?php
-
+$this->registerJS('$("#plate-no").select2();', View::POS_READY);
 //if( $viecle->plate_no != "" )
 //    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>'.$viecle->plate_no.'</option>")', View::POS_READY );
 //else

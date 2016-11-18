@@ -41,7 +41,7 @@ class Quotation extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['CID', 'VID', 'TID', 'CLID', 'damage_level', 'damage_position', 'EID'], 'integer'],
+            [['CID', 'VID', 'TID', 'CLID', 'damage_level', 'damage_position', 'EID', 'revised'], 'integer'],
             [['quotation_id'], 'string'],
             [['quotation_date'], 'safe'],
             [['CLID', 'damage_position', 'EID'], 'required'],

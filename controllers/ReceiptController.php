@@ -206,7 +206,7 @@ class ReceiptController extends Controller{
         // call mPDF methods on the fly
         'methods' => [
             //'SetHeader'=>['Krajee Report Header'],
-            'SetFooter'=>['หน้า {PAGENO} / {nb}'],
+            // 'SetFooter'=>['หน้า {PAGENO} / {nb}'],    //remove 20161117
             ]
         ]);
 

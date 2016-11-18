@@ -245,6 +245,5 @@ foreach($partDescriptionModel as $partDescription){
         price: ' . json_encode($partDescription->price, JSON_HEX_TAG)  . '});', VIEW::POS_END);
 }
 
-$this->registerJS('globalQid = '. $quotation->QID . ';', VIEW::POS_END);
-                   
+$this->registerJS('renderTableBody();calTotal();updateTableIndex();', VIEW::POS_READY);
 ?>

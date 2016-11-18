@@ -34,7 +34,7 @@ class Description extends \yii\db\ActiveRecord
     {
         return [
             [['QID'], 'required'],
-            [['QID', 'row'], 'integer'],
+            [['QID', 'row', 'revise'], 'integer'],
             [['description', 'type'], 'string'],
             [['price'], 'number'],
             [['date'], 'safe'],
@@ -55,6 +55,7 @@ class Description extends \yii\db\ActiveRecord
             'type' => 'Type',
             'price' => 'Price',
             'date' => 'Date',
+            'revise' => 'Revise', 
         ];
     }
 

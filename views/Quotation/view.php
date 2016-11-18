@@ -126,11 +126,12 @@ $this->title = "ใบเสนอราคา";
         <?php $form = ActiveForm::begin(['options' => [
             'data-pjax' => true,
             'class' => 'form-inline']]) ?>
+            <label>REVISED ล่าสุด: <?=$quotation->revised?></label><br>
             <label class="form-label">ประวัติการแก้ไข</label>
             <select id="history-date" name="dateIndex" class="form-control input-sm">
                 <div class="col-sm-3">
                     <?php $i= 0; foreach($dateLists as $date): ?>
-                        <option value="<?= $i ?>" <?= $i==$dateIndex?"selected":null?> ><?= $date->date ?> <?= $i==0 ? "(ล่าสุด)":null ?></option>
+                         <option value="<?= $i ?>" <?= $i==$dateIndex?"selected":null?> ><?= 'Rev ' . $date['revise'] . ' / ' . $date['date']?></option>
                     <?php $i++; endforeach; ?>
                 </div>
             </select>

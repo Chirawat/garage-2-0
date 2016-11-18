@@ -10,6 +10,9 @@ $this->title = "รายงานค้างจ่าย";
 
 ?>
 
+<h1><?=$this->title?></h1>
+
+<!-- 
 <?php ActiveForm::begin([
 'options' => [
     'class' => 'form-inline' ]]) ?>
@@ -24,6 +27,7 @@ $this->title = "รายงานค้างจ่าย";
     <button type="submit" class="btn btn-primary">ตกลง</button>
 <?php ActiveForm::end() ?>
 <br>
+-->
 
 <?= GridView::widget([
     'dataProvider' => $dataProvider,

@@ -53,7 +53,7 @@ class PaymentStatus extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getR()
+    public function getReceipt()
     {
         return $this->hasOne(Reciept::className(), ['RID' => 'RID']);
     }

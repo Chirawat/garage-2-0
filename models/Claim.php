@@ -45,16 +45,16 @@ class Claim extends \yii\db\ActiveRecord
     {
         return [
             'CLID' => 'Clid',
-            'claim_no' => 'Claim No',
+            'claim_no' => 'หมายเลขเคลม',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getInvoices()
+    public function getInvoice()
     {
-        return $this->hasMany(Invoice::className(), ['CLID' => 'CLID']);
+        return $this->hasOne(Invoice::className(), ['CLID' => 'CLID']);
     }
 
     /**
@@ -62,7 +62,7 @@ class Claim extends \yii\db\ActiveRecord
      */
     public function getPaymentStatus()
     {
-        return $this->hasMany(PaymentStatus::className(), ['CLID' => 'CLID']);
+        return $this->hasOne(PaymentStatus::className(), ['CLID' => 'CLID']);
     }
 
     /**

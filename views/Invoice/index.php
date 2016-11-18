@@ -257,3 +257,7 @@ $url = Url::to(['customer-list']);?>
         </table>
     </div>
 </div>
+
+<?php 
+$this->registerJS('$("#plate-no").select2();', VIEW::POS_READY);
+?>

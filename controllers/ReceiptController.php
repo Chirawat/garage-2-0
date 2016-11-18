@@ -165,6 +165,7 @@ class ReceiptController extends Controller{
 
             if($reciept->validate() && $reciept->save()){
                 // success
+                $reciept = Reciept::find()->orderBy(['RID' => SORT_DESC])->one();
             }
             else{
                 // failed
@@ -173,6 +174,12 @@ class ReceiptController extends Controller{
             }    
 
         }
+        
+        // update payment status
+        $paymentStatus = new PaymentStatus();
+        $paymentStatus->RID = $reciept->RID;
+        $paymentStatus->CLID = $reciept->invoice['CLID'];
+        $paymentStatus->save();
         
         $content = $this->renderPartial('report', [
             'invoice' => $invoice,

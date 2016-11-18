@@ -73,6 +73,7 @@ $this->title = 'ใบเสนอราคา/ใบเสร็จ';
         </div>
     </div>
 </div>
+<div>แก้ไขล่าสุด: <?=$lastUpdate->date?></div>
 <div class="row">
     <div class="col-sm-12">
         <table class="table table-bordered">
@@ -113,6 +114,6 @@ $this->title = 'ใบเสนอราคา/ใบเสร็จ';
                 </tr>
             </tfoot>
         </table>
-        <div>แก้ไขล่าสุด: <?=$lastUpdate->date?></div>
+        
     </div>
 </div>

@@ -36,23 +36,23 @@ $this->title = "รายงานค้างจ่าย";
             'class' => 'yii\grid\SerialColumn'
         ],
         'claim_no',
-        //'create_time',
         [
-            'attribute' => 'paymentStatus.reciept.invoice.date',
+            'attribute' => 'invoice.date',
             'label' => 'วันที่ออกใบแจ้งหนี้',
             'format' => [
                 'date', 'php: d/m/Y',
             ],
         ],
         [
-            'attribute' => 'paymentStatus.reciept.invoice.book_number', 'label' => 'เล่มที่'
+            'attribute' => 'invoice.book_number', 
+            'label' => 'เล่มที่'
         ],
         [
-            'attribute' => 'paymentStatus.reciept.invoice.invoice_id',
+            'attribute' => 'invoice.invoice_id',
             'label' => 'เลขที่ใบแจ้งหนี้'
         ],
         [
-            'attribute' => 'paymentStatus.reciept.invoice.customer.fullname',
+            'attribute' => 'invoice.customer.fullname',
             'label' => 'ในนาม',
         ],
         [
@@ -66,15 +66,15 @@ $this->title = "รายงานค้างจ่าย";
             },
         ],
         [
-            'attribute' => 'paymentStatus.reciept.book_number', 
+            'attribute' => 'paymentStatus.receipt.book_number', 
             'label' => 'เล่มที่',
         ],
         [
-            'attribute' => 'paymentStatus.reciept.reciept_id',
+            'attribute' => 'paymentStatus.receipt.reciept_id',
             'label' => 'เลขที่ใบเสร็จ',
         ],
         [
-            'attribute' => 'paymentStatus.reciept.date',
+            'attribute' => 'paymentStatus.receipt.date',
             'label' => 'วันที่ออกใบเสร็จ',
             'format' => ['date', 'php: d/m/Y'],
         ],

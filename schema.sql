@@ -1,312 +1,373 @@
--- MySQL dump 10.13  Distrib 5.7.12, for Win32 (AMD64)
---
--- Host: localhost    Database: garage
--- ------------------------------------------------------
--- Server version	5.7.14
+-- MySQL Workbench Forward Engineering
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
---
--- Table structure for table `claim`
---
+-- -----------------------------------------------------
+-- Schema garage
+-- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `claim`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `claim` (
-  `CLID` int(11) NOT NULL AUTO_INCREMENT,
-  `claim_no` text NOT NULL,
-  PRIMARY KEY (`CLID`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- -----------------------------------------------------
+-- Schema garage
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `garage` DEFAULT CHARACTER SET utf8 ;
+USE `garage` ;
 
---
--- Table structure for table `customer`
---
+-- -----------------------------------------------------
+-- Table `garage`.`customer`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`customer` (
+  `CID` INT(11) NOT NULL AUTO_INCREMENT,
+  `fullname` TEXT NULL DEFAULT NULL,
+  `type` TEXT NULL DEFAULT NULL,
+  `address` TEXT NULL DEFAULT NULL,
+  `phone` TEXT NULL DEFAULT NULL,
+  `fax` TEXT NULL DEFAULT NULL,
+  `taxpayer_id` TEXT NULL DEFAULT NULL COMMENT 'เลขประจำตัวผู้เสียภาษี',
+  `phone2` TEXT NULL,
+  `branch` TEXT NULL,
+  PRIMARY KEY (`CID`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 371
+DEFAULT CHARACTER SET = utf8;
 
-DROP TABLE IF EXISTS `customer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `customer` (
-  `CID` int(11) NOT NULL AUTO_INCREMENT,
-  `fullname` text,
-  `type` text,
-  `address` text,
-  `phone` text,
-  `fax` text,
-  `taxpayer_id` text COMMENT 'เลขประจำตัวผู้เสียภาษี',
-  `phone2` text,
-  `branch` text,
-  PRIMARY KEY (`CID`)
-) ENGINE=InnoDB AUTO_INCREMENT=387 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `damage_position`
---
+-- -----------------------------------------------------
+-- Table `garage`.`damage_position`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`damage_position` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `position` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 7
+DEFAULT CHARACTER SET = utf8;
 
-DROP TABLE IF EXISTS `damage_position`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `damage_position` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `position` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `description`
---
+-- -----------------------------------------------------
+-- Table `garage`.`viecle_name`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`viecle_name` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 12
+DEFAULT CHARACTER SET = utf8;
 
-DROP TABLE IF EXISTS `description`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `description` (
-  `DID` int(11) NOT NULL AUTO_INCREMENT,
-  `QID` int(11) NOT NULL,
-  `row` int(11) DEFAULT NULL,
-  `description` text COMMENT 'รายการ',
-  `type` text COMMENT 'ประเภท',
-  `price` float DEFAULT NULL COMMENT 'ราคา',
-  `date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`DID`),
-  KEY `fk_quotation_description_quotation1_idx` (`QID`),
-  CONSTRAINT `fk_quotation_description_quotation1` FOREIGN KEY (`QID`) REFERENCES `quotation` (`QID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=680 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `employee`
---
-
-DROP TABLE IF EXISTS `employee`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `employee` (
-  `EID` int(11) NOT NULL AUTO_INCREMENT,
-  `fullname` text,
-  `Position` text,
-  PRIMARY KEY (`EID`)
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `invoice`
---
-
-DROP TABLE IF EXISTS `invoice`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `invoice` (
-  `IID` int(11) NOT NULL AUTO_INCREMENT,
-  `CID` int(11) NOT NULL,
-  `VID` int(11) NOT NULL,
-  `CLID` int(11) NOT NULL,
-  `book_number` text,
-  `invoice_id` text,
-  `date` date DEFAULT NULL,
-  `EID` int(11) NOT NULL,
-  PRIMARY KEY (`IID`),
-  KEY `fk_invoice_customer1_idx` (`CID`),
-  KEY `fk_invoice_viecle1_idx` (`VID`),
-  KEY `fk_invoice_Employee1_idx` (`EID`),
-  KEY `fk_invoice_claim1_idx` (`CLID`),
-  CONSTRAINT `fk_invoice_Employee1` FOREIGN KEY (`EID`) REFERENCES `employee` (`EID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_invoice_claim1` FOREIGN KEY (`CLID`) REFERENCES `claim` (`CLID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_invoice_customer1` FOREIGN KEY (`CID`) REFERENCES `customer` (`CID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_invoice_viecle1` FOREIGN KEY (`VID`) REFERENCES `viecle` (`VID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `invoice_description`
---
-
-DROP TABLE IF EXISTS `invoice_description`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `invoice_description` (
-  `idid` int(11) NOT NULL AUTO_INCREMENT,
-  `IID` int(11) NOT NULL,
-  `description` text,
-  `price` float DEFAULT NULL,
-  `date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`idid`,`IID`),
-  KEY `fk_invoice_description_invoice1_idx` (`IID`),
-  CONSTRAINT `fk_invoice_description_invoice1` FOREIGN KEY (`IID`) REFERENCES `invoice` (`IID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `organization`
---
-
-DROP TABLE IF EXISTS `organization`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `organization` (
-  `OID` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text,
-  `address` text,
-  `phone` int(11) DEFAULT NULL,
-  `fax` int(11) DEFAULT NULL,
-  PRIMARY KEY (`OID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `photo`
---
-
-DROP TABLE IF EXISTS `photo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `photo` (
-  `PID` int(11) NOT NULL AUTO_INCREMENT,
-  `CLID` int(11) NOT NULL,
-  `filename` text NOT NULL,
-  `last_update` timestamp NULL DEFAULT NULL,
-  `type` varchar(45) DEFAULT NULL,
-  `order` int(11) DEFAULT NULL,
-  PRIMARY KEY (`PID`),
-  KEY `fk_photo_claim1_idx` (`CLID`),
-  CONSTRAINT `fk_photo_claim1` FOREIGN KEY (`CLID`) REFERENCES `claim` (`CLID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `quotation`
---
-
-DROP TABLE IF EXISTS `quotation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `quotation` (
-  `QID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสใบเสนอราคา',
-  `CID` int(11) DEFAULT NULL COMMENT 'รหัสลูกค้า',
-  `VID` int(11) DEFAULT NULL COMMENT 'รหัสรถ',
-  `TID` int(11) DEFAULT NULL,
-  `quotation_id` text COMMENT 'รหัสใบเสนอราคาอ้างอิง',
-  `quotation_date` date DEFAULT NULL COMMENT 'วันทีทำรายการ',
-  `CLID` int(11) NOT NULL,
-  `damage_level` int(11) DEFAULT NULL,
-  `damage_position` int(11) NOT NULL,
-  `EID` int(11) NOT NULL,
-  PRIMARY KEY (`QID`),
-  KEY `fk_quotation_customer1_idx` (`CID`),
-  KEY `fk_quotation_test1_idx` (`VID`),
-  KEY `fk_quotation_damage_position1_idx` (`damage_position`),
-  KEY `fk_quotation_Employee1_idx` (`EID`),
-  KEY `fk_quotation_claim1_idx` (`CLID`),
-  CONSTRAINT `fk_quotation_Employee1` FOREIGN KEY (`EID`) REFERENCES `employee` (`EID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_quotation_claim1` FOREIGN KEY (`CLID`) REFERENCES `claim` (`CLID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_quotation_customer1` FOREIGN KEY (`CID`) REFERENCES `customer` (`CID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_quotation_damage_position1` FOREIGN KEY (`damage_position`) REFERENCES `damage_position` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_quotation_test1` FOREIGN KEY (`VID`) REFERENCES `viecle` (`VID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=198 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `reciept`
---
-
-DROP TABLE IF EXISTS `reciept`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `reciept` (
-  `RID` int(11) NOT NULL AUTO_INCREMENT,
-  `IID` int(11) NOT NULL,
-  `book_number` text,
-  `reciept_id` text,
-  `date` timestamp NULL DEFAULT NULL,
-  `total` int(11) DEFAULT NULL,
-  `EID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`RID`),
-  KEY `fk_Reciept_invoice1_idx` (`IID`),
-  KEY `fk_Reciept_Employee1_idx` (`EID`),
-  CONSTRAINT `fk_Reciept_Employee1` FOREIGN KEY (`EID`) REFERENCES `employee` (`EID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Reciept_invoice1` FOREIGN KEY (`IID`) REFERENCES `invoice` (`IID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `viecle`
---
-
-DROP TABLE IF EXISTS `viecle`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `viecle` (
-  `VID` int(11) NOT NULL AUTO_INCREMENT,
-  `plate_no` text COMMENT 'เลขทะเบียน',
-  `viecle_name` int(11) DEFAULT NULL,
-  `viecle_model` int(11) DEFAULT NULL,
-  `body_code` text COMMENT 'เลขตัวถัง',
-  `engin_code` text COMMENT 'เลขเครื่องยนต์',
-  `viecle_year` int(11) DEFAULT NULL COMMENT 'ปี',
-  `body_type` text,
-  `cc` int(11) DEFAULT NULL COMMENT 'ซีซี',
-  `seat` int(11) DEFAULT NULL COMMENT 'ที่นั่ง',
-  `weight` int(11) DEFAULT NULL COMMENT 'น้ำหนักรวม',
-  `owner` int(11) DEFAULT NULL,
-  PRIMARY KEY (`VID`),
-  KEY `fk_viecle_customer1_idx` (`owner`),
-  KEY `fk_viecle_viecle_name1_idx` (`viecle_name`),
-  KEY `fk_viecle_viecle_model1_idx` (`viecle_model`),
-  CONSTRAINT `fk_viecle_customer1` FOREIGN KEY (`owner`) REFERENCES `customer` (`CID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_viecle_viecle_model1` FOREIGN KEY (`viecle_model`) REFERENCES `viecle_model` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_viecle_viecle_name1` FOREIGN KEY (`viecle_name`) REFERENCES `viecle_name` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=331 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `viecle_model`
---
-
-DROP TABLE IF EXISTS `viecle_model`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `viecle_model` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `viecle_name` int(11) NOT NULL,
-  `model` text,
+-- -----------------------------------------------------
+-- Table `garage`.`viecle_model`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`viecle_model` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `viecle_name` INT(11) NOT NULL,
+  `model` TEXT NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_viecle_model_viecle_name1_idx` (`viecle_name`),
-  CONSTRAINT `fk_viecle_model_viecle_name1` FOREIGN KEY (`viecle_name`) REFERENCES `viecle_name` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  INDEX `fk_viecle_model_viecle_name1_idx` (`viecle_name` ASC),
+  CONSTRAINT `fk_viecle_model_viecle_name1`
+    FOREIGN KEY (`viecle_name`)
+    REFERENCES `garage`.`viecle_name` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 22
+DEFAULT CHARACTER SET = utf8;
 
---
--- Table structure for table `viecle_name`
---
 
-DROP TABLE IF EXISTS `viecle_name`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `viecle_name` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+-- -----------------------------------------------------
+-- Table `garage`.`viecle`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`viecle` (
+  `VID` INT(11) NOT NULL AUTO_INCREMENT,
+  `plate_no` TEXT NULL DEFAULT NULL COMMENT 'เลขทะเบียน',
+  `viecle_name` INT(11) NULL DEFAULT NULL,
+  `viecle_model` INT(11) NULL DEFAULT NULL,
+  `body_code` TEXT NULL DEFAULT NULL COMMENT 'เลขตัวถัง',
+  `engin_code` TEXT NULL DEFAULT NULL COMMENT 'เลขเครื่องยนต์',
+  `viecle_year` INT(11) NULL DEFAULT NULL COMMENT 'ปี',
+  `body_type` TEXT NULL DEFAULT NULL,
+  `cc` INT(11) NULL DEFAULT NULL COMMENT 'ซีซี',
+  `seat` INT(11) NULL DEFAULT NULL COMMENT 'ที่นั่ง',
+  `weight` INT(11) NULL DEFAULT NULL COMMENT 'น้ำหนักรวม',
+  `owner` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`VID`),
+  INDEX `fk_viecle_customer1_idx` (`owner` ASC),
+  INDEX `fk_viecle_viecle_name1_idx` (`viecle_name` ASC),
+  INDEX `fk_viecle_viecle_model1_idx` (`viecle_model` ASC),
+  CONSTRAINT `fk_viecle_customer1`
+    FOREIGN KEY (`owner`)
+    REFERENCES `garage`.`customer` (`CID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_viecle_viecle_model1`
+    FOREIGN KEY (`viecle_model`)
+    REFERENCES `garage`.`viecle_model` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_viecle_viecle_name1`
+    FOREIGN KEY (`viecle_name`)
+    REFERENCES `garage`.`viecle_name` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 320
+DEFAULT CHARACTER SET = utf8;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-15 11:23:49
+-- -----------------------------------------------------
+-- Table `garage`.`Employee`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`Employee` (
+  `EID` INT NOT NULL AUTO_INCREMENT,
+  `fullname` TEXT NULL,
+  `Position` TEXT NULL,
+  PRIMARY KEY (`EID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `garage`.`claim`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`claim` (
+  `CLID` INT NOT NULL AUTO_INCREMENT,
+  `VID` INT(11) NULL,
+  `claim_no` TEXT NOT NULL,
+  `create_time` TIMESTAMP NULL,
+  PRIMARY KEY (`CLID`),
+  INDEX `fk_claim_viecle1_idx` (`VID` ASC),
+  CONSTRAINT `fk_claim_viecle1`
+    FOREIGN KEY (`VID`)
+    REFERENCES `garage`.`viecle` (`VID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `garage`.`quotation`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`quotation` (
+  `QID` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสใบเสนอราคา',
+  `CID` INT(11) NULL DEFAULT NULL COMMENT 'รหัสลูกค้า',
+  `VID` INT(11) NULL DEFAULT NULL COMMENT 'รหัสรถ',
+  `TID` INT(11) NULL DEFAULT NULL,
+  `quotation_id` TEXT NULL DEFAULT NULL COMMENT 'รหัสใบเสนอราคาอ้างอิง',
+  `quotation_date` DATE NULL DEFAULT NULL COMMENT 'วันทีทำรายการ',
+  `CLID` INT NOT NULL,
+  `damage_level` INT(11) NULL DEFAULT NULL,
+  `damage_position` INT(11) NOT NULL,
+  `EID` INT NOT NULL,
+  `revised` INT NULL,
+  PRIMARY KEY (`QID`),
+  INDEX `fk_quotation_customer1_idx` (`CID` ASC),
+  INDEX `fk_quotation_test1_idx` (`VID` ASC),
+  INDEX `fk_quotation_damage_position1_idx` (`damage_position` ASC),
+  INDEX `fk_quotation_Employee1_idx` (`EID` ASC),
+  INDEX `fk_quotation_claim1_idx` (`CLID` ASC),
+  CONSTRAINT `fk_quotation_customer1`
+    FOREIGN KEY (`CID`)
+    REFERENCES `garage`.`customer` (`CID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_quotation_damage_position1`
+    FOREIGN KEY (`damage_position`)
+    REFERENCES `garage`.`damage_position` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_quotation_test1`
+    FOREIGN KEY (`VID`)
+    REFERENCES `garage`.`viecle` (`VID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_quotation_Employee1`
+    FOREIGN KEY (`EID`)
+    REFERENCES `garage`.`Employee` (`EID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_quotation_claim1`
+    FOREIGN KEY (`CLID`)
+    REFERENCES `garage`.`claim` (`CLID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 186
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `garage`.`description`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`description` (
+  `DID` INT(11) NOT NULL AUTO_INCREMENT,
+  `QID` INT(11) NOT NULL,
+  `row` INT(11) NULL DEFAULT NULL,
+  `description` TEXT NULL DEFAULT NULL COMMENT 'รายการ',
+  `type` TEXT NULL DEFAULT NULL COMMENT 'ประเภท',
+  `price` FLOAT NULL DEFAULT NULL COMMENT 'ราคา',
+  `date` TIMESTAMP NULL DEFAULT NULL,
+  `revise` INT NULL,
+  PRIMARY KEY (`DID`),
+  INDEX `fk_quotation_description_quotation1_idx` (`QID` ASC),
+  CONSTRAINT `fk_quotation_description_quotation1`
+    FOREIGN KEY (`QID`)
+    REFERENCES `garage`.`quotation` (`QID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 607
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `garage`.`invoice`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`invoice` (
+  `IID` INT(11) NOT NULL AUTO_INCREMENT,
+  `CID` INT(11) NOT NULL,
+  `VID` INT(11) NULL,
+  `CLID` INT NULL,
+  `book_number` TEXT NULL,
+  `invoice_id` TEXT NULL DEFAULT NULL,
+  `date` DATE NULL DEFAULT NULL,
+  `EID` INT NOT NULL,
+  PRIMARY KEY (`IID`),
+  INDEX `fk_invoice_customer1_idx` (`CID` ASC),
+  INDEX `fk_invoice_viecle1_idx` (`VID` ASC),
+  INDEX `fk_invoice_Employee1_idx` (`EID` ASC),
+  INDEX `fk_invoice_claim1_idx` (`CLID` ASC),
+  CONSTRAINT `fk_invoice_customer1`
+    FOREIGN KEY (`CID`)
+    REFERENCES `garage`.`customer` (`CID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_invoice_viecle1`
+    FOREIGN KEY (`VID`)
+    REFERENCES `garage`.`viecle` (`VID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_invoice_Employee1`
+    FOREIGN KEY (`EID`)
+    REFERENCES `garage`.`Employee` (`EID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_invoice_claim1`
+    FOREIGN KEY (`CLID`)
+    REFERENCES `garage`.`claim` (`CLID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 24
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `garage`.`invoice_description`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`invoice_description` (
+  `idid` INT(11) NOT NULL AUTO_INCREMENT,
+  `IID` INT(11) NOT NULL,
+  `description` TEXT NULL DEFAULT NULL,
+  `price` FLOAT NULL DEFAULT NULL,
+  `date` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`idid`, `IID`),
+  INDEX `fk_invoice_description_invoice1_idx` (`IID` ASC),
+  CONSTRAINT `fk_invoice_description_invoice1`
+    FOREIGN KEY (`IID`)
+    REFERENCES `garage`.`invoice` (`IID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 62
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `garage`.`organization`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`organization` (
+  `OID` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` TEXT NULL DEFAULT NULL,
+  `address` TEXT NULL DEFAULT NULL,
+  `phone` INT(11) NULL DEFAULT NULL,
+  `fax` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`OID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `garage`.`Reciept`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`Reciept` (
+  `RID` INT NOT NULL AUTO_INCREMENT,
+  `IID` INT(11) NOT NULL,
+  `book_number` TEXT NULL,
+  `reciept_id` TEXT NULL,
+  `date` TIMESTAMP NULL,
+  `total` INT NULL,
+  `EID` INT NULL,
+  PRIMARY KEY (`RID`),
+  INDEX `fk_Reciept_invoice1_idx` (`IID` ASC),
+  INDEX `fk_Reciept_Employee1_idx` (`EID` ASC),
+  CONSTRAINT `fk_Reciept_invoice1`
+    FOREIGN KEY (`IID`)
+    REFERENCES `garage`.`invoice` (`IID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Reciept_Employee1`
+    FOREIGN KEY (`EID`)
+    REFERENCES `garage`.`Employee` (`EID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `garage`.`photo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`photo` (
+  `PID` INT NOT NULL AUTO_INCREMENT,
+  `CLID` INT NOT NULL,
+  `filename` TEXT NOT NULL,
+  `last_update` TIMESTAMP NULL,
+  `type` VARCHAR(45) NULL,
+  `order` INT NULL,
+  PRIMARY KEY (`PID`),
+  INDEX `fk_photo_claim1_idx` (`CLID` ASC),
+  CONSTRAINT `fk_photo_claim1`
+    FOREIGN KEY (`CLID`)
+    REFERENCES `garage`.`claim` (`CLID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `garage`.`payment_status`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `garage`.`payment_status` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `RID` INT NOT NULL,
+  `CLID` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_payment_status_Reciept1_idx` (`RID` ASC),
+  INDEX `fk_payment_status_claim1_idx` (`CLID` ASC),
+  UNIQUE INDEX `CLID_UNIQUE` (`CLID` ASC),
+  CONSTRAINT `fk_payment_status_Reciept1`
+    FOREIGN KEY (`RID`)
+    REFERENCES `garage`.`Reciept` (`RID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_payment_status_claim1`
+    FOREIGN KEY (`CLID`)
+    REFERENCES `garage`.`claim` (`CLID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

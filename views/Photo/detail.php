@@ -8,6 +8,8 @@ use yii\helpers\Url;
 <?=Html::beginForm(['photo/del', 'get'])?>
 <?php if(sizeof($details) != 0): ?>
     <div class="form-group">
+        <input type="hidden" name="CLID" value="<?=$details[0]->CLID?>">
+        <input type="hidden" name="type" value="<?=$details[0]->type?>">
         <button type="submit" class="btn btn-danger">ลบที่เลือก</button>
     </div>
 <?php else:?>
@@ -18,30 +20,18 @@ use yii\helpers\Url;
 <!-- Projects Row -->
         <div class="row">
             <?php foreach($details as $detail): ?>
-                <div id="open-<?=$detail->PID?>" class="modal fade" tabindex="-1" role="dialog">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title">ดูรูปภาพ</h4>
-                            </div>
-                        <div class="modal-body">
-                            <div>
-                                <img src="upload/<?=$detail->CLID?>-<?=$detail->claim['claim_no']?>/<?=$detail->type?>/<?=$detail->filename?>" alt="" width="80%">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
+                
+            
+                <?php $images = explode(", ", $detail->filename); foreach($images as $image):?>
                 <div class="col-md-3 portfolio-item">
-                    <a href="#open-<?=$detail->PID?>" data-toggle="modal">
-                        <img class="img-responsive" src="upload/<?=$detail->CLID?>-<?=$detail->claim['claim_no']?>/<?=$detail->type?>/<?=$detail->filename?>" alt="">
+                    <?php $file = "upload/" . $detail->CLID . "-" . $detail->claim['claim_no'] . "/" . $detail->type . "/" . $image; ?>
+                    <a href="<?=$file?>" target="_blank">
+                        <img class="img-responsive" src= "<?=$file?>" alt="">
                     </a>
-                    <?=Html::checkbox('PID[]', false, ['label' => $detail->filename, 'value' => $detail->PID])?>
+                    <?=Html::checkbox('filename[]', false, ['label' => $image, 'value' => $image])?>
+                    <input type="hidden" name="PID" value="<?=$detail->PID?>">
                 </div>
+                <?php endforeach; ?>
             <?php endforeach; ?>
         </div>
     <?=Html::endForm()?>

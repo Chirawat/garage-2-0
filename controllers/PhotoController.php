@@ -9,6 +9,7 @@ use app\models\Claim;
 use app\models\Photo;
 use yii\web\UploadedFile;
 use kartik\mpdf\Pdf;
+use yii\helpers\ArrayHelper;
 
 class PhotoController extends Controller
 {
@@ -73,15 +74,21 @@ class PhotoController extends Controller
 
         // when upload file
         if($request->isPost){
+
             $photo->load( $request->post() );
-            $photo->imageFile = UploadedFile::getInstance($photo, 'imageFile');
-            $photo->filename = $photo->imageFile->name;
-            $photo->last_update = date('Y-m-d H:i:s');
+            $photo->imageFiles = UploadedFile::getInstances($photo, 'imageFiles');
+            $dt = date('Y-m-d H:i:s');
+            $name =ArrayHelper::getColumn($photo->imageFiles, 'name');
+            $photo->filename = implode(", ", $name);
+            $photo->last_update = $dt;
             $photo->order = Photo::find()->where(['CLID' => $photo->CLID, 'type' => $photo->type])->count() + 1;
-
-            $photo->save();
-            $photo->upload( $photo->claim['CLID'], $photo->claim['claim_no'], $photo->type);
-
+            if($photo->validate() && $photo->save()){
+                $photo->upload( $photo->claim['CLID'], $photo->claim['claim_no'], $photo->type);
+            }
+            else{
+                var_dump($photo->errors);
+                die();
+            }
             return $this->redirect(['photo/index', 'CLID' => $photo->CLID, 'type' => $photo->type]);
         }
 
@@ -103,20 +110,49 @@ class PhotoController extends Controller
     
     public function actionDel(){
         $request = Yii::$app->request;
-
+//        var_dump($request->post());
+//        die();
+        $CLID = $request->post('CLID');
+        $type = $request->post('type');
         if($request->isPost){
-            $CLID = null;
-            $type = null;
-            $PID = $request->post('PID');
-            foreach($PID as $PID_t){
-                $photo = Photo::findOne($PID_t);
+            $filenames = $request->post('filename');
+            //$PID = $request->post('PID');
+            //$photo = Photo::findOne($PID);
+            foreach($filenames as $filename_t){
+                $query = Photo::find()->where(['like', 'filename', $filename_t]);
+                $query->andWhere(['CLID' => $CLID, 'type' => $type]);
+                $photo_t = $query->all();
+                foreach($photo_t as $photo){
+                    $filesName_temp = explode(", ", $photo->filename);
 
-                $CLID = $photo->CLID;
-                $type = $photo->type;
-                $file = 'upload/' . $photo->CLID . '-' . $photo->claim['claim_no'] . '/' . $photo->type . '/' . $photo->filename;
-                if(file_exists($file))
-                    unlink($file);
-                $photo->delete();
+                    foreach($filenames as $filename){
+                        $key = array_search($filename, $filesName_temp);
+                        if($key !== false){
+                            unset($filesName_temp[$key]);
+                        }
+                    }
+                    if(count($filesName_temp) != 0){
+                        $photo->filename = implode(", ", $filesName_temp);
+                        if($photo->validate() && $photo->save()){
+                            $photo->save();
+                        }
+                        else{
+                            var_dump($photo->errors);
+                            die();    
+                        }
+                    }
+                    else{
+                        $photo->delete();
+                    }
+    //                var_dump($filesName_temp);
+
+                    $CLID = $photo->CLID;
+                    $type = $photo->type;
+                    $file = 'upload/' . $photo->CLID . '-' . $photo->claim['claim_no'] . '/' . $photo->type . '/' . $filename_t;
+
+                    if(file_exists($file))
+                        unlink($file);
+                }
             }
 
             $this->redirect(['photo/index', 'CLID' => $CLID, 'type' => $type]);

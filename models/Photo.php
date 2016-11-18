@@ -19,7 +19,7 @@ use yii\helpers\BaseFileHelper;
  */
 class Photo extends \yii\db\ActiveRecord
 {
-    public $imageFile;
+    public $imageFiles;
     /**
      * @inheritdoc
      */
@@ -40,7 +40,7 @@ class Photo extends \yii\db\ActiveRecord
             [['last_update'], 'safe'],
             [['type'], 'string', 'max' => 45],
             [['CLID'], 'exist', 'skipOnError' => true, 'targetClass' => Claim::className(), 'targetAttribute' => ['CLID' => 'CLID']],
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'jpg'],
+            [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg', 'maxFiles' => 4, 'maxSize'=>1024*1024*10],
         ];
     }
 
@@ -72,7 +72,10 @@ class Photo extends \yii\db\ActiveRecord
             $path = 'upload/' . $CLID . '-' . $claim_no . '/' . $type;
             if( !is_dir($path) )
                 $r = BaseFileHelper::createDirectory($path, 0777, true);
-            $this->imageFile->saveAs( $path . '/' . $this->imageFile->baseName . '.' . $this->imageFile->extension );
+            
+            foreach($this->imageFiles as $file){
+                $file->saveAs( $path . '/' . $file->baseName . '.' . $file->extension );
+            }
             return true;
         }
         else{

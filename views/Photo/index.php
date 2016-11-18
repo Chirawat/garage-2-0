@@ -40,7 +40,7 @@ $this->title = "เพิ่มรูปภาพ";
         <div class="panel-body">
             <?php $form_upload = ActiveForm::begin(['options' => [
                 'class' => 'form-horizontal',
-                'encrype' => 'multipart/form-data',]]); ?>
+                'enctype' => 'multipart/form-data',]]); ?>
                 <div class="form-group">
                     <label class="control-label col-sm-2">เลขที่เคลม</label>
                     <div class="col-sm-3">
@@ -50,7 +50,9 @@ $this->title = "เพิ่มรูปภาพ";
                             'prompt' => 'เลือกเลขที่เคลม',
                             'options' => [$selectedKey => ['Selected' => true],]
                         ]) ?>
-                    </div> <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add-claim-no">เพิ่ม</a> </div>
+                    </div> 
+<!--                    <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add-claim-no">เพิ่ม</a> -->
+            </div>
                 <div class="form-group">
                     <label class="control-label col-sm-2">ช่วงเวลา</label>
                     <div class="col-sm-3">
@@ -71,7 +73,7 @@ $this->title = "เพิ่มรูปภาพ";
                     <label for="exampleInputFile" class="control-label col-sm-2">ไฟล์</label>
                     <div class="col-sm-3">
                         <div class="container">
-                            <?= $form_upload->field($photo, 'imageFile')->fileInput()->label(false)->hint('ไฟล์ jpg ขนาดไม่เกิน 10 MB') ?>
+                            <?= $form_upload->field($photo, 'imageFiles[]')->fileInput(['multiple' => true, 'accept' => 'image/*'])->label(false)->hint('ไฟล์ jpg ขนาดไม่เกิน 10 MB') ?>
                         </div>
                     </div>
                 </div>

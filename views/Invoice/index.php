@@ -122,8 +122,10 @@ $url = Url::to(['customer-list']);?>
             <div class="pull-right">
                 <a href="<?=Url::to(['invoice/search'])?>" class="btn btn-primary btn-sm">
                     <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบแจ้งหนี้</a>
+<!--
                 <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm">
                     <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a>
+-->
                 <a id="btn-save-invoice" class="btn btn-primary btn-sm">
                     <span class="glyphicon glyphicon-save-file"></span> บันทึก</a>
             </div>

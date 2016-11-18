@@ -59,6 +59,7 @@ AppAsset::register($this);
                 'items' => [
                     ['label' => 'บริษัทประกัน', 'url' => Url::to(['config/insurance-company']), 'linkOptions' => ['target' => '_blank']],
                     ['label' => 'ชื่อและรุ่นรถยนต์', 'url' => Url::to(['config/viecle']), 'linkOptions' => ['target' => '_blank']],
+                    ['label' => 'ลงทะเบียนรถซ่อม', 'url' => Url::to(['viecle/index']), 'linkOptions' => ['target' => '_blank']],
                     ['label' => 'ตั้งค่าพนักงาน', 'url' => '#', 'visible' => false],
 //                    '<li class="divider"></li>',
                     ['label' => 'ตรวจสอบรุ่นโปรแกรม', 'url' => '#', 'visible' => false],

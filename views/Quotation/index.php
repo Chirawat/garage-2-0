@@ -77,8 +77,10 @@ $this->title = "ใบเสนอราคา";
     <div class="form-group pull-right">
         <a href="<?=Url::to(['quotation/search'])?>" class="btn btn-primary btn-sm">
             <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบเสนอราคา </a>
+<!--
         <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm">
             <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a>
+-->
         <a id="btn-save" class="btn btn-primary btn-sm">
             <span class="glyphicon glyphicon-save-file"></span> บันทึก </a>
     </div>

@@ -301,8 +301,6 @@ class QuotationController extends Controller
     public function actionReport($qid, $dateIndex = 0) {
         $request = Yii::$app->request;
         
-        //$qid = Quotation::findOne($qid);
-        
         // Quotation
         $model = Quotation::find()->where(['QID' => $qid])->one();
         
@@ -357,6 +355,13 @@ class QuotationController extends Controller
             
             //'revise' => $dateLists[$dateIndex]->revise,
         ]);
+        
+        $header = $this->renderPartial('report_header',[
+            'model' => $model,
+            'dt' => date_format($dt, "Y/m/d") , // 20161027 date in quotation should be description's date
+            'customerModel' => $customerModel,
+            'viecleModel' => $viecleModel,
+        ]);
 
         // setup kartik\mpdf\Pdf component
         $pdf = null;
@@ -370,6 +375,12 @@ class QuotationController extends Controller
             'orientation' => Pdf::ORIENT_PORTRAIT, 
             // stream to browser inline
             'destination' => Pdf::DEST_BROWSER, 
+                
+            'marginTop' => 114,
+                
+            'marginBottom' => 50,
+                
+            'marginRight' => 7,
             // your html content input
             'content' => $content,  
             // format content from your own css file if needed or use the
@@ -381,7 +392,7 @@ class QuotationController extends Controller
             'options' => ['title' => 'ใบเสนอราคา'],
             // call mPDF methods on the fly
             'methods' => [ 
-                //'SetHeader'=>['Krajee Report Header'], 
+                'SetHeader'=> $header, 
                 'SetFooter'=>['ลงชื่อ&emsp;............................................ ผู้เสนอราคา<br>
                 (&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;)&emsp;&emsp;&emsp;&emsp;&emsp;<br>  หน้า {PAGENO} / {nb}'],
                 ]
@@ -398,6 +409,8 @@ class QuotationController extends Controller
             // stream to browser inline
             'destination' => Pdf::DEST_BROWSER, 
                 
+            'marginTop' => 114,
+                
             'marginBottom' => 50,
                 
             'marginRight' => 7,
@@ -412,13 +425,12 @@ class QuotationController extends Controller
             'options' => ['title' => 'ใบเสนอราคา'],
             // call mPDF methods on the fly
             'methods' => [ 
-                //'SetHeader'=>['Krajee Report Header'], 
+                'SetHTMLHeader'=>$header, 
                 'SetFooter'=>['ลงชื่อ&emsp;............................................ ผู้เสนอราคา<br>
                 (&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;)&emsp;&emsp;&emsp;&emsp;&emsp;<br>  REVISED: ' . $dateLists[$dateIndex]->revise . ' หน้า {PAGENO} / {nb}'],
                 ]
             ]);
         }
-
         $pdf->configure(array(
             'defaultfooterline' => '0', 
             'defaultfooterfontstyle' => 'R',

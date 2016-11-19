@@ -33,7 +33,7 @@ function DateThai($strDate){
     <h2 class="header">ใบเสร็จรับเงิน/ใบกำกับภาษี</h2>
     <table class="table_bordered" width="100%" border="0" cellpadding="2" cellspacing="0" style="border: 0px solid transparent;">
         <tr>
-            <td width="70%" style="padding: 10px;"><b>ชื่อ <?= $invoice->customer->fullname ?>
+            <td width="70%" style="padding: 10px;"><b>ชื่อ <?= $invoice->customer->fullname ?> <?=$invoice->customer->branch?>
                 <br /> ที่อยู่</b> <?= $invoice->customer->address ?>
                 <?php if($invoice->customer->taxpayer_id != null): ?>
                 <br /> เลขประจำตัวผู้เสียภาษีอากร <?= $invoice->customer->taxpayer_id ?></td>

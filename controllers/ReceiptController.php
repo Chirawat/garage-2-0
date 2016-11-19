@@ -456,16 +456,18 @@ class ReceiptController extends Controller{
             return $receipt->errors;
         }
         
-        foreach($claims as $CLID){
-            $paymentStatus = new PaymentStatus();
-            $paymentStatus->RID = $receipt->RID;
-            $paymentStatus->CLID = $CLID;
-            
-            if($paymentStatus->validate() && $paymentStatus->save()){
-                
-            }
-            else{
-                return $paymentStatus->errors;
+        if(isset($claims)){
+            foreach($claims as $CLID){
+                $paymentStatus = new PaymentStatus();
+                $paymentStatus->RID = $receipt->RID;
+                $paymentStatus->CLID = $CLID;
+
+                if($paymentStatus->validate() && $paymentStatus->save()){
+
+                }
+                else{
+                    return $paymentStatus->errors;
+                }
             }
         }
         return ['status' => true, 'iid' => $IID, 'rid' => $receipt->RID];

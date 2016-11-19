@@ -118,7 +118,8 @@ $this->title = 'ใบเสนอราคา/ใบเสร็จ';
                                 <div class="form-group">
                                 <?= Html::dropDownList('multiple-claim-no', null, ArrayHelper::map($claim, 'CLID', 'claim_no'), [
                                         'class' => 'form-control input-sm',
-                                        'id' => 'multiple-claim-no']);?>
+                                        'id' => 'multiple-claim-no',
+                                        'prompt' => 'ไม่ระบุ']);?>
                                 </div>
                                 <div class="form-group">
                                     <a id="add-claim-no" class="btn btn-primary btn-sm">เพิ่ม</a>

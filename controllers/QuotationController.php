@@ -399,6 +399,8 @@ class QuotationController extends Controller
             'destination' => Pdf::DEST_BROWSER, 
                 
             'marginBottom' => 50,
+                
+            'marginRight' => 7,
             // your html content input
             'content' => $content,  
             // format content from your own css file if needed or use the

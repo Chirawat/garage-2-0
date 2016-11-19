@@ -47,8 +47,8 @@ function DateThai($strDate){
         <tr>
             <td height="40" width="20%" class="column-header">ชื่อรถยนต์ / รุ่น</td>
             <td width="20%" class="column-header">เลขทะเบียน</td>
-            <td width="40%" class="column-header">เลขตัวถัง</td>
-            <td width="10%" class="column-header">เลขเครื่องยนต์</td>
+            <td width="35%" class="column-header">เลขตัวถัง</td>
+            <td width="15%" class="column-header">เลขเครื่องยนต์</td>
             <td width="10%" class="column-header">ปีรุ่น</td>
         </tr>
         <tr>

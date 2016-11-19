@@ -397,6 +397,8 @@ class QuotationController extends Controller
             'orientation' => Pdf::ORIENT_PORTRAIT, 
             // stream to browser inline
             'destination' => Pdf::DEST_BROWSER, 
+                
+            'marginBottom' => 50,
             // your html content input
             'content' => $content,  
             // format content from your own css file if needed or use the

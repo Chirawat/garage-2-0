@@ -62,12 +62,12 @@ function DateThai($strDate){
     <!--<pagebreak />-->
     <table class="table_bordered" width="100%" border="0" cellpadding="2" cellspacing="0" style="border: 0px solid transparent;">
         <tr>
-            <td height="40" width="5%" class="column-header">ลำดับ</td>
+            <td height="40" width="7%" class="column-header">ลำดับ</td>
             <td width="30%" class="column-header">รายการซ่อม</td>
-            <td width="15%" class="column-header">ราคา</td>
-            <td width="5%" class="column-header">ลำดับ</td>
+            <td width="13%" class="column-header">ราคา</td>
+            <td width="7%" class="column-header">ลำดับ</td>
             <td width="30%" class="column-header">รายการอะไหล่</td>
-            <td width="15%" class="column-header">ราคา</td>
+            <td width="13%" class="column-header">ราคา</td>
         </tr>
         <?php for($i = 0; $i < $numRow; $i++):?>
         <tr>

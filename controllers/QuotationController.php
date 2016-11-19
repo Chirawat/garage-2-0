@@ -392,7 +392,7 @@ class QuotationController extends Controller
             'options' => ['title' => 'ใบเสนอราคา'],
             // call mPDF methods on the fly
             'methods' => [ 
-                'SetHeader'=> $header, 
+                'SetHTMLHeader'=>$header,
                 'SetFooter'=>['ลงชื่อ&emsp;............................................ ผู้เสนอราคา<br>
                 (&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;)&emsp;&emsp;&emsp;&emsp;&emsp;<br>  หน้า {PAGENO} / {nb}'],
                 ]
@@ -442,15 +442,16 @@ class QuotationController extends Controller
     }
     
     public function actionRevisedUp($QID=null, $up=false){
-        
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        if($up === "false")
+            return false;
 
-        //return Yii::$app->request->get();
         $quotation = Quotation::findOne($QID);
         if($quotation->revised === null){
             $quotation->revised = 1;
         }
-        elseif($up === "true"){
+        else{
             $quotation->revised += 1;
         }
         

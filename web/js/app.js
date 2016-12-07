@@ -666,6 +666,27 @@ $("#btn-save-invoice").on("click", function (event, ui) {
         }
     });
 });
+$("#btn-save-invoice-general").on("click", function (event, ui) {
+    $.post("index.php?r=invoice-general/create", {
+        CID: $("#customer-list option:selected").val(),
+        VID: $("#plate-no").val(),
+        claim_no: $("#claim-no").val(),
+        invoice: invoice
+    }, function(data){
+        if( data.status ){
+            var r = confirm("บันทึกเรียบร้อย\r\nคุณต้องการพิมพ์ใบแจ้งหนี้เลยหรือไม่");
+
+            if(r){
+                // print
+                 window.open(
+                      '?r=invoice/report&iid=' + data.IID,
+                      '_blank' // <- This is what makes it open in a new window.
+                );
+            }
+            window.location.replace("?r=invoice/view&iid=" + data.IID);
+        }
+    });
+});
 $("#btn-edit-invoice").click(function(){
     var iid = getUrlVars()["iid"];
     $.post("index.php?r=invoice/edit&iid=" + iid, {

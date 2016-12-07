@@ -42,6 +42,7 @@ AppAsset::register($this);
                 'items' => [
                     ['label' => 'ใบเสนอราคา', 'url' => Url::to(['quotation/index'])],
                     ['label' => 'ใบแจ้งหนี้/ใบเสร็จ', 'url' => Url::to(['invoice/index'])],
+                    ['label' => 'ใบแจ้งหนี้/ใบเสร็จ (สำหรับลูกค้าทั่วไป)', 'url' => Url::to(['invoice-general/index'])],
                     '<li class="divider"></li>',
                     ['label' => 'ใบเสร็จแบบรวมหลายเคลม', 'url' => Url::to(['receipt/multiple-claim'])],
                 ],

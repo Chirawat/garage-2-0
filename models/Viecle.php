@@ -116,4 +116,8 @@ class Viecle extends \yii\db\ActiveRecord
     { 
         return $this->hasMany(Claim::className(), ['VID' => 'VID']); 
     } 
+    public function getInvoiceGenerals() 
+    { 
+       return $this->hasMany(InvoiceGeneral::className(), ['VID' => 'VID']); 
+    }
 }

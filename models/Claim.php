@@ -85,4 +85,9 @@ class Claim extends \yii\db\ActiveRecord
     { 
        return $this->hasOne(Viecle::className(), ['VID' => 'VID']); 
     }
+    
+    public function getInvoiceGeneral()
+    {
+       return $this->hasOne(InvoiceGeneral::className(), ['CLID' => 'CLID']);
+    }
 }

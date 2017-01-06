@@ -337,7 +337,7 @@ class QuotationController extends Controller
         }
         
         $total = null;
-        $model->total != null ? $total = $model->total : $sumMaintenance + $sumPart;
+        $model->total !== null ? $total = $model->total : $total = $sumMaintenance + $sumPart;
 
         $numRow = 0;
         if(sizeof($maintenanceDescriptionModel) > sizeof($partDescriptionModel))

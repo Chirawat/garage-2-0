@@ -1,4 +1,4 @@
-// rev 20161115-1617
+// rev 20160106-1038
 var maintenance = [];
 var part = [];
 var qid = undefined;
@@ -267,6 +267,53 @@ $(document).ready(function () {
     calTotalInvoice();
 
     ///////////////////////////////////////////////////////
+    // update 20160106 - make total field editable
+    $.fn.enterKey = function (fnc) {
+        return this.each(function () {
+            $(this).keypress(function (ev) {
+                var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+                if (keycode == '13') {
+                    fnc.call(this, ev);
+                }
+            })
+        })
+    }
+
+    $("#maintenance-total").dblclick( function() {
+        $("#maintenance-total-editing input").val( $(this).text() );
+        $("#maintenance-total-editing").show();
+        $(this).hide();
+    });
+    $("#maintenance-total-editing input").enterKey( function() {
+        $("#maintenance-total").text( $(this).val() );
+        $("#maintenance-total").show();
+        $("#maintenance-total-editing").hide();
+    });   
+
+    $("#part-total").dblclick( function() {
+        $("#part-total-editing input").val( $(this).text() );
+        $("#part-total-editing").show();
+        $(this).hide();
+    });
+    $("#part-total-editing input").enterKey( function() {
+        $("#part-total").text( $(this).val() );
+        $("#part-total").show();
+        $("#part-total-editing").hide();
+    });    
+
+    $("#total").dblclick( function() {
+        $("#total-editing input").val( $(this).text() );
+        $("#total-editing").show();
+        $(this).hide();
+    });
+    $("#total-editing input").enterKey( function() {
+        $("#total").text( $(this).val() );
+        $("#total").show();
+        $("#total-editing").hide();
+    });
+
+    
+    ///////////////////////////////////////////////////////
 
     /* Bind enter key to function */
     $("#maintenance-list").bind('keypress', function (e) {
@@ -411,7 +458,6 @@ $(document).ready(function () {
         }
     });
     $("#btn-save").on("click", function (event, ui) {
-        //if (maintenance.length != 0 || part.length != 0) {
         // get quotation info
         quotation_info = {
             CID: $("#customer option:selected").val(), 
@@ -419,8 +465,25 @@ $(document).ready(function () {
             claimNo: $("#claim-no").val(), 
             damageLevel: $("#damage-level").val(), 
             damagePosition: $("#damage-position").val(), 
-            VID: $("#plate-no option:selected").val()
+            VID: $("#plate-no option:selected").val()            
         };
+        var totalManual = {
+            maintenance: $("#maintenance-total-editing input").val(),
+            part: $("#part-total-editing input").val(),
+            total: $("#total-editing input").val()
+        }
+        if(totalManual.maintenance !== "" && !$.isNumeric(totalManual.maintenance)){
+            alert('รวมรายการซ่อมไม่ถูกต้อง!');
+            return false;
+        }
+        if(totalManual.part !== "" && !$.isNumeric(totalManual.part)){
+            alert('รวมรายการอะไหล่ไม่ถูกต้อง!');
+            return false;
+        }
+        if(totalManual.total !== "" && !$.isNumeric(totalManual.total)){
+            alert('รวมไม่ถูกต้อง!');
+            return false;
+        }
         // check empty
         if (quotation_info.vieclePlateNo == "") {
             alert("กรุณาข้อมูลรถยนต์");
@@ -435,10 +498,19 @@ $(document).ready(function () {
             return false;
         }
         
+        
         /* Send information to server */
         $.post("index.php?r=quotation/quotation-save",{
-            quotation_info: quotation_info, maintenance_list: maintenance, part_list: part
-        },function(data){
+            quotation_info: 
+                quotation_info, 
+                maintenance_list: maintenance, 
+                part_list: part, 
+                totalManual : {
+                    maintenance: $("#maintenance-total-editing input").val(),
+                    part: $("#part-total-editing input").val(),
+                    total: $("#total-editing input").val()
+                }
+        }, function(data) {
             console.log(data);
             // confirmation dialog
             var r = confirm(data.message);
@@ -450,7 +522,7 @@ $(document).ready(function () {
                 );
             }
             // redirect
-            window.location.replace("?r=quotation/view&qid=" + data.QID);
+            //window.location.replace("?r=quotation/view&qid=" + data.QID);
         });
     });
     /* edit description, save button clicked */

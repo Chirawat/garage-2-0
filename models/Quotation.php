@@ -4,27 +4,6 @@ namespace app\models;
 
 use Yii;
 
-/**
- * This is the model class for table "quotation".
- *
- * @property integer $QID
- * @property integer $CID
- * @property integer $VID
- * @property integer $TID
- * @property string $quotation_id
- * @property string $quotation_date
- * @property integer $CLID
- * @property integer $damage_level
- * @property integer $damage_position
- * @property integer $EID
- *
- * @property Description[] $descriptions
- * @property Employee $e
- * @property Claim $cL
- * @property Customer $c
- * @property DamagePosition $damagePosition
- * @property Viecle $v
- */
 class Quotation extends \yii\db\ActiveRecord
 {
     /**
@@ -44,6 +23,7 @@ class Quotation extends \yii\db\ActiveRecord
             [['CID', 'VID', 'TID', 'CLID', 'damage_level', 'damage_position', 'EID', 'revised'], 'integer'],
             [['quotation_id'], 'string'],
             [['quotation_date'], 'safe'],
+            [['maintenance_total', 'part_total', 'total'], 'number'],
             [['CLID', 'damage_position', 'EID'], 'required'],
             [['EID'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['EID' => 'EID']],
             [['CLID'], 'exist', 'skipOnError' => true, 'targetClass' => Claim::className(), 'targetAttribute' => ['CLID' => 'CLID']],
@@ -69,6 +49,9 @@ class Quotation extends \yii\db\ActiveRecord
             'damage_level' => 'Damage Level',
             'damage_position' => 'Damage Position',
             'EID' => 'Eid',
+            'maintenance_total' => 'Maintenance Total', 
+            'part_total' => 'Part Total', 
+            'total' => 'Total', 
         ];
     }
 

@@ -109,15 +109,12 @@ class QuotationController extends Controller
     
     public function actionQuotationSave(){
         $request = Yii::$app->request;
-        
-        //return var_dump($request->post('maintenance_list'));
-        
+
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if( $request->isPost ){    
             $quotationInfo = $request->post('quotation_info');
                         
-            $quotation = new Quotation();
-            
+            $quotation = new Quotation();    
             $quotation->CID = $quotationInfo['CID'];
             $quotation->VID = $quotationInfo['VID'];
 
@@ -139,25 +136,26 @@ class QuotationController extends Controller
             $quotation->quotation_date = date("Y-m-d");
             $quotation->damage_level = $quotationInfo['damageLevel'];
             $quotation->damage_position = $quotationInfo['damagePosition'];            
-            $quotation->EID = Yii::$app->user->identity->getId();
+            $quotation->EID = Yii::$app->user->identity->getId();         
             
+            // update 20170106
+            $totalManual = $request->post('totalManual');
+            $quotation->maintenance_total = $totalManual['maintenance'];
+            $quotation->part_total = $totalManual['part'];
+            $quotation->total = $totalManual['total'];
+
             if($quotation->validate() && $quotation->save()){
                 $quotation = Quotation::find()->orderBy(['QID' => SORT_DESC])->one();
-                
-                
                 $maintenances = $request->post('maintenance_list');
                 if($maintenances != null){
                     foreach($maintenances as $maintenance){
                         $description = new Description();
-
                         $description->QID = $quotation->QID;
                         $description->description = $maintenance["list"];
                         $description->type = "MAINTENANCE";
                         $description->price = $maintenance["price"];
                         $description->date = $dt;
-
                         if($description->validate() && $description->save()){
-
                         }
                         else{
                             return ['status' => false, 'message' => $description->errors];
@@ -169,15 +167,12 @@ class QuotationController extends Controller
                 if($parts != null){
                     foreach($parts as $part){
                         $description = new Description();
-
                         $description->QID = $quotation->QID;
                         $description->description = $part["list"];
                         $description->type = "PART";
                         $description->price = $part["price"];
                         $description->date = $dt;
-
                         if($description->validate() && $description->save()){
-
                         }
                         else{
                             return ['status' => false, 'message' => $description->errors];
@@ -325,12 +320,25 @@ class QuotationController extends Controller
         // Description
         $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE', 'date' => $dateLists[$dateIndex]['date'] ]);
         $maintenanceDescriptionModel = $query->all();
-        $sumMaintenance = $query->sum('price');
+        if($model->maintenance_total == null) {
+            $sumMaintenance = $query->sum('price');
+        }
+        else {
+            $sumMaintenance = $model->maintenance_total;
+        }
         
         $query = Description::find()->where(['QID' => $qid, 'type' => 'PART', 'date' => $dateLists[$dateIndex]['date']]);
         $partDescriptionModel = $query->all();
-        $sumPart = $query->sum('price');
+        if($model->part_total == null) {
+            $sumPart = $query->sum('price');
+        }
+        else {
+            $sumPart = $model->part_total;
+        }
         
+        $total = null;
+        $model->total != null ? $total = $model->total : $sumMaintenance + $sumPart;
+
         $numRow = 0;
         if(sizeof($maintenanceDescriptionModel) > sizeof($partDescriptionModel))
             $numRow = sizeof($maintenanceDescriptionModel);
@@ -348,6 +356,7 @@ class QuotationController extends Controller
             'maintenanceDescriptionModel' => $maintenanceDescriptionModel,
             'sumMaintenance' => $sumMaintenance,
             'partDescriptionModel' => $partDescriptionModel,
+            'total' => $total,
             'sumPart' => $sumPart,
             'numRow' => $numRow,
             

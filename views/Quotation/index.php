@@ -7,7 +7,7 @@ use yii\helpers\ArrayHelper;
 use yii\jui\AutoComplete;
 use yii\web\View;
 
-$this->title = "ใบเสนอราคา";
+$this->title = "ใบเสนอราคา / rev2";
 ?>
 <div id="edit-maintenance-description" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -176,7 +176,7 @@ $this->title = "ใบเสนอราคา";
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="phone">ตำแหน่งการชน</label>
                             <div class="col-sm-9">
-                                <select id="damage-position" class="form-control input-sm">
+                                <select id="damage-position" class="form-control input-sm"z>
                                     <?php foreach($damagePostions as $damagePosition): ?>
                                         <option value="<?= $damagePosition->id ?>">
                                             <?= $damagePosition->position ?>
@@ -231,10 +231,20 @@ $this->title = "ใบเสนอราคา";
                 <tr>
                     <td></td>
                     <td>รวมรายการซ่อม</td>
-                    <td><div id="maintenance-total"></div></td>
+                    <td>
+                        <div id="maintenance-total"></div>
+                        <div id="maintenance-total-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                     <td>รวมรายการอะไหล่</td>
-                    <td><div id="part-total"></div></td>
+                    <td>
+                        <div id="part-total"></div>
+                        <div id="part-total-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
                 <tr>
@@ -243,16 +253,16 @@ $this->title = "ใบเสนอราคา";
                     <td></td>
                     <td></td>
                     <td>รวมสุทธิ</td>
-                    <td><div id="total"></div></td>
+                    <td>
+                        <div id="total"></div>
+                        <div id="total-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
             </tfoot>
         </table>
+        * ช่วงรวม Double Click เพื่อทำการแก้ไข/กด enter เพื่อยืนยันการแก้ไข
     </div>
-<?php
-$this->registerJS('$("#plate-no").select2();', View::POS_READY);
-//if( $viecle->plate_no != "" )
-//    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>'.$viecle->plate_no.'</option>")', View::POS_READY );
-//else
-//    $this->registerJS( '$("select#plate-no").append("<option disabled selected value>เลือกทะเบียนรถ</option>")', View::POS_READY );
-?>
+<?php $this->registerJS('$("#plate-no").select2();', View::POS_READY);?>

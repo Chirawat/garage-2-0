@@ -10,8 +10,6 @@ function DateThai($strDate){
     $strSeconds= date("s",strtotime($strDate));
     $strMonthCut = Array("","มกราคม","กุมภาพันธ์","มีนาคม.","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม");
     $strMonthThai=$strMonthCut[$strMonth];
-    
-//    return "$strDay $strMonthThai $strYear, $strHour:$strMinute";
     return "$strDay $strMonthThai $strYear";
 }
 ?>
@@ -38,7 +36,7 @@ function DateThai($strDate){
         <tr>
             <td class="total-cell" colspan="4" style="border: 0px solid transparent;"></td>
             <td class="text-right"><b>รวมสุทธิ</b></td>
-            <td class="text-right"><b><?= number_format( $sumMaintenance + $sumPart, 2) ?></b></td>
+            <td class="text-right"><b><?= number_format( $total , 2) ?></b></td>
         </tr>
     </table>
     <br/>

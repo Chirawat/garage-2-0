@@ -212,10 +212,20 @@ $this->title = "แก้ไขใบเสนอราคา";
                 <tr>
                     <td></td>
                     <td>รวมรายการซ่อม</td>
-                    <td><div id="maintenance-total"></div></td>
+                    <td>
+                        <div id="maintenance-total"></div>
+                        <div id="maintenance-total-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                     <td>รวมรายการอะไหล่</td>
-                    <td><div id="part-total"></div></td>
+                    <td>
+                        <div id="part-total"></div>
+                        <div id="part-total-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
                 <tr>
@@ -224,11 +234,17 @@ $this->title = "แก้ไขใบเสนอราคา";
                     <td></td>
                     <td></td>
                     <td>รวมสุทธิ</td>
-                    <td><div id="total"></div></td>
+                    <td>
+                        <div id="total"></div>
+                        <div id="total-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
             </tfoot>
         </table>
+        * ช่วงรวม Double Click เพื่อทำการแก้ไข/กด enter เพื่อยืนยันการแก้ไข
 </div>
 
 

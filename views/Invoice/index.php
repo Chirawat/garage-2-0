@@ -272,6 +272,7 @@ $url = Url::to(['customer-list']);?>
                 </tr>
             </tfoot>
         </table>
+        * ช่วงรวม Double Click เพื่อทำการแก้ไข/กด enter เพื่อยืนยันการแก้ไข
     </div>
 </div>
 

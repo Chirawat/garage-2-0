@@ -213,11 +213,13 @@ class QuotationController extends Controller
         // Description
         $query = Description::find()->where(['QID' => $qid, 'type' => 'MAINTENANCE', 'date' => $dateLists[$dateIndex]->date ]);
         $maintenanceDescriptionModel = $query->all();
-        $sumMaintenance = $query->sum('price');
+        $quotation->maintenance_total != null ? $sumMaintenance = $quotation->maintenance_total : $sumMaintenance = $query->sum('price');
         
         $query = Description::find()->where(['QID' => $qid, 'type' => 'PART', 'date' => $dateLists[$dateIndex]->date ]);
         $partDescriptionModel = $query->all();
-        $sumPart = $query->sum('price');
+        $quotation->part_total != null ? $sumPart = $quotation->part_total : $sumPart = $query->sum('price');
+
+        $quotation->total != null ? $grandTotal = $quotation->total : $grandTotal = $sumMaintenance + $sumPart;
         
         $numRow = 0;
         if(sizeof($maintenanceDescriptionModel) > sizeof($partDescriptionModel))
@@ -238,6 +240,7 @@ class QuotationController extends Controller
             'sumMaintenance' => $sumMaintenance,
             'partDescriptionModel' => $partDescriptionModel,
             'sumPart' => $sumPart,
+            'grandTotal' => $grandTotal,
             'numRow' => $numRow,
             
             'dateLists' => $dateLists,
@@ -248,7 +251,9 @@ class QuotationController extends Controller
     
     public function actionEdit($qid){
         $request = Yii::$app->request;
+
         $quotation = Quotation::findOne( $qid );
+        
         $viecle = $quotation->viecle;
         $descriptions = $quotation->descriptions;
         

@@ -177,6 +177,15 @@ class DescriptionController extends Controller
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             $request = Yii::$app->request;
             $data = $request->bodyParams;
+
+            // update 20170106
+            $qid = $data["qid"];
+            $quotation = Quotation::findOne($qid);
+            $totalManual = $request->post('totalManual');
+            $quotation->maintenance_total = $totalManual['maintenance'];
+            $quotation->part_total = $totalManual['part'];
+            $quotation->total = $totalManual['total'];
+            $quotation->save();
             
             $dt = date('Y-m-d H:i:s');
             

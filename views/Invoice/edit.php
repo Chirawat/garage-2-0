@@ -213,29 +213,51 @@ $url = Url::to(['customer-list']);
                 <tr>
                     <td></td>
                     <td>จำนวนเงิน</td>
-                    <td><div id="invoice-total"></div></td>
+                    <td>
+                        <div id="invoice-total"></div>
+                        <div id="invoice-total-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>ภาษีมูลค่าเพิ่ม (7%)</td>
-                    <td><div id="invoice-tax"></div></td>
+                    <td>
+                        <div id="invoice-tax"></div>
+                        <div id="invoice-tax-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>ยอดรวมทั้งสิ้น</td>
-                    <td><div id="invoice-grand-total"></div></td>
+                    <td>
+                        <div id="invoice-grand-total"></div>
+                        <div id="invoice-grand-total-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
             </tfoot>
         </table>
+        * ช่วงรวม Double Click เพื่อทำการแก้ไข/กด enter เพื่อยืนยันการแก้ไข
     </div>
 </div>
-<?php foreach($invoiceDescriptions as $invoiceDescription){
+<?php 
+foreach($invoiceDescriptions as $invoiceDescription){
     $this->registerJS('invoice.push({
         list: ' . json_encode($invoiceDescription->description, JSON_HEX_TAG) . ',
         price: ' . json_encode($invoiceDescription->price, JSON_HEX_TAG) . '});', VIEW::POS_END);
 }
-$this->registerJS('rederTableInvoice();calTotalInvoice();', VIEW::POS_READY);
+
+// render total field
+// if($invoice->grand_total != null)
+//     $this->registerJS('rederTableInvoice();', VIEW::POS_READY);
+// else
+//     $this->registerJS('rederTableInvoice();calTotalInvoice();', VIEW::POS_READY);
 ?>

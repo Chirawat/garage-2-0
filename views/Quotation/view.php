@@ -172,7 +172,7 @@ $this->title = "ใบเสนอราคา";
                 <td></td>
                 <td></td>
                 <td>รวมสุทธิ</td>
-                <td><?= number_format( $sumMaintenance + $sumPart, 2 ) ?></td>
+                <td><?= number_format( $grandTotal, 2 ) ?></td>
             </tr>
         </tfoot>
     </table>

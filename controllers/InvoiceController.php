@@ -444,6 +444,13 @@ class InvoiceController extends Controller
         $request = Yii::$app->request;
 
         $invoice = Invoice::findOne( $iid );
+        // update 20170106
+        $totalManual = $request->post('totalManual');
+        $invoice->total = $totalManual['total'];
+        $invoice->total_vat = $totalManual['total_tax'];
+        $invoice->grand_total = $totalManual['grandTotal'];
+
+        $invoice->save();
 
         $viecle = $invoice->viecle;
 

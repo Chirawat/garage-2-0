@@ -314,7 +314,7 @@ $(document).ready(function () {
     ////////////////////////////////////////////////////////////
     // update 20170106 - invoice total editable
     $("#invoice-total").dblclick( function() {
-        $("invoice-total-editing input").val( $(this).text() );
+        $("#invoice-total-editing input").val( $(this).text() );
         $("#invoice-total-editing").show();
         $(this).hide();
     });
@@ -562,11 +562,19 @@ $(document).ready(function () {
     /* edit description, save button clicked */
     $("#btn-edit-save").click(function () {
         $.ajax({
-            url: "index.php?r=description/update"
-            , type: 'json'
-            , data: {
+            method: "POST",
+            url: "index.php?r=description/update", 
+            type: 'json', 
+            data: {
                 //quotation_info: quotation_info, 
-                qid: getUrlVars()['qid'], maintenance_list: maintenance, part_list: part
+                qid: getUrlVars()['qid'], 
+                maintenance_list: maintenance, 
+                part_list: part,
+                totalManual : {
+                    maintenance: $("#maintenance-total-editing input").val(),
+                    part: $("#part-total-editing input").val(),
+                    total: $("#total-editing input").val()
+                }
             }
             , success: function (data) {
                 // confirmation dialog
@@ -798,7 +806,12 @@ $("#btn-save-invoice-general").on("click", function (event, ui) {
 $("#btn-edit-invoice").click(function(){
     var iid = getUrlVars()["iid"];
     $.post("index.php?r=invoice/edit&iid=" + iid, {
-        invoice: invoice
+        invoice: invoice,
+        totalManual: {
+            total: $("#invoice-total-editing input").val(),
+            total_tax: $("#invoice-tax-editing input").val(),
+            grandTotal: $("#invoice-grand-total-editing input").val(),
+        }
     }, function(data){
         if( data.status ){
             var r = confirm("บันทึกเรียบร้อย\r\nคุณต้องการพิมพ์ใบแจ้งหนี้เลยหรือไม่");

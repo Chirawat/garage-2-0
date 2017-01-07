@@ -293,9 +293,9 @@ class InvoiceController extends Controller
         // Description
         $query = InvoiceDescription::find()->where(['IID' => $iid, 'date' => $dateLists[$dateIndex]->date ]);
         $descriptions = $query->all();
-        $total = $query->sum('price');
-        $vat = $total * 0.07;
-        $grandTotal = $total + $vat;
+        $invoice->total != null ? $total = $invoice->total : $total = $query->sum('price');
+        $invoice->total_vat != null ? $vat = $invoice->total_vat : $vat = $total * 0.07;
+        $invoice->grand_total != null ? $grandTotal = $invoice->grand_total : $grandTotal = $total + $vat;
 
         $customer = $invoice->customer;
 
@@ -322,9 +322,8 @@ class InvoiceController extends Controller
     public function actionCreate(){
         $request = Yii::$app->request;
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        // Create invoice
-        $invoice = new Invoice();
 
+        $invoice = new Invoice();
         $number = Invoice::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count() + 1;
         $number = str_pad($number, 4, "0", STR_PAD_LEFT);
         $invoiceId = $number . "/" . (( date('Y') + 543 ) - 2500);
@@ -336,21 +335,26 @@ class InvoiceController extends Controller
         $invoice->VID = $request->post('VID');
         $invoice->EID = Yii::$app->user->identity->getId();
 
-        $claim = new Claim();
-        $claim_no = $request->post('claim_no');
-        
+        $claim_no = $request->post('claim_no');       
         $claim = Claim::find()->where(['claim_no' => $claim_no])->one();
-        if($claim == null){
+        if($claim == null){ // if not found, create instance of Claim
             $claim = new Claim();
-        }
-        $claim->claim_no = $claim_no;
-        $claim->save();
+            $claim->claim_no = $claim_no;
+            $claim->save();
 
-        $claim = Claim::find()->orderBy(['CLID' => SORT_DESC])->one();
+            // retrieve last record
+            $claim = Claim::find()->orderBy(['CLID' => SORT_DESC])->one(); 
+        }
         $invoice->CLID = $claim->CLID;
 
         $dt = date('Y-m-d H:i:s');
         $invoice->date = $dt;
+
+        // update 20170106
+        $totalManual = $request->post('totalManual');
+        $invoice->total = $totalManual['total'];
+        $invoice->total_vat = $totalManual['total_tax'];
+        $invoice->grand_total = $totalManual['grandTotal'];
 
         $ret = [];
         if($invoice->validate() && $invoice->save()){
@@ -510,9 +514,9 @@ class InvoiceController extends Controller
         $query = InvoiceDescription::find()->where(['iid' => $iid, 'date' => $dateLists[$dateIndex]]);
         $descriptions = $query->all();
 
-        $total = $query->sum('price');
-        $vat = $total * 0.07;
-        $grandTotal = $total + $vat;
+        $invoice->total != null ? $total = $invoice->total : $total = $query->sum('price');
+        $invoice->total_vat != null ? $vat = $invoice->total_vat : $vat = $total * 0.07;
+        $invoice->grand_total != null ? $grandTotal = $invoice->grand_total : $grandTotal = $total + $vat;
 
         $content = $this->renderPartial('report', [
             'invoice' => $invoice,

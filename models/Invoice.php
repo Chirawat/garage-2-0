@@ -42,6 +42,7 @@ class Invoice extends \yii\db\ActiveRecord
             [['CID', 'VID', 'CLID', 'EID'], 'integer'],
             [['invoice_id', 'book_number'], 'string'],
             [['date'], 'safe'],
+            [['total', 'total_vat', 'grand_total'], 'number'], 
             [['EID'], 'exist', 'skipOnError' => true, 'targetClass' => Employee::className(), 'targetAttribute' => ['EID' => 'EID']],
             [['CLID'], 'exist', 'skipOnError' => true, 'targetClass' => Claim::className(), 'targetAttribute' => ['CLID' => 'CLID']],
             [['CID'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['CID' => 'CID']],

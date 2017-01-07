@@ -1,4 +1,4 @@
-// rev 20160106-1038
+// rev 20160106-2109
 var maintenance = [];
 var part = [];
 var qid = undefined;
@@ -310,6 +310,40 @@ $(document).ready(function () {
         $("#total").text( $(this).val() );
         $("#total").show();
         $("#total-editing").hide();
+    });
+    ////////////////////////////////////////////////////////////
+    // update 20170106 - invoice total editable
+    $("#invoice-total").dblclick( function() {
+        $("invoice-total-editing input").val( $(this).text() );
+        $("#invoice-total-editing").show();
+        $(this).hide();
+    });
+    $("#invoice-total-editing input").enterKey( function() {
+        $("#invoice-total").text( $(this).val() );
+        $("#invoice-total").show();
+        $("#invoice-total-editing").hide();
+    });
+
+    $("#invoice-tax").dblclick( function() {
+        $("#invoice-tax-editing input").val( $(this).text() );
+        $("#invoice-tax-editing").show();
+        $(this).hide();
+    });
+    $("#invoice-tax-editing input").enterKey( function() {
+        $("#invoice-tax").text( $(this).val() );
+        $("#invoice-tax").show();
+        $("#invoice-tax-editing").hide();
+    });
+
+    $("#invoice-grand-total").dblclick( function() {
+        $("#invoice-grand-total-editing input").val( $(this).text() );
+        $("#invoice-grand-total-editing").show();
+        $(this).hide();
+    });
+    $("#invoice-grand-total-editing input").enterKey( function() {
+        $("#invoice-grand-total").text( $(this).val() );
+        $("#invoice-grand-total").show();
+        $("#invoice-grand-total-editing").hide();
     });
 
     
@@ -715,18 +749,19 @@ $("table#myTable").on("click", "#btn-del-invoice", function (event) {
     $("#btn-save-invoice").removeClass('disabled');
 });
 $("#btn-save-invoice").on("click", function (event, ui) {
-    // error, customer cannot be blank!
-//    if ($("#customer").val() == "") window.alert("ต้องเลือกลูกค้าก่อน");
-
     $.post("index.php?r=invoice/create", {
         CID: $("#customer-list option:selected").val(),
         VID: $("#plate-no").val(),
         claim_no: $("#claim-no").val(),
-        invoice: invoice
+        invoice: invoice,
+        totalManual: {
+            total: $("#invoice-total-editing input").val(),
+            total_tax: $("#invoice-tax-editing input").val(),
+            grandTotal: $("#invoice-grand-total-editing input").val(),
+        }
     }, function(data){
         if( data.status ){
-            var r = confirm("บันทึกเรียบร้อย\r\nคุณต้องการพิมพ์ใบแจ้งหนี้เลยหรือไม่");
-
+            var r = confirm("บันทึกเรียบร้อย");
             if(r){
                 // print
                  window.open(
@@ -734,6 +769,7 @@ $("#btn-save-invoice").on("click", function (event, ui) {
                       '_blank' // <- This is what makes it open in a new window.
                 );
             }
+
             window.location.replace("?r=invoice/view&iid=" + data.IID);
         }
     });

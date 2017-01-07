@@ -139,9 +139,13 @@ class ReceiptController extends Controller{
         $query = InvoiceDescription::find()->where(['iid' => $iid, 'date' => $dateLists[$dateIndex]]);
         $descriptions = $query->all();
 
-        $total = $query->sum('price');
-        $vat = $total * 0.07;
-        $grandTotal = $total + $vat;
+        // $total = $query->sum('price');
+        // $vat = $total * 0.07;
+        // $grandTotal = $total + $vat;
+
+        $invoice->total != null ? $total = $invoice->total : $total = $query->sum('price');
+        $invoice->total_vat != null ? $vat = $invoice->total_vat : $vat = $total * 0.07;
+        $invoice->grand_total != null ? $grandTotal = $invoice->grand_total : $grandTotal = $total + $vat;
 
 
         /* Update Reciept Info */

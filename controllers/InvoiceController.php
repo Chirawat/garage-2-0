@@ -17,91 +17,10 @@ use yii\helpers\Url;
 use yii\db\Query;
 use yii\data\ActiveDataProvider;
 
+use app\controllers\Common;
+
 class InvoiceController extends Controller
 {
-    function num2thai($number){
-        $t1 = array("ศูนย์", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า");
-        $t2 = array("เอ็ด", "ยี่", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", "ล้าน");
-        $zerobahtshow = 0; // ในกรณีที่มีแต่จำนวนสตางค์ เช่น 0.25 หรือ .75 จะให้แสดงคำว่า ศูนย์บาท หรือไม่ 0 = ไม่แสดง, 1 = แสดง
-        (string) $number;
-        $number = explode(".", $number);
-        if(!empty($number[1])){
-            if(strlen($number[1]) == 1){
-                $number[1] .= "0";
-            }else if(strlen($number[1]) > 2){
-                if($number[1]{2} < 5){
-                    $number[1] = substr($number[1], 0, 2);
-                }else{
-                    $number[1] = $number[1]{0}.($number[1]{1}+1);
-                }
-            }
-        }
-
-        for($i=0; $i<count($number); $i++){
-            $countnum[$i] = strlen($number[$i]);
-            if($countnum[$i] <= 7){
-                $var[$i][] = $number[$i];
-            }else{
-                $loopround = ceil($countnum[$i]/6);
-                for($j=1; $j<=$loopround; $j++){
-                    if($j == 1){
-                            $slen = 0;
-                        $elen = $countnum[$i]-(($loopround-1)*6);
-                    }else{
-                        $slen = $countnum[$i]-((($loopround+1)-$j)*6);
-                        $elen = 6;
-                    }
-                    $var[$i][] = substr($number[$i], $slen, $elen);
-                }
-            }
-
-            $nstring[$i] = "";
-            for($k=0; $k<count($var[$i]); $k++){
-                if($k > 0) $nstring[$i] .= $t2[7];
-                    $val = $var[$i][$k];
-                    $tnstring = "";
-                    $countval = strlen($val);
-                for($l=7; $l>=2; $l--){
-                    if($countval >= $l){
-                        $v = substr($val, -$l, 1);
-                        if($v > 0){
-                            if($l == 2 && $v == 1){
-                                $tnstring .= $t2[($l)];
-                            }elseif($l == 2 && $v == 2){
-                                $tnstring .= $t2[1].$t2[($l)];
-                            }else{
-                                $tnstring .= $t1[$v].$t2[($l)];
-                            }
-                        }
-                    }
-                }
-
-                if($countval >= 1){
-                    $v = substr($val, -1, 1);
-                    if($v > 0){
-                        if($v == 1 && $countval > 1 && substr($val, -2, 1) > 0){
-                            $tnstring .= $t2[0];
-                        }else{
-                            $tnstring .= $t1[$v];
-                        }
-                    }
-                }
-
-                $nstring[$i] .= $tnstring;
-            }
-        }
-        $rstring = "";
-        if(!empty($nstring[0]) || $zerobahtshow == 1 || empty($nstring[1])){
-            if($nstring[0] == "") $nstring[0] = $t1[0];
-                $rstring .= $nstring[0]."บาท";
-        }
-        if(count($number) == 1 || empty($nstring[1])){
-            $rstring .= "ถ้วน";
-        }else{
-            $rstring .= $nstring[1]."สตางค์";
-        }
-        return $rstring;
-    }
 
     public function behaviors()
     {
@@ -176,11 +95,9 @@ class InvoiceController extends Controller
 
         $customer_t = new Customer();
 
-        $number = Invoice::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count();
-        $invoiceId = ($number + 1) . "/" . (( date('Y') + 543 ) - 2500);
-        
-        $number = Reciept::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count();
-        $receiptId = ($number + 1) . "/" . (( date('Y') + 543 ) - 2500);
+        $type = $request->get('type');
+        $invoiceId = $this->getInvoiceNumber($type);
+        $receiptId = $this->getReceiptNumber($type);
         
         $book_number = date('m') . "/" . (( date('Y') + 543 ) - 2500);
 
@@ -227,14 +144,14 @@ class InvoiceController extends Controller
         $vat = $total * 0.07;
         $grandTotal = $total + $vat;
 
-        $thbStr = $this->num2thai(1200);
+        $thbStr = Common::num2thai(1200);
         $content = $this->renderPartial('invoice_report',[
             'invoice' => $invoice,
 
             'total' => $total,
             'vat' => $vat,
             'grandTotal' => $grandTotal,
-            'thbStr' => $this->num2thai($grandTotal),
+            'thbStr' => Common::num2thai($grandTotal),
         ]);
 
         // setup kartik\mpdf\Pdf component
@@ -319,27 +236,65 @@ class InvoiceController extends Controller
         ]);
     }
 
+    private function getInvoiceNumber($type = null) {
+        if ($type === null)
+            $number = Invoice::find()->where(['type' => null,'YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count() + 1; 
+        else
+            $number = Invoice::find()->where(['type' => 'General', 'YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count() + 1; 
+
+        $number = str_pad($number, 4, "0", STR_PAD_LEFT);
+        $invoiceId = $number . "/" . (( date('Y') + 543 ) - 2500);
+
+        if ($type === null)
+            return "IV-" . $invoiceId;
+        else
+            return $invoiceId;
+    }
+
+    private function getReceiptNumber($type = null) {
+        if($type === 'General') {
+            $number = Reciept::find()
+                        ->joinWith('invoice')
+                        ->where(['YEAR(reciept.date)' => date('Y'), 'MONTH(reciept.date)' => date('m'), 'invoice.type' => 'General'])
+                        ->count() + 1;
+        }
+        else {
+             $number = Reciept::find()
+                        ->joinWith('invoice')
+                        ->where(['YEAR(reciept.date)' => date('Y'), 'MONTH(reciept.date)' => date('m'), 'invoice.type' => null])
+                        ->count() + 1;
+        }
+        $number = str_pad($number, 4, "0", STR_PAD_LEFT);
+        $receiptId = $number . "/" . (( date('Y') + 543 ) - 2500);
+        
+        if ($type === 'General') 
+            return $receiptId;
+        else
+            return "RE-" . $receiptId;
+    }
+
     public function actionCreate(){
         $request = Yii::$app->request;
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         $invoice = new Invoice();
-        $number = Invoice::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count() + 1;
-        $number = str_pad($number, 4, "0", STR_PAD_LEFT);
-        $invoiceId = $number . "/" . (( date('Y') + 543 ) - 2500);
-        $invoice->invoice_id = "IV-" . $invoiceId;
+
+        $type = $request->post('type');
+        $invoice->invoice_id = $this->getInvoiceNumber( $type );
 
         $invoice->book_number = date('m') . '/' . ( (date('Y') + 543) - 2500 );
-
         $invoice->CID = $request->post('CID');
         $invoice->VID = $request->post('VID');
         $invoice->EID = Yii::$app->user->identity->getId();
+        if($type !== 'undefinded')
+            $invoice->type = $type;
 
         $claim_no = $request->post('claim_no');       
         $claim = Claim::find()->where(['claim_no' => $claim_no])->one();
         if($claim == null){ // if not found, create instance of Claim
             $claim = new Claim();
             $claim->claim_no = $claim_no;
+            $claim->VID = $invoice->VID;
             $claim->save();
 
             // retrieve last record
@@ -532,7 +487,7 @@ class InvoiceController extends Controller
             'total' => $total,
             'vat' => $vat,
             'grandTotal' => $grandTotal,
-            'thbStr' => $this->num2thai($grandTotal),
+            'thbStr' => Common::num2thai($grandTotal),
         ]);
 
         // setup kartik\mpdf\Pdf component

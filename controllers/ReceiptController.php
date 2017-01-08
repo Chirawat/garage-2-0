@@ -127,8 +127,33 @@ class ReceiptController extends Controller{
         ];
     }
 
+
+    private function getReceiptNumber($type = null) {
+        if($type === 'General') {
+            $number = Reciept::find()
+                        ->joinWith('invoice')
+                        ->where(['YEAR(reciept.date)' => date('Y'), 'MONTH(reciept.date)' => date('m'), 'invoice.type' => 'General'])
+                        ->count() + 1;
+        }
+        else {
+             $number = Reciept::find()
+                        ->joinWith('invoice')
+                        ->where(['YEAR(reciept.date)' => date('Y'), 'MONTH(reciept.date)' => date('m'), 'invoice.type' => null])
+                        ->count() + 1;
+        }
+        $number = str_pad($number, 4, "0", STR_PAD_LEFT);
+        $receiptId = $number . "/" . (( date('Y') + 543 ) - 2500);
+        
+        if ($type === 'General') 
+            return $receiptId;
+        else
+            return "RE-" . $receiptId;
+    }
+
     public function actionReport($iid = null, $dateIndex = null){
         // find date
+        $request = Yii::$app->request;
+        
         $dateLists = InvoiceDescription::find()->select(['date'])->distinct()->where(['IID' => $iid])->orderBy(['date' => SORT_DESC])->all();
 
         if( $dateIndex == null)
@@ -139,27 +164,19 @@ class ReceiptController extends Controller{
         $query = InvoiceDescription::find()->where(['iid' => $iid, 'date' => $dateLists[$dateIndex]]);
         $descriptions = $query->all();
 
-        // $total = $query->sum('price');
-        // $vat = $total * 0.07;
-        // $grandTotal = $total + $vat;
-
+        // update 20170107
         $invoice->total != null ? $total = $invoice->total : $total = $query->sum('price');
         $invoice->total_vat != null ? $vat = $invoice->total_vat : $vat = $total * 0.07;
         $invoice->grand_total != null ? $grandTotal = $invoice->grand_total : $grandTotal = $total + $vat;
 
-
         /* Update Reciept Info */
         $reciept = Reciept::find()->where(['IID' => $iid])->one();
-//        var_dump( count($reciept) );
-//        die();
+
         if( count($reciept) == null ){
             $reciept = new Reciept();
             
-            $number = Reciept::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count() + 1;
-            $number = str_pad($number, 4, "0", STR_PAD_LEFT);
-            $receiptId = $number . "/" . (( date('Y') + 543 ) - 2500);
-            
-            $reciept->reciept_id = "RE-" . $receiptId;
+            $type = $request->get('type');
+            $reciept->reciept_id = $this->getReceiptNumber($type);
             $reciept->IID = $invoice->IID;
             $reciept->book_number = date('m') . '/' . ((date('Y') + 543) - 2500);
 

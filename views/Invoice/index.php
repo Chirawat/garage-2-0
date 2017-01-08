@@ -115,17 +115,18 @@ $url = Url::to(['customer-list']);?>
 <div class="row">
     <div class="container">
         <div class="col-sm-6">
-            <label>เล่มที่ <span class="label label-default"><?= $book_number ?></span> ใบแจ้งหนี้ <span class="label label-default"><?=$invoiceId?></span> / ใบเสร็จ <span class="label label-default"><?=$receiptId?></span></label><br>
+            <label>เล่มที่ 
+                <span class="label label-default"><?= $book_number ?></span> 
+                ใบแจ้งหนี้ <span class="label label-default"><?=$invoiceId?></span> 
+                / ใบเสร็จ <span class="label label-default"><?=$receiptId?></span> 
+                <?php \Yii::$app->request->get('type') == 'General' ? print "(ลูกค้าทั่วไป)": ''; ?>
+            </label><br>
             <label>วันที่ <?=date('d/m/Y')?></label>
         </div>
         <div class="col-sm-6">
             <div class="pull-right">
                 <a href="<?=Url::to(['invoice/search'])?>" class="btn btn-primary btn-sm">
                     <span class="glyphicon glyphicon-save-file"></span> ค้นหาใบแจ้งหนี้</a>
-<!--
-                <a href="<?=Url::to(['viecle/index'])?>" class="btn btn-primary btn-sm">
-                    <span class="glyphicon glyphicon-save-file"></span> จัดการข้อมูลรถ </a>
--->
                 <a id="btn-save-invoice" class="btn btn-primary btn-sm">
                     <span class="glyphicon glyphicon-save-file"></span> บันทึก</a>
             </div>

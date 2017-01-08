@@ -1,4 +1,4 @@
-// rev 20160106-2109
+// rev 20160107 - 1644
 var maintenance = [];
 var part = [];
 var qid = undefined;
@@ -74,12 +74,10 @@ function calTotalInvoice() {
 };
 
 function updateInvoiceDescription( i ){
-    //console.log(i);
     var modal = $('#edit-invoice-description');
     invoice[i].list = modal.find('.modal-body input#list').val();
     invoice[i].price = modal.find('.modal-body input#price').val();
 
-    //console.log(invoice);
     rederTableInvoice();
     calTotalInvoice();
     $("#edit-invoice-description").modal('hide');
@@ -756,18 +754,25 @@ $("table#myTable").on("click", "#btn-del-invoice", function (event) {
     $("#maintenance-list").keyup(function () {
     $("#btn-save-invoice").removeClass('disabled');
 });
+
 $("#btn-save-invoice").on("click", function (event, ui) {
-    $.post("index.php?r=invoice/create", {
+    var type_t = getUrlVars()["type"]
+    var body = {
         CID: $("#customer-list option:selected").val(),
         VID: $("#plate-no").val(),
         claim_no: $("#claim-no").val(),
         invoice: invoice,
+        type: type_t,
         totalManual: {
             total: $("#invoice-total-editing input").val(),
             total_tax: $("#invoice-tax-editing input").val(),
             grandTotal: $("#invoice-grand-total-editing input").val(),
         }
-    }, function(data){
+    };
+    $.post("index.php?r=invoice/create", body, function(data) {
+        if( !data.status) // error
+            alert(JSON.stringify(data.message));
+
         if( data.status ){
             var r = confirm("บันทึกเรียบร้อย");
             if(r){
@@ -777,29 +782,7 @@ $("#btn-save-invoice").on("click", function (event, ui) {
                       '_blank' // <- This is what makes it open in a new window.
                 );
             }
-
-            window.location.replace("?r=invoice/view&iid=" + data.IID);
-        }
-    });
-});
-$("#btn-save-invoice-general").on("click", function (event, ui) {
-    $.post("index.php?r=invoice-general/create", {
-        CID: $("#customer-list option:selected").val(),
-        VID: $("#plate-no").val(),
-        claim_no: $("#claim-no").val(),
-        invoice: invoice
-    }, function(data){
-        if( data.status ){
-            var r = confirm("บันทึกเรียบร้อย\r\nคุณต้องการพิมพ์ใบแจ้งหนี้เลยหรือไม่");
-
-            if(r){
-                // print
-                 window.open(
-                      '?r=invoice/report&iid=' + data.IID,
-                      '_blank' // <- This is what makes it open in a new window.
-                );
-            }
-            window.location.replace("?r=invoice/view&iid=" + data.IID);
+            window.location.replace("?r=invoice/view&iid=" + data.IID + '&type=' + type_t);
         }
     });
 });
@@ -861,25 +844,23 @@ $("input#customer-type").on('change', function(){
         $("#customer-list").html(data);
     })
 });
+
 $("#btn-print-invoice").click(function () {
     var iid = getUrlVars()["iid"];
     var dateIndex = $("#history-date").val();
     var hrefStr = "index.php?r=invoice/report&iid=" + iid + "&dateIndex=" + dateIndex;
-
     $("#btn-print-invoice").attr("href", hrefStr);
 });
-$("#btn-print-receipt").click( function(){
-    var r = confirm("คุณต้องการพิมพ์ใบเสร็จใช่หรือไม่")
 
+$("#btn-print-receipt").click( function(){
     var iid = getUrlVars()["iid"];
+    var type = getUrlVars()["type"];
     var dateIndex = $("#history-date").val();
-    var str = "index.php?r=receipt/report&iid=" + iid + "&dateIndex=" + dateIndex;
-    if(r){
-        window.open(
-          str,
-          '_blank' // <- This is what makes it open in a new window.
-        );
-    }
+    var str = "index.php?r=receipt/report&iid=" 
+                + iid 
+                + "&dateIndex=" + dateIndex 
+                + "&type=" + type; 
+    window.open( str, '_blank' );
 });
 
 /////////////////////////////////////////////////////////

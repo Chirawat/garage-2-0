@@ -15,10 +15,12 @@ $this->title = "ใบแจ้งหนี้";
     <div class="row">
         <div class="col-sm-6">
             <label>
-                ใบแจ้งหนี้ <span class="label label-default"><?=$invoice->book_number?> - <?=$invoice->invoice_id?></span> 
+                <span class="label label-default"></span> 
+                ใบแจ้งหนี้ <span class="label label-default"><?= $invoice->book_number ?>-<?=$invoice->invoice_id?></span> 
                 <?php if( isset($invoice->reciept['reciept_id']) ): ?>
                     / ใบเสร็จ <span class="label label-default"><?=$invoice->reciept['book_number']?>-<?=$invoice->reciept['reciept_id']?></span>
                 <?php endif;?>
+                <?php \Yii::$app->request->get('type') == 'General' ? print "(ลูกค้าทั่วไป)": ''; ?>
             </label><br>
             <label>วันที่ <?=date('d/m/Y')?></label>
         </div>

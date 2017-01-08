@@ -40,6 +40,13 @@ $this->title = "ค้นหาใบแจ้งหนี้";
                     'attribute' => 'invoice_id',
                     'label' => 'เลขที่ใบแจ้งหนี้',
                 ],
+                [
+                    'label' => 'ประเภท',
+                    'value' => function($model) {
+                        return $model->type === 'General' ? "ลูกค้าทั่วไป" : "บริษัทประกัน";
+                    },
+                    'format' => 'html'
+                ],
                 'viecle.plate_no',
                 [
                     'attribute' => 'customer.fullname',
@@ -52,7 +59,10 @@ $this->title = "ค้นหาใบแจ้งหนี้";
                 [
                     'label' => '',
                     'value' => function($model){
-                        return Html::a('ดู', ['invoice/view', 'iid' => $model->IID], ['class' => 'btn btn-default btn-sm']);
+                        if ($model->type === null)
+                            return Html::a('ดู', ['invoice/view', 'iid' => $model->IID], ['class' => 'btn btn-default btn-sm']);
+                        else 
+                            return Html::a('ดู', ['invoice/view', 'iid' => $model->IID, 'type' => 'General'], ['class' => 'btn btn-default btn-sm']);
                     },  
                     'format' => 'html',
                 ],

@@ -1,4 +1,4 @@
-// rev 20160107 - 1644
+// rev 20160113-1000
 var maintenance = [];
 var part = [];
 var qid = undefined;
@@ -554,7 +554,7 @@ $(document).ready(function () {
                 );
             }
             // redirect
-            //window.location.replace("?r=quotation/view&qid=" + data.QID);
+            window.location.replace("?r=quotation/view&qid=" + data.QID);
         });
     });
     /* edit description, save button clicked */

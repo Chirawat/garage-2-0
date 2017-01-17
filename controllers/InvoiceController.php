@@ -487,7 +487,7 @@ class InvoiceController extends Controller
             'total' => $total,
             'vat' => $vat,
             'grandTotal' => $grandTotal,
-            'thbStr' => Common::num2thai($grandTotal),
+            'thbStr' => Common::num2thai(\Yii::$app->request->get('type') !== 'General' ? $grandTotal : $total),
         ]);
 
         // setup kartik\mpdf\Pdf component

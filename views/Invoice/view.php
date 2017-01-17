@@ -180,6 +180,7 @@ $this->title = "ใบแจ้งหนี้";
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
+                <?php if (\Yii::$app->request->get('type') !== 'General') : ?>
                 <tr>
                     <td></td>
                     <td>จำนวนเงิน</td>
@@ -196,11 +197,12 @@ $this->title = "ใบแจ้งหนี้";
                     </td>
                     <td></td>
                 </tr>
+                <?php endif; ?>
                 <tr>
                     <td></td>
                     <td>ยอดรวมทั้งสิ้น</td>
                     <td>
-                        <div><?= number_format( $grandTotal, 2 ) ?></div>
+                        <div><?= number_format( \Yii::$app->request->get('type') !== 'General' ? $grandTotal : $total, 2 ) ?></div>
                     </td>
                     <td></td>
                 </tr>

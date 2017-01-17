@@ -249,6 +249,7 @@ $url = Url::to(['customer-list']);?>
                     </td>
                     <td></td>
                 </tr>
+                <?php if (\Yii::$app->request->get('type') !== 'General') :?>
                 <tr>
                     <td></td>
                     <td>ภาษีมูลค่าเพิ่ม (7%)</td>
@@ -271,6 +272,7 @@ $url = Url::to(['customer-list']);?>
                     </td>
                     <td></td>
                 </tr>
+                <?php endif; ?>
             </tfoot>
         </table>
         * ช่วงรวม Double Click เพื่อทำการแก้ไข/กด enter เพื่อยืนยันการแก้ไข

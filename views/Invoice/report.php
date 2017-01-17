@@ -67,6 +67,7 @@ function DateThai($strDate){
                 <td>ทะเบียน <?=$invoice->viecle['plate_no']?></td>
                 <td></td>
             </tr>
+            <?php if (\Yii::$app->request->get('type') !== 'General') : ?>
             <tr>
                 <td colspan="2" style="text-align:right; border: 0px solid transparent;">จำนวนเงิน</td>
                 <td style="text-align: right;"><?= number_format( $total, 2 ) ?></td>
@@ -75,9 +76,10 @@ function DateThai($strDate){
                 <td colspan="2" style="text-align:right; border: 0px solid transparent;">ภาษีมูลค่าเพิ่ม (7%)</td>
                 <td style="text-align: right;"><?= number_format( $vat, 2 ) ?></td>
             </tr>
+            <?php endif; ?>
             <tr>
                 <td colspan="2" style="text-align:right; border: 0px solid transparent;">ยอดรวมทั้งสิ้น</td>
-                <td style="text-align: right;"><?= number_format( $grandTotal, 2 ) ?></td>
+                <td style="text-align: right;"><?= number_format( \Yii::$app->request->get('type') !== 'General' ? $grandTotal : $total, 2 ) ?></td>
             </tr>
         </tbody>
     </table>

@@ -756,18 +756,29 @@ $("table#myTable").on("click", "#btn-del-invoice", function (event) {
 });
 
 $("#btn-save-invoice").on("click", function (event, ui) {
-    var type_t = getUrlVars()["type"]
+    var type_t = getUrlVars()["type"];
+    var totalManual_t = null;
+    if (type_t === 'General') {
+        totalManual_t =  {
+            total: $("#invoice-total-editing input").val(),
+            total_tax: 0,
+            grandTotal: $("#invoice-total-editing input").val()
+        };
+    }
+    else {
+        totalManual_t =  {
+            total: $("#invoice-total-editing input").val(),
+            total_tax: $("#invoice-tax-editing input").val(),
+            grandTotal: $("#invoice-grand-total-editing input").val()
+        };
+    }
     var body = {
         CID: $("#customer-list option:selected").val(),
         VID: $("#plate-no").val(),
         claim_no: $("#claim-no").val(),
         invoice: invoice,
         type: type_t,
-        totalManual: {
-            total: $("#invoice-total-editing input").val(),
-            total_tax: $("#invoice-tax-editing input").val(),
-            grandTotal: $("#invoice-grand-total-editing input").val(),
-        }
+        totalManual: totalManual_t
     };
     $.post("index.php?r=invoice/create", body, function(data) {
         if( !data.status) // error
@@ -778,7 +789,7 @@ $("#btn-save-invoice").on("click", function (event, ui) {
             if(r){
                 // print
                  window.open(
-                      '?r=invoice/report&iid=' + data.IID,
+                      '?r=invoice/report&iid=' + data.IID + '&type=' + type_t,
                       '_blank' // <- This is what makes it open in a new window.
                 );
             }
@@ -847,9 +858,13 @@ $("input#customer-type").on('change', function(){
 
 $("#btn-print-invoice").click(function () {
     var iid = getUrlVars()["iid"];
+    var type = getUrlVars()["type"];
     var dateIndex = $("#history-date").val();
-    var hrefStr = "index.php?r=invoice/report&iid=" + iid + "&dateIndex=" + dateIndex;
-    $("#btn-print-invoice").attr("href", hrefStr);
+    var str = "index.php?r=invoice/report&iid=" 
+                + iid 
+                + "&dateIndex=" + dateIndex 
+                + "&type=" + type; 
+    window.open( str, '_blank' );
 });
 
 $("#btn-print-receipt").click( function(){

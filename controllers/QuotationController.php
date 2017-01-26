@@ -390,7 +390,7 @@ class QuotationController extends Controller
             // stream to browser inline
             'destination' => Pdf::DEST_BROWSER, 
                 
-            'marginTop' => 114,
+            'marginTop' => 118,
                 
             'marginBottom' => 50,
                 

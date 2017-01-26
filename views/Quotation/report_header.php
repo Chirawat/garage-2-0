@@ -38,7 +38,7 @@ use yii\helpers\Html;
             <td width="10%" class="column-header">ปีรุ่น</td>
         </tr>
         <tr>
-            <td class="text-centered"><?= $viecleModel->viecleName['name'] ?> <br> <?= $viecleModel->viecleModel['model'] ?></td>
+            <td height="54" class="text-centered"><?= $viecleModel->viecleName['name'] ?> <br> <?= $viecleModel->viecleModel['model'] ?></td>
             <td class="text-centered"><?= $viecleModel->plate_no ?></td>
             <td class="text-centered"><?= $viecleModel->body_code ?></td>
             <td class="text-centered"><?= $viecleModel->engin_code ?></td>

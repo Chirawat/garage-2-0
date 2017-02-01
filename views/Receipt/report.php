@@ -30,7 +30,11 @@ function DateThai($strDate){
         </tr>
     </table>
     <br/>
+    <?php if (\Yii::$app->request->get('type') !== 'General') : ?>
+    <h2 class="header">ใบเสร็จรับเงิน</h2>
+    <?php else : ?>
     <h2 class="header">ใบเสร็จรับเงิน/ใบกำกับภาษี</h2>
+    <?php endif; ?>
     <table class="table_bordered" width="100%" border="0" cellpadding="2" cellspacing="0" style="border: 0px solid transparent;">
         <tr>
             <td width="70%" style="padding: 10px;"><b>ชื่อ <?= $invoice->customer->fullname ?> <?=$invoice->customer->branch?>

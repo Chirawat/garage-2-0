@@ -118,7 +118,7 @@ class QuotationController extends Controller
             $quotation->CID = $quotationInfo['CID'];
             $quotation->VID = $quotationInfo['VID'];
 
-            $quotationId = Quotation::find()->where(['YEAR(quotation_date)' => date('Y'), 'MONTH(quotation_date)' => date('m')])->count() + 1;
+            $quotationId = Quotation::find()->where(['YEAR(quotation_date)' => date('Y')])->count() + 1;
             $quotationId = $quotationId . "/" . (date('Y') + 543);
             $quotation->quotation_id = $quotationId;
             

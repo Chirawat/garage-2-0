@@ -347,6 +347,8 @@ class ReceiptController extends Controller{
         // invoice
         $invoice = new Invoice();
         $invoice->CID = $CID;
+        $invoice->book_number = date('m') . '/' . ( (date('Y') + 543) - 2500 );
+        $invoice->invoice_id = $this->getInvoiceNumber();
         $invoice->date = $dt;
         $invoice->EID = Yii::$app->user->identity->getId();
 
@@ -412,6 +414,21 @@ class ReceiptController extends Controller{
         }
         return ['status' => true, 'iid' => $IID, 'rid' => $receipt->RID];
     }
+
+    private function getInvoiceNumber($type = null) {
+        if ($type === null)
+            $number = Invoice::find()->where(['type' => null,'YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count() + 1; 
+        else
+            $number = Invoice::find()->where(['type' => 'General', 'YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count() + 1; 
+
+        $number = str_pad($number, 4, "0", STR_PAD_LEFT);
+        $invoiceId = $number . "/" . (( date('Y') + 543 ) - 2500);
+
+        if ($type === null)
+            return "IV-" . $invoiceId;
+        else
+            return $invoiceId;
+    }
     
     public function actionViewMultipleClaim($rid){
         $receipt = Reciept::find()->with(['invoice', 'paymentStatus'])->where(['RID' => $rid])->one();
@@ -444,14 +461,54 @@ class ReceiptController extends Controller{
                 $invoiceDescription->price = $description['price'];
                 $invoiceDescription->date = $dt;
                 
-                if($invoiceDescription->validate() && $invoiceDescription->save()){
-                    
+                if($invoiceDescription->validate()){
+                    $invoiceDescription->save();
                 }
                 else{
-                    return $invoiceDescription->errors;
+                    return [
+                        'status' => false,
+                        'message' => 'validation error!',
+                        'obj' => $invoiceDescription->errors
+                    ];
                 }
             }
-            return ['status' => true, 'IID' => $receipt->IID];
+
+            $receipt->total = InvoiceDescription::find()->where(['IID' => $receipt->IID, 'date' => $dt])->sum('price');
+            if ($receipt->validate() ) {
+                $receipt->save();
+            }
+            else {
+                return [
+                    'status' => false,
+                    'message' => 'validation error!',
+                    'obj' => $receipt->errors
+                ];
+            }
+
+            // update 20170207
+            $totalManual = $request->post('totalManual');
+            if ($totalManual != null) {                
+                $invoice = $receipt->invoice;
+                $invoice->total = str_replace(",", "", $totalManual['total']);
+                $invoice->total_vat = str_replace(",", "", $totalManual['total_tax']);
+                $invoice->grand_total = str_replace(",", "", $totalManual['grandTotal']);
+                if ($invoice->validate()) {
+                    $invoice->save();
+                }
+                else {
+                    return [
+                        'status' => false,
+                        'message' => 'validation error!',
+                        'obj' => $invoice->errors
+                    ];
+                }
+            }
+
+            return [
+                'status' => true, 
+                'message' => 'Update successfully',
+                'IID' => $invoice->IID
+            ];
         }
         return $this->render('update_multiple_claim', [
             'receipt' => $receipt,

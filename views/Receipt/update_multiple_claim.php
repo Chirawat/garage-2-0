@@ -128,19 +128,34 @@ $this->title = 'ใบเสนอราคา/ใบเสร็จ';
                 <tr>
                     <td></td>
                     <td>จำนวนเงิน</td>
-                    <td><div id="invoice-total"></div></td>
+                    <td>
+                        <div id="invoice-total"></div>
+                        <div id="invoice-total-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>ภาษีมูลค่าเพิ่ม (7%)</td>
-                    <td><div id="invoice-tax"></div></td>
+                    <td>
+                        <div id="invoice-tax"></div>
+                        <div id="invoice-tax-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>ยอดรวมทั้งสิ้น</td>
-                    <td><div id="invoice-grand-total"></div></td>
+                    <td>
+                        <div id="invoice-grand-total"></div>
+                        <div id="invoice-grand-total-editing" style="display: none;">
+                            <input type="text" class="form-control text-right">
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
             </tfoot>

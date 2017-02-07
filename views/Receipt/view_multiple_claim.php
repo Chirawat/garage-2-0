@@ -97,19 +97,19 @@ $this->title = 'ใบเสนอราคา/ใบเสร็จ';
                 <tr>
                     <td></td>
                     <td>จำนวนเงิน</td>
-                    <?php $total = $receipt->invoice->getInvoiceDescriptions()->sum('price')?>
+                    <?php $receipt->invoice->total == "" ? $total = $receipt->total : $total = $receipt->invoice->total; ?>
                     <td><?=number_format($total, 2)?></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>ภาษีมูลค่าเพิ่ม (7%)</td>
-                    <?php $vat = $total * 0.07 ?>
+                    <?php $receipt->invoice->total_vat == "" ? $vat = $total * 0.07 : $vat = $receipt->invoice->total_vat; ?>
                     <td><?=number_format($vat, 2)?></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>ยอดรวมทั้งสิ้น</td>
-                    <?php $grandTotal = $total+$vat?>
+                    <?php $receipt->invoice->grand_total == "" ? $grandTotal = $total + $vat : $grandTotal = $receipt->invoice->grand_total; ?>
                     <td><?=number_format($grandTotal, 2)?></td>
                 </tr>
             </tfoot>

@@ -1,4 +1,4 @@
-// rev 20160113-1000
+// rev 20160207-0959
 var maintenance = [];
 var part = [];
 var qid = undefined;
@@ -809,7 +809,7 @@ $("#btn-edit-invoice").click(function(){
     }, function(data){
         if( data.status ){
             var r = confirm("บันทึกเรียบร้อย\r\nคุณต้องการพิมพ์ใบแจ้งหนี้เลยหรือไม่");
-
+            //console.log(data);
             if(r){
                 // print
                  window.open(
@@ -995,9 +995,14 @@ $("#btn-save-multiple").click(function(){
 $("#update-multiple-claim").click(function(){
     var rid = getUrlVars()["rid"];
     $.post("?r=receipt/update-multiple-claim&rid=" + rid, {
-        invoice: invoice
+        invoice: invoice,
+        totalManual: {
+            total: $("#invoice-total-editing input").val(),
+            total_tax: $("#invoice-tax-editing input").val(),
+            grandTotal: $("#invoice-grand-total-editing input").val(),
+        }
     }, function(data){
-        if( data ){
+        if( data.status ){
             var r = confirm("บันทึกเรียบร้อย");
             if(r){
                 // print

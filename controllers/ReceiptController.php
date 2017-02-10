@@ -315,8 +315,8 @@ class ReceiptController extends Controller{
     public function actionMultipleClaim(){
         $invoice = new Invoice();
         $book_number = date('m') . "/" . (( date('Y') + 543 ) - 2500);
-        $number = Reciept::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count();
-        $receiptId = ($number + 1) . "/" . (( date('Y') + 543 ) - 2500);
+        //$number = Reciept::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count();
+        $receiptId = $this->getReceiptNumber();
         
         $paymentStatus = PaymentStatus::find()->all();
         $paymentStatusCLID = ArrayHelper::getColumn($paymentStatus, 'CLID');

@@ -378,9 +378,9 @@ class ReceiptController extends Controller{
         
         $number = Reciept::find()->where(['YEAR(date)' => date('Y'), 'MONTH(date)' => date('m')])->count() + 1;
         $number = str_pad($number, 4, "0", STR_PAD_LEFT);
-        $receiptId = $number . "/" . (( date('Y') + 543 ) - 2500);
+        //$receiptId = $number . "/" . (( date('Y') + 543 ) - 2500);
         
-        $receipt->reciept_id = "RE-" . $receiptId;
+        $receipt->reciept_id = $this->getReceiptNumber();
         
         $receipt->total = InvoiceDescription::find()->where(['IID' => $IID])->sum('price');
         

@@ -458,15 +458,14 @@ class QuotationController extends Controller
     public function actionRevisedUp($QID=null, $up=false){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
-        if($up === "false")
-            return false;
-
         $quotation = Quotation::findOne($QID);
-        if($quotation->revised === null){
-            $quotation->revised = 1;
-        }
-        else{
-            $quotation->revised += 1;
+        if($up !== "false") {
+            if($quotation->revised === null){
+                $quotation->revised = 1;
+            }
+            else{
+                $quotation->revised += 1;
+            }
         }
         
         // update quotation

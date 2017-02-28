@@ -122,9 +122,9 @@ class ReceiptController extends Controller{
         $paymentStatus->save();
         
         $baht = round( \Yii::$app->request->get('type') !== 'General' ? $grandTotal : $total, 2 );
-        $thb = Common::num2thai( $baht );
-        var_dump($baht, $thb);
-        die();
+        // $thb = Common::num2thai( $baht );
+        // var_dump($baht, $thb);
+        // die();
 
 
         $content = $this->renderPartial('report', [
@@ -134,7 +134,7 @@ class ReceiptController extends Controller{
             'total' => $total,
             'vat' => $vat,
             'grandTotal' => $grandTotal,
-            'thbStr' => Common::num2thai(\Yii::$app->request->get('type') !== 'General' ? $grandTotal : $total),
+            'thbStr' => $baht,
         ]);
 
         // setup kartik\mpdf\Pdf component

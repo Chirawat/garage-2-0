@@ -480,6 +480,7 @@ class InvoiceController extends Controller
         $invoice->total_vat != null ? $vat = $invoice->total_vat : $vat = $total * 0.07;
         $invoice->grand_total != null ? $grandTotal = $invoice->grand_total : $grandTotal = $total + $vat;
 
+        $thb = round(\Yii::$app->request->get('type') !== 'General' ? $grandTotal : $total, 2)
         $content = $this->renderPartial('report', [
             'invoice' => $invoice,
 
@@ -487,7 +488,7 @@ class InvoiceController extends Controller
             'total' => $total,
             'vat' => $vat,
             'grandTotal' => $grandTotal,
-            'thbStr' => Common::num2thai(\Yii::$app->request->get('type') !== 'General' ? $grandTotal : $total),
+            'thbStr' => Common::num2thai($thb),
         ]);
 
         // setup kartik\mpdf\Pdf component

@@ -344,6 +344,8 @@ class QuotationController extends Controller
         $total = null;
         $model->total !== null ? $total = $model->total : $total = $sumMaintenance + $sumPart;
 
+        $total = round($total, 2);
+
         $numRow = 0;
         if(sizeof($maintenanceDescriptionModel) > sizeof($partDescriptionModel))
             $numRow = sizeof($maintenanceDescriptionModel);

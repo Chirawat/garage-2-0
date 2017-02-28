@@ -121,6 +121,12 @@ class ReceiptController extends Controller{
         $paymentStatus->CLID = $reciept->invoice['CLID'];
         $paymentStatus->save();
         
+        $baht = \Yii::$app->request->get('type') !== 'General' ? $grandTotal : $total;
+        $thb = Common::num2thai($baht);
+        var_dump($baht, $thb);
+        die();
+
+
         $content = $this->renderPartial('report', [
             'invoice' => $invoice,
 

@@ -94,7 +94,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">Version: 20170216.1212</p>
+        <p class="pull-left">Version: 20170228.0911</p>
     </div>
 </footer>
 

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 use yii\helpers\Html;
 
 function DateThai($strDate){
@@ -14,34 +14,30 @@ function DateThai($strDate){
 //    return "$strDay $strMonthThai $strYear, $strHour:$strMinute";
     return "$strDay $strMonthThai $strYear";
 }
-//$this->title = "ใบเสร็จรับเงิน/ใบกํากับภาษี";
 ?>
     <table width="100%">
         <tr>
             <td width="10%">
-                <?=Html::img(Yii::getAlias('@app').'/web/img/logo_t.jpg', ['width' => 60])?><br>
+                <?=Html::img('/img/logo_t.jpg', ['width' => 60])?><br>
             </td>
             <td>
                 <h3>ห้างหุ้นส่วนจำกัดยโสธรเจริญการช่าง</h3>
                 <h3>YASOTHON JAROEN KARN CHANG LIMITED PARTNERSHIP</h3> 
-                <small>405 หมู่ 2 ตำบลน้ำคำใหญ่ อำเภอเมืองยโสธร จังหวัดยโสธร 35000<br/>เบอร์โทรศัพท์ 099-2309916, 095-3190146, 063-2362878, 045-756672</small> 
+                <small>405 หมู่ 2 ตำบลน้ำคำใหญ่ อำเภอเมืองยโสธร จังหวัดยโสธร 35000<br/>
+                เบอร์โทรศัพท์ 099-2309916, 095-3190146, 063-2362878, 045-756672</small> 
             </td>
         </tr>
     </table>
     <br/>
-    <?php if (\Yii::$app->request->get('type') == 'General') : ?>
-    <h2 class="header">ใบเสร็จรับเงิน</h2>
-    <?php else : ?>
-    <h2 class="header">ใบเสร็จรับเงิน/ใบกำกับภาษี</h2>
-    <?php endif; ?>
+    <h2 class="header">ใบแจ้งหนี้</h2>
     <table class="table_bordered" width="100%" border="0" cellpadding="2" cellspacing="0" style="border: 0px solid transparent;">
         <tr>
-            <td width="70%" style="padding: 10px;"><b>ชื่อ <?= $invoice->customer->fullname ?> <?=$invoice->customer->branch?>
-                <br /> ที่อยู่</b> <?= $invoice->customer->address ?>
+            <td width="70%" style="padding: 10px;"><b>ชื่อ <?= $invoice->customer->fullname ?> <?=$invoice->customer->branch?></b>
+                <br /> <b>ที่อยู่</b> <?= $invoice->customer->address ?>
                 <?php if($invoice->customer->taxpayer_id != null): ?>
                 <br /> เลขประจำตัวผู้เสียภาษีอากร <?= $invoice->customer->taxpayer_id ?></td>
                 <?php endif; ?>
-            <td width="30%" style="padding: 10px;">เล่มที่ <?= $invoice->reciept['book_number'] ?> เลขที่ <?= $invoice->reciept['reciept_id'] ?><br>
+            <td width="30%" style="padding: 10px;">เล่มที่ <?= $invoice->book_number ?> เลขที่ <?= $invoice->invoice_id ?> <br>
                 วันที่ <?= DateThai( $invoice->date ) ?>
                 <br /> เลขประจำตัวผู้เสียภาษีอากร 0353556000391
                 <br />  สาขา สำนักงานใหญ่</td>
